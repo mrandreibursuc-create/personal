@@ -1,0 +1,2854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>The Mechanical Watch — From First Tick to Timegrapher</title>
+<meta name="description" content="An interactive course on mechanical watch movements: power, gear trains, the Swiss lever escapement, the balance, regulation, and fault diagnosis — with live simulations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,560;9..144,680&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#101317;
+  --bg2:#0B0E11;
+  --panel:#171C22;
+  --panel2:#1D242C;
+  --line:#2A323C;
+  --line2:#38424E;
+  --text:#E9E5DB;
+  --muted:#A9B1BD;
+  --faint:#8993A2;
+  --brass:#D9A93C;
+  --brass-dim:#8F7127;
+  --ruby:#E8446B;
+  --ruby-dim:#8C2A44;
+  --steel:#6FA2F2;
+  --steel-dim:#3D5C97;
+  --silver:#C4CCD8;
+  --good:#5FC98E;
+  --radius:14px;
+  --maxw:880px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:#0B0E11}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Source Sans 3",system-ui,-apple-system,sans-serif;
+  font-size:17.5px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--brass);color:#14100a}
+
+/* ------- Geneva stripes hero motif ------- */
+.hero{
+  position:relative;
+  padding:88px 24px 72px;
+  overflow:hidden;
+  border-bottom:1px solid var(--line);
+  background:
+    repeating-linear-gradient(104deg,
+      rgba(255,255,255,0.028) 0 46px,
+      rgba(255,255,255,0.0) 46px 47px,
+      rgba(0,0,0,0.20) 47px 92px,
+      rgba(255,255,255,0.0) 92px 93px),
+    radial-gradient(1200px 600px at 70% -10%, #1A2029 0%, var(--bg2) 70%);
+}
+.hero-inner{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1.05fr 0.95fr;gap:48px;align-items:center}
+.kicker{
+  font-family:"IBM Plex Mono",monospace;font-size:12.5px;letter-spacing:0.16em;
+  text-transform:uppercase;color:var(--brass);margin-bottom:18px;
+}
+h1{
+  font-family:"Fraunces",Georgia,serif;font-weight:560;font-size:clamp(38px,5.2vw,58px);
+  line-height:1.06;letter-spacing:-0.015em;margin-bottom:20px;
+}
+h1 em{font-style:italic;color:var(--brass)}
+.lede{color:var(--muted);font-size:19px;max-width:46ch;margin-bottom:26px}
+.hero-meta{display:flex;gap:22px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--faint)}
+.hero-meta b{color:var(--silver);font-weight:500}
+.hero-demo{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px 14px 10px;box-shadow:0 24px 60px rgba(0,0,0,0.45);
+}
+.hero-demo canvas{width:100%;height:auto;display:block;border-radius:9px;background:var(--bg2)}
+.hero-demo .cap{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--faint);
+  padding:9px 4px 4px;display:flex;justify-content:space-between;align-items:center}
+.livechip{display:inline-flex;align-items:center;gap:7px;color:var(--good)}
+.livechip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--good);
+  box-shadow:0 0 8px var(--good);animation:pulse 1s steps(2) infinite}
+@keyframes pulse{50%{opacity:.35}}
+@media (prefers-reduced-motion: reduce){ .livechip::before{animation:none} }
+
+/* ------- Course rail / chapter nav ------- */
+.rail{
+  position:sticky;top:0;z-index:50;background:rgba(11,14,17,0.9);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.rail-inner{max-width:1060px;margin:0 auto;display:flex;gap:4px;overflow-x:auto;padding:0 16px;
+  scrollbar-width:none}
+.rail-inner::-webkit-scrollbar{display:none}
+.rail a{
+  flex:0 0 auto;padding:13px 13px;color:var(--faint);text-decoration:none;
+  font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.04em;white-space:nowrap;
+  border-bottom:2px solid transparent;
+}
+.rail a:hover{color:var(--silver)}
+.rail a.active{color:var(--brass);border-bottom-color:var(--brass)}
+.rail .tier{align-self:center;padding:3px 9px;margin:0 8px;border:1px solid var(--line2);
+  border-radius:999px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--faint);flex:0 0 auto}
+
+/* ------- Article body ------- */
+main{max-width:var(--maxw);margin:0 auto;padding:0 22px 120px}
+section{padding-top:84px}
+.chapnum{
+  font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.16em;color:var(--brass);
+  text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:12px;
+}
+.chapnum::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,var(--brass-dim),transparent)}
+h2{font-family:"Fraunces",Georgia,serif;font-weight:560;font-size:clamp(28px,3.6vw,38px);
+  line-height:1.12;margin-bottom:18px;letter-spacing:-0.01em}
+h3{font-family:"Fraunces",Georgia,serif;font-weight:560;font-size:22px;margin:34px 0 10px}
+p{margin-bottom:16px;color:#D6D2C8}
+p b{color:var(--text)}
+.note{
+  border-left:2px solid var(--brass);background:linear-gradient(90deg,rgba(217,169,60,0.07),transparent 70%);
+  padding:12px 16px;margin:20px 0;color:var(--muted);font-size:16px;border-radius:0 8px 8px 0;
+}
+.note b{color:var(--brass)}
+.bench{
+  border-left:2px solid var(--ruby);background:linear-gradient(90deg,rgba(232,68,107,0.06),transparent 70%);
+  padding:12px 16px;margin:20px 0;color:var(--muted);font-size:16px;border-radius:0 8px 8px 0;
+}
+.bench b{color:var(--ruby)}
+.bench::before, .note::before{
+  display:block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;margin-bottom:5px;
+}
+.note::before{content:"Theory";color:var(--brass)}
+.bench::before{content:"At the bench";color:var(--ruby)}
+
+/* color-coded part names, echoing the original article's convention */
+.pt{font-weight:600;border-bottom:1px dotted currentColor;padding-bottom:1px}
+.pt.brass{color:var(--brass)} .pt.ruby{color:var(--ruby)}
+.pt.steel{color:var(--steel)} .pt.silver{color:var(--silver)} .pt.green{color:var(--good)}
+
+/* ------- Demo blocks ------- */
+.demo{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  margin:26px 0 30px;overflow:hidden;
+}
+.demo canvas{width:100%;display:block;background:var(--bg2);touch-action:pan-y}
+.demo .bar{
+  display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;
+  padding:13px 16px;border-top:1px solid var(--line);background:var(--panel2);
+}
+.demo .bar label{
+  display:flex;align-items:center;gap:10px;font-family:"IBM Plex Mono",monospace;
+  font-size:12px;color:var(--muted);flex:1 1 200px;min-width:180px;
+}
+.demo .bar label span.val{color:var(--brass);min-width:64px;text-align:right}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;flex:1;height:26px;background:transparent;cursor:pointer;min-width:90px;
+}
+input[type=range]::-webkit-slider-runnable-track{height:3px;background:var(--line2);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:20px;height:20px;border-radius:50%;margin-top:-8.5px;
+  background:var(--brass);border:3px solid var(--bg2);box-shadow:0 0 0 1px var(--brass-dim);
+}
+input[type=range]::-moz-range-track{height:3px;background:var(--line2);border-radius:2px}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--brass);border:3px solid var(--bg2)}
+.btn{
+  font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.05em;cursor:pointer;
+  background:var(--bg2);color:var(--silver);border:1px solid var(--line2);
+  border-radius:8px;padding:8px 14px;transition:border-color .15s,color .15s;
+}
+.btn:hover{border-color:var(--brass);color:var(--brass)}
+.btn.primary{background:var(--brass);color:#171205;border-color:var(--brass);font-weight:500}
+.btn.primary:hover{filter:brightness(1.1)}
+.btn.on{border-color:var(--ruby);color:var(--ruby)}
+.btn:focus-visible,input[type=range]:focus-visible,.rail a:focus-visible{outline:2px solid var(--steel);outline-offset:2px}
+.readout{
+  font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);
+  display:flex;gap:16px;flex-wrap:wrap;
+}
+.readout b{color:var(--text);font-weight:500}
+.readout .warn{color:var(--ruby)}
+.readout .ok{color:var(--good)}
+.demo .cap{padding:9px 16px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--faint);
+  border-top:1px solid var(--line)}
+
+/* preset chips (timegrapher faults) */
+.chips{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px 2px}
+.chip{
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px;cursor:pointer;
+  background:transparent;color:var(--muted);border:1px solid var(--line2);
+  border-radius:999px;padding:6px 13px;
+}
+.chip:hover{color:var(--silver);border-color:var(--silver)}
+.chip.sel{color:var(--ruby);border-color:var(--ruby);background:rgba(232,68,107,0.08)}
+
+/* diagnosis quiz */
+.quiz-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;padding:14px 16px}
+.quiz-opts .btn{text-align:left;padding:11px 14px}
+.quiz-opts .btn.correct{border-color:var(--good);color:var(--good)}
+.quiz-opts .btn.wrong{border-color:var(--ruby);color:var(--ruby)}
+.quiz-feedback{padding:0 16px 14px;font-size:15.5px;color:var(--muted);min-height:24px}
+.quiz-feedback b{color:var(--good)}
+
+/* service checklist */
+.steps{counter-reset:st;margin:22px 0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.step{display:flex;gap:16px;padding:15px 18px;border-bottom:1px solid var(--line);background:var(--panel)}
+.step:last-child{border-bottom:none}
+.step::before{
+  counter-increment:st;content:counter(st,decimal-leading-zero);
+  font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--brass);flex:0 0 30px;padding-top:2px;
+}
+.step h4{font-size:16.5px;font-weight:600;margin-bottom:3px}
+.step p{font-size:15px;color:var(--muted);margin:0}
+.step .oil{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--steel);margin-top:5px;display:block}
+
+.matrix{width:100%;border-collapse:collapse;margin:24px 0;font-size:14.5px;background:var(--panel);
+  border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:block;overflow-x:auto}
+.matrix table{width:100%;border-collapse:collapse;min-width:640px}
+.matrix th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--brass);text-align:left;padding:11px 14px;border-bottom:1px solid var(--line2);background:var(--panel2)}
+.matrix td{padding:10px 14px;border-bottom:1px solid var(--line);color:var(--muted);vertical-align:top}
+.matrix td:first-child{color:var(--text);font-weight:600}
+.matrix td:nth-child(2){font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--steel)}
+.matrix td:last-child{color:var(--good)}
+.matrix tr:last-child td{border-bottom:none}
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:22px 0}
+.tools>div{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+.tools h4{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--brass);margin-bottom:10px}
+.tools ul{list-style:none;font-size:15px;color:var(--muted)}
+.tools li{padding:4px 0;border-bottom:1px dotted var(--line)}
+.tools li:last-child{border:none}
+.tools li b{color:var(--text);font-weight:600}
+.chq{border:1px solid var(--line);border-radius:var(--radius);margin-top:36px;overflow:hidden;background:var(--panel)}
+.chq-head{display:flex;justify-content:space-between;align-items:center;padding:13px 18px;
+  background:var(--panel2);border-bottom:1px solid var(--line)}
+.chq-head b{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);font-weight:500}
+.chq-score{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted)}
+.chq-q{padding:15px 18px;border-bottom:1px solid var(--line)}
+.chq-q:last-child{border-bottom:none}
+.chq-q .qt{font-size:16px;color:var(--text);margin-bottom:10px}
+.chq-q .qt em{color:var(--brass);font-style:normal;font-family:"IBM Plex Mono",monospace;font-size:12.5px;margin-right:8px}
+.chq-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:640px){.chq-opts{grid-template-columns:1fr}}
+.chq-opts .btn{text-align:left;font-family:"Source Sans 3",sans-serif;font-size:14.5px;letter-spacing:0;padding:9px 13px;line-height:1.4}
+.chq-opts .btn.correct{border-color:var(--good);color:var(--good)}
+.chq-opts .btn.wrong{border-color:var(--ruby);color:var(--ruby)}
+.chq-exp{margin-top:10px;font-size:14.5px;color:var(--muted);display:none;
+  border-left:2px solid var(--good);padding:6px 12px;background:rgba(95,201,142,0.05)}
+details.deep{border:1px solid var(--line);border-radius:var(--radius);margin:24px 0;
+  background:linear-gradient(180deg,rgba(111,162,242,0.05),transparent 60%),var(--panel);overflow:hidden}
+details.deep summary{cursor:pointer;padding:14px 18px;font-family:"IBM Plex Mono",monospace;
+  font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);list-style:none;
+  display:flex;align-items:center;gap:10px}
+details.deep summary::-webkit-details-marker{display:none}
+details.deep summary::before{content:"\25B8";transition:transform .18s;color:var(--steel)}
+details.deep[open] summary::before{transform:rotate(90deg)}
+details.deep summary:hover{color:var(--text)}
+details.deep .deep-body{padding:4px 18px 18px;border-top:1px solid var(--line)}
+details.deep .deep-body p{font-size:16px}
+details.deep .deep-body .demo{margin:18px 0 6px}
+html.fr .note::before{content:"Théorie"}
+html.fr .bench::before{content:"À l\'établi"}
+footer{border-top:1px solid var(--line);padding:44px 22px;text-align:center;color:var(--faint);
+  font-family:"IBM Plex Mono",monospace;font-size:12px}
+footer a{color:var(--muted)}
+
+@media (max-width:900px){
+  .hero{padding:56px 18px 44px}
+  .hero-inner{grid-template-columns:1fr;gap:30px}
+  body{font-size:16.5px}
+  main{padding:0 16px 90px}
+  section{padding-top:64px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="kicker">An interactive course · 15 chapters</div>
+      <h1 data-frh="La montre mécanique,&lt;br&gt;du premier tic au &lt;em&gt;vibrographe&lt;/em&gt;">The Mechanical Watch,<br>from first tick to <em>timegrapher</em></h1>
+      <p class="lede" data-frh="Ni pile, ni électronique — un ressort, un rouage, et un cœur de rubis et d'acier. Chaque schéma est une simulation vivante : remontez, décortiquez, cassez, réparez.">No batteries, no electronics — just a coiled spring, a train of gears, and a heartbeat of ruby and steel. Every diagram on this page is a live simulation you can wind, scrub, break, and repair.</p>
+      <div class="hero-meta">
+        <div><b>Level</b> beginner → expert</div>
+        <div><b>Demos</b> 23 interactive · 111 quiz questions</div>
+        <div><b>Time</b> ~90 min</div>
+      </div>
+    </div>
+    <div class="hero-demo">
+      <canvas id="cv-hero" width="640" height="560" aria-label="Live simulation of a Swiss lever escapement ticking"></canvas>
+      <div class="cap"><span class="livechip">Swiss lever escapement · slowed ≈4×</span><button class="btn" id="hero-pause" style="padding:5px 11px">Pause</button></div>
+    </div>
+  </div>
+</header>
+
+<nav class="rail" aria-label="Chapters">
+  <div class="rail-inner" id="rail">
+    <span class="tier">Beginner</span>
+    <a href="#power">01 Power</a>
+    <a href="#gears">02 Gears</a>
+    <a href="#train">03 Train</a>
+    <span class="tier">Intermediate</span>
+    <a href="#escapement">04 Escapement</a>
+    <a href="#balance">05 Balance</a>
+    <a href="#click">06 Winding</a>
+    <a href="#keyless">07 Keyless</a>
+    <a href="#motion">08 Motion</a>
+    <span class="tier">Advanced</span>
+    <a href="#automatic">09 Automatic</a>
+    <a href="#shock">10 Shock &amp; hairspring</a>
+    <a href="#regulation">11 Regulation</a>
+    <a href="#positions">12 Positions</a>
+    <span class="tier">Expert</span>
+    <a href="#timegrapher">13 Timegrapher</a>
+    <a href="#service">14 Service</a>
+    <a href="#complications">15 Complications</a>
+    <a href="#exam">Final exam</a>
+    <a href="#lexicon">FR·EN Lexique</a>
+    <button class="chip" id="lang-toggle" style="align-self:center;flex:0 0 auto;margin:0 8px">FR</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ 01 POWER ============ -->
+<section id="power">
+  <div class="chapnum">Chapter 01 · Power</div>
+  <h2>Everything begins with a wound spring</h2>
+  <p>A mechanical watch stores all of its energy in one part: the <span class="pt steel">mainspring</span>, a long ribbon of hardened alloy coiled inside a drum called the <span class="pt brass">barrel</span>. Winding the crown twists the spring tighter around a central shaft, the <span class="pt silver">arbor</span>. As the spring fights to unwind, it turns the barrel — and the barrel drives everything else in the watch.</p>
+  <p>Use the slider below to wind the spring and watch its coils bunch around the arbor. The <b>torque curve</b> on the right shows a hidden problem: a spring pushes hardest when fully wound and weakest when nearly flat. Good movements are designed to run in the middle of that curve, which is one reason a watch keeps better time when worn and wound daily.</p>
+
+  <div class="demo">
+    <canvas id="cv-spring" width="880" height="420"></canvas>
+    <div class="bar">
+      <label>Wind <input type="range" id="in-wind" min="0" max="100" value="15"><span class="val" id="out-wind">15%</span></label>
+      <button class="btn primary" id="btn-release">Let go of the arbor</button>
+      <div class="readout"><span>Power reserve <b id="out-reserve">6 h</b></span><span>Torque <b id="out-torque">low</b></span></div>
+    </div>
+    <div class="cap">Release the arbor with nothing attached and the spring dumps ~40 hours of stored energy in about two seconds.</div>
+  </div>
+
+  <p>That release button demonstrates the core problem of watchmaking. Left alone, a mainspring doesn't <i>meter</i> its energy — it explodes it. A hand attached directly to the barrel would spin wildly for a moment, then stop forever. The next three chapters build the machinery that turns this violent unwinding into one quiet tick every fraction of a second, for forty hours straight.</p>
+  <div class="bench">Real mainsprings hold enough energy to injure you. During a service, the spring is let down <b>before</b> anything else: hold the crown, pull the click away with a peg, and let the crown slip backward through your fingers, a half-turn at a time. Never open a barrel that hasn't been let down.</div>
+
+  
+  <details class="deep"><summary>Go deeper — spring metallurgy, the fusee, and where "40 hours" comes from</summary><div class="deep-body">
+  <p><b>Why thickness rules everything.</b> A mainspring's torque scales with its width and with the <b>cube of its thickness</b> (M ∝ E·w·t³/L). A spring 10% thicker is a third stronger — which is why "just fit a stronger spring" is a dangerous cure: it can push amplitude into knocking territory (Chapter 13) and chew the winding work. Modern springs are cold-rolled Nivaflex-type alloys: essentially unbreakable and "non-setting", unlike blued carbon-steel springs in vintage watches, which take a permanent set and deliver a sagging torque curve even when intact — a routine replacement item in any vintage service.</p>
+  <p><b>The old solution to the torque curve: the fusee.</b> Before going barrels, watches wound a chain onto a cone. Fully wound, the chain pulled on the cone's small radius; as the spring weakened it worked on a larger radius — a continuously variable transmission delivering near-constant torque, in 1450. It was abandoned because the S-curved slipping mainspring plus a well-designed escapement made 200 parts of chain unnecessary.</p>
+  <p><b>Do the reserve math on our own movement.</b> Our barrel turns once per 6.4 hours (Chapter 03) and a healthy spring gives about 6¼ usable turns: 6.25 × 6.4 ≈ <b>40 hours</b>. Every power-reserve number on a spec sheet is exactly this multiplication — usable barrel turns × hours per barrel revolution. Long-reserve calibers get there with thinner, longer springs (more turns), stacked double barrels, or slower trains.</p>
+  </div></details>
+  
+  <details class="deep"><summary>Go deeper — barrel engineering: fitting a mainspring by the numbers</summary><div class="deep-body">
+  <p>Choosing a replacement mainspring is arithmetic, not luck. Wound on the arbor, the spring's coils occupy an area L·e (length × thickness); relaxed, the same area presses against the wall. The turns you can actually extract are what's left between those two states — and the classic result is the <b>half-area rule</b>: maximum turns when the spring fills exactly <b>half</b> the free space between arbor and wall. Too long a spring chokes its own barrel; too short wastes the volume. Play spring-fitter — barrel Ø 10.4 mm, arbor Ø 3.4 mm:</p>
+  <div class="demo">
+    <canvas id="cv-barrel" width="840" height="360"></canvas>
+    <div class="bar">
+      <label>Spring thickness <input type="range" id="in-be" min="80" max="160" step="5" value="110"><span class="val" id="out-be"></span></label>
+      <label>Spring length <input type="range" id="in-bl" min="200" max="560" step="10" value="345"><span class="val" id="out-bl"></span></label>
+      <div class="readout"><span>Turns <b id="out-bturns">—</b></span><span>Reserve <b id="out-bres">—</b></span><span id="out-bmsg"></span></div>
+    </div>
+    <div class="cap">Thickness is the trump card (torque ∝ t³): going 0.005 mm thicker to "fix" low amplitude adds ~15% torque — often straight into knocking.</div>
+  </div>
+  </div></details>
+  <div class="chq" data-ch="power"></div>
+</section>
+
+<!-- ============ 02 GEARS ============ -->
+<section id="gears">
+  <div class="chapnum">Chapter 02 · Gears</div>
+  <h2>Trading force for speed</h2>
+  <p>Over a full wind, the barrel turns only about <b>7 times</b> — but the second hand must turn about <b>2,400 times</b>. Gears make that exchange. When a large <span class="pt brass">driving wheel</span> meshes with a small <span class="pt ruby">pinion</span>, both move tooth-by-tooth together, so the pinion — with fewer teeth — must complete far more revolutions.</p>
+  <p>Change the tooth counts below and watch the marked dots. The ratio of teeth <i>is</i> the ratio of speeds — and, just as importantly, the <b>inverse</b> ratio of torque. The pinion spins faster but pushes weaker. Watchmaking spends the mainspring's brute force to buy speed and gentleness.</p>
+
+  <div class="demo">
+    <canvas id="cv-ratio" width="880" height="380"></canvas>
+    <div class="bar">
+      <label>Wheel teeth <input type="range" id="in-t1" min="24" max="80" value="64"><span class="val" id="out-t1">64</span></label>
+      <label>Pinion teeth <input type="range" id="in-t2" min="6" max="20" value="8"><span class="val" id="out-t2">8</span></label>
+      <div class="readout"><span>Ratio <b id="out-ratio">8.0 : 1</b></span><span>Pinion torque <b id="out-tq2">×0.13</b></span></div>
+    </div>
+  </div>
+
+  <div class="note">A single pair can't reach 343:1 in a watch-sized case — the big wheel would need to be dinner-plate sized or the pinion microscopic. The answer is to <b>chain</b> modest ratios: 8 × 7.5 × 6.4 ≈ 384. That chain is the going train.</div>
+
+  <div class="chq" data-ch="gears"></div>
+</section>
+
+<!-- ============ 03 GOING TRAIN ============ -->
+<section id="train">
+  <div class="chapnum">Chapter 03 · The going train</div>
+  <h2>Four wheels between the spring and the tick</h2>
+  <p>The <span class="pt brass">barrel</span> drives the <span class="pt silver">center wheel</span> (one turn per hour — the minute hand rides here), which drives the <span class="pt steel">third wheel</span>, which drives the <span class="pt good" style="color:var(--good)">fourth wheel</span> (one turn per minute — the second hand), which finally drives the <span class="pt ruby">escape wheel</span>. Each stage is a big wheel driving the next axis's small pinion, multiplying speed at every step.</p>
+
+  <div class="demo">
+    <canvas id="cv-train" width="880" height="430"></canvas>
+    <div class="bar">
+      <label>Simulation speed <input type="range" id="in-trainspd" min="0" max="100" value="35"><span class="val" id="out-trainspd">×60</span></label>
+      <button class="btn" id="btn-flow">Show power flow</button>
+      <div class="readout"><span>Barrel <b>1 rev / 6.4 h</b></span><span>Escape wheel <b>1 rev / 6 s</b></span></div>
+    </div>
+    <div class="cap">Spoked wheels aren't decoration: cutting material out reduces rotational inertia, so the train can stop and restart 8 times per second without strain.</div>
+  </div>
+
+  <p>Notice what we still don't have: anything that sets the <i>pace</i>. This train faithfully multiplies whatever speed the barrel provides — and the barrel would still love to unwind all at once. The pace-setter comes next, and it's the most beautiful mechanism in all of horology.</p>
+
+  <div class="chq" data-ch="train"></div>
+</section>
+
+<!-- ============ 04 ESCAPEMENT ============ -->
+<section id="escapement">
+  <div class="chapnum">Chapter 04 · The escapement</div>
+  <h2>The Swiss lever, frame by frame</h2>
+  <p>The escapement is a gatekeeper. The <span class="pt brass">escape wheel</span> — the last wheel of the train — is locked by one of two ruby <span class="pt ruby">pallet stones</span> mounted on a pivoting <span class="pt silver">pallet fork</span>. Each swing of the balance flicks the fork, letting the wheel <i>escape</i> by exactly one half-tooth before the opposite stone catches it. That capture is the tick you hear.</p>
+  <p>But the escapement does a second, subtler job: as each tooth slides across the angled face of a pallet stone, it <b>pushes back</b>, sending a pulse of energy through the fork into the balance. The watch pays the balance a tiny wage for every beat, which keeps it swinging forever. Scrub the timeline to watch a single beat in slow motion:</p>
+
+  <div class="demo">
+    <div class="chips" id="esc-mags">
+      <button class="chip sel" data-m="entry">🔍 entry stone</button>
+      <button class="chip" data-m="exit">🔍 exit stone</button>
+      <button class="chip" data-m="roller">🔍 roller &amp; horns</button>
+      <button class="chip" data-m="off">loupe off</button>
+    </div>
+    <canvas id="cv-esc" width="880" height="520"></canvas>
+    <div class="bar">
+      <label>Scrub one beat <input type="range" id="in-esc" min="0" max="1000" value="0"><span class="val" id="out-escphase">locked</span></label>
+      <button class="btn" id="btn-escplay">▶ Play slowly</button>
+    </div>
+    <div class="cap">Phases: lock → unlock (roller jewel knocks the fork) → impulse (wheel pushes the fork, fork pushes the balance) → drop → lock on the other stone.</div>
+  </div>
+
+  <div class="note">The pallet stones and the roller jewel are synthetic <b>ruby</b> — the "17 jewels" on a dial are bearings and contact surfaces, not ornament. Ruby is nearly as hard as diamond and glides on steel with very little friction, so these parts survive <b>250 million impacts a year</b>.</div>
+  <div class="bench">Under a loupe, a healthy escapement shows a tiny safety margin called <b>drop</b> between tooth and stone, and the fork should snap crisply against its banking pins. A fork that creeps or hesitates means a bent pivot, oil in the wrong place, or magnetism.</div>
+
+  
+  <details class="deep"><summary>Go deeper — lock, drop, draw: the five adjustments, and the rival escapements</summary><div class="deep-body">
+  <p>Escapement fitters live by five words. <b>Lock</b>: how deep the tooth lands on the stone's locking face (~1.5° — safety). <b>Drop</b>: the tooth's brief free flight between one stone releasing and the other catching (clearance for manufacturing error — but pure wasted energy). <b>Slide</b>: extra travel after locking as draw pulls the fork home to the banking. <b>Draw</b>: the locking faces are angled so that train torque actively <i>pulls</i> the fork against its banking pin — this is what holds the fork safely parked between beats and keeps the guard pin off the safety roller. <b>Lift (impulse) angle</b>: the total balance arc during which fork and jewel are engaged, typically 50–54° — the number you must type into a timegrapher.</p>
+  <p>Adjust the geometry yourself. The strip below is the escapement "unrolled" — one pallet stone, teeth passing beneath it:</p>
+  <div class="demo">
+    <canvas id="cv-esclab" width="840" height="330"></canvas>
+    <div class="bar">
+      <label>Lock depth <input type="range" id="in-lock" min="0" max="12" value="5"><span class="val" id="out-lock"></span></label>
+      <label>Drop <input type="range" id="in-drop" min="0" max="14" value="6"><span class="val" id="out-drop"></span></label>
+      <div class="readout"><span id="out-esclab"></span></div>
+    </div>
+    <div class="cap">On real movements lock is set by moving the pallet stones in their shellac seats with a heated tool; drop is fixed by the parts and checked, not adjusted.</div>
+  </div>
+  <p><b>The rivals.</b> The <b>cylinder</b> escapement (Breguet's era) rested the tooth directly on the balance staff's hollow cylinder — simple, but constant friction on the balance meant mediocre timekeeping and fast wear. The <b>detent</b> (chronometer) escapement gives the balance one direct, almost frictionless impulse per oscillation with no lubrication needed at the impulse — supreme on a gimballed marine chronometer, hopeless on a wrist, where a shock mid-arc can trip it ("setting"). The <b>co-axial</b> (George Daniels, industrialized by Omega) splits locking and impulse across stacked wheels so impulses are pushing, not sliding — less friction-dependence and longer service intervals, at the price of demanding manufacture. The Swiss lever won the wrist because of one property the others lack: <b>detached safety</b> — the balance swings free 97% of the time, and the fork is actively held out of its way by draw.</p>
+  </div></details>
+  <div class="chq" data-ch="escapement"></div>
+</section>
+
+<!-- ============ 05 BALANCE ============ -->
+<section id="balance">
+  <div class="chapnum">Chapter 05 · The balance</div>
+  <h2>The heartbeat: a wheel on a hairspring</h2>
+  <p>What decides <i>when</i> the fork flips? The <span class="pt brass">balance wheel</span>, a weighted ring on the thinnest spring in the watch — the <span class="pt steel">hairspring</span>. Twist it and let go, and it oscillates with a natural period that depends on just two things: the spring's stiffness <b>k</b> and the wheel's rotational inertia <b>I</b>. The period is T = 2π√(I∕k) — and crucially, it barely depends on how <i>hard</i> you twist it. Big swing or small, each beat takes the same time. That property, called isochronism, is why a spring-and-wheel can keep time.</p>
+  <p>Tune the oscillator below. Give it a flick, then change stiffness and inertia and watch the beat rate respond:</p>
+
+  <div class="demo">
+    <canvas id="cv-bal" width="880" height="420"></canvas>
+    <div class="bar">
+      <label>Hairspring stiffness k <input type="range" id="in-k" min="20" max="100" value="55"><span class="val" id="out-k">55</span></label>
+      <label>Wheel inertia I <input type="range" id="in-I" min="20" max="100" value="55"><span class="val" id="out-I">55</span></label>
+      <button class="btn primary" id="btn-flick">Flick the wheel</button>
+      <div class="readout"><span>Period <b id="out-T">—</b></span><span>Rate <b id="out-bph">—</b></span></div>
+    </div>
+    <div class="cap">Stiffer spring → faster beat. Heavier rim → slower beat. Every regulating device in horology is a way of nudging k or I.</div>
+  </div>
+
+  <p>A real balance beats fast — typically 4 Hz, or 28,800 beats per hour — because a fast oscillator averages out disturbances like wrist motion. And it never gets to swing freely for long: twice per cycle, its <span class="pt ruby">impulse jewel</span> slaps the pallet fork, unlocking the escape wheel and collecting its little payment of energy in return. Balance and escapement together form a closed loop: the balance times the escapement, and the escapement feeds the balance.</p>
+
+  
+  <details class="deep"><summary>Go deeper — overcoils, free-sprung balances, temperature, and the hi-beat wars</summary><div class="deep-body">
+  <p><b>The Breguet overcoil.</b> A flat hairspring doesn't breathe concentrically — its center of mass shuttles sideways each oscillation, loading the pivots and splitting the vertical rates. Breguet's fix: raise the last coil and sweep it back over the spring in a calculated terminal curve. The spring then breathes like a lung, concentric, and isochronism across positions improves markedly. The cost is height and hand-finishing, which is why overcoils live in chronometry-focused calibers.</p>
+  <p><b>Free-sprung balances.</b> The regulator's pins are themselves an isochronism defect: the spring bounces between them differently at different amplitudes. High-end solutions (Patek Gyromax, Rolex Microstella) delete the regulator entirely and tune the rate by turning tiny inertia weights on the balance rim — adjusting I instead of k, in the language of this chapter. More stable, harder to service: rate changes now need a key on the balance itself.</p>
+  <p><b>Temperature.</b> Steel springs soften when warm — a plain steel hairspring loses roughly 11 seconds per day per °C. A century of metallurgy fixed this: first bimetallic cut balances that curled to compensate, then self-compensating alloys (Elinvar, then <b>Nivarox</b>), and now <b>silicon</b>, which is also completely non-magnetic. Slide the thermometer:</p>
+  <div class="demo">
+    <canvas id="cv-temp" width="840" height="330"></canvas>
+    <div class="bar">
+      <label>Temperature <input type="range" id="in-temp" min="-10" max="40" value="20"><span class="val" id="out-temp"></span></label>
+      <div class="readout"><span>Steel <b id="out-tsteel"></b></span><span>Nivarox <b id="out-tniv"></b></span><span>Silicon <b id="out-tsi"></b></span></div>
+    </div>
+  </div>
+  <p><b>Beat-rate history.</b> 18,000 vph ruled for two centuries; the 1960s chased stability with 21,600, 28,800, then Zenith's and Seiko's 36,000 vph "hi-beats". Faster resists disturbance better — but doubles the escapement mileage and demands oils that survive it. 28,800 became the industry's truce between chronometry and service life.</p>
+  </div></details>
+  <div class="chq" data-ch="balance"></div>
+</section>
+
+<!-- ============ 06 CLICK / WINDING ============ -->
+<section id="click">
+  <div class="chapnum">Chapter 06 · Winding &amp; the click</div>
+  <h2>Why the crown ratchets</h2>
+  <p>One problem left over from Chapter 01: the moment you let go of the crown, the mainspring would happily unwind backward through it. The fix is a mechanism so satisfying it named itself — the <span class="pt ruby">click</span>. A sprung pawl rides on the teeth of the <span class="pt brass">ratchet wheel</span> screwed to the arbor. Wind forward and the click hops from tooth to tooth (that's the sound). Try to go backward, and it jams solid.</p>
+
+  <div class="demo">
+    <canvas id="cv-click" width="880" height="400"></canvas>
+    <div class="bar">
+      <label>Turn the crown <input type="range" id="in-crown" min="0" max="100" value="0"><span class="val" id="out-crown">0 clicks</span></label>
+      <button class="btn" id="btn-reverse">Try to unwind ↩</button>
+      <div class="readout"><span id="out-clickmsg">Wind forward to hear the click take up.</span></div>
+    </div>
+  </div>
+
+  <div class="bench">This is also why <b>over-winding is mostly a myth</b> in modern watches: manual movements simply stop firm at full wind, and automatics have a slipping bridle inside the barrel that lets the spring skid instead of breaking. A "wound too tight" watch that won't run is almost always a <i>dirty</i> watch — old oil has turned to glue.</div>
+
+  <div class="chq" data-ch="click"></div>
+</section>
+
+<!-- ============ 07 KEYLESS WORKS ============ -->
+<section id="keyless">
+  <div class="chapnum">Chapter 07 · Keyless works</div>
+  <h2>The mechanism under your crown</h2>
+  <p>Early watches were wound with a separate key; the "keyless works" is everything that lets one crown do two jobs. The <span class="pt silver">stem</span> carries a square section on which the <span class="pt brass">sliding clutch</span> (castle wheel) can slide but not spin freely. Pulling the crown moves the <span class="pt ruby">setting lever</span>, whose finger rides a groove in the stem; the lever throws the <span class="pt steel">yoke</span>, which slides the clutch between two sets of teeth: pushed in, it drives the <b>winding pinion</b> toward the mainspring; pulled out, it drives the <b>setting wheels</b> toward the hands.</p>
+
+  <div class="demo">
+    <canvas id="cv-keyless" width="880" height="400"></canvas>
+    <div class="bar">
+      <button class="btn primary" id="btn-pos1">Push in — wind</button>
+      <button class="btn" id="btn-pos2">Pull out — set</button>
+      <label>Turn the crown <input type="range" id="in-kcrown" min="0" max="200" value="0"><span class="val" id="out-kcrown"></span></label>
+    </div>
+    <div class="cap" id="keyless-cap">Position 1: the clutch's left (Breguet) teeth mesh with the winding pinion — turning the crown winds the barrel.</div>
+  </div>
+
+  <div class="bench">The keyless works is the <b>most common repair</b> a beginner meets: crowns get yanked, stems snap at the case tube, setting-lever springs break. Learn to release the stem (usually a dimple or the setting-lever screw next to it — press <i>gently</i> with the crown pushed in, or you can eject the setting lever and face a full teardown). A replacement stem is cut to length with a jeweler's saw and finished with a stone.</div>
+
+  <div class="chq" data-ch="keyless"></div>
+</section>
+
+<!-- ============ 08 MOTION WORKS ============ -->
+<section id="motion">
+  <div class="chapnum">Chapter 08 · Motion works</div>
+  <h2>Three hands from one train</h2>
+  <p>The going train already contains a wheel turning once a minute (fourth wheel → second hand) and once an hour (center wheel → minute hand via the <span class="pt brass">cannon pinion</span>). The hour hand needs one more 12:1 reduction, handled by two small gears — the <span class="pt silver">minute wheel</span> and <span class="pt steel">hour wheel</span> — stacked around the same central axis. That stack of coaxial pipes is why all three hands can share one center.</p>
+  <p>The cannon pinion hides one more trick: it grips its shaft by <b>friction alone</b>. That slip-fit is what lets you set the time — turning the crown overpowers the friction and rotates the hands without fighting the whole gear train.</p>
+
+  <div class="demo">
+    <canvas id="cv-motion" width="880" height="440"></canvas>
+    <div class="bar">
+      <label>Time speed <input type="range" id="in-tspeed" min="0" max="100" value="40"><span class="val" id="out-tspeed">×600</span></label>
+      <button class="btn" id="btn-setmode">Setting mode (slip the cannon pinion)</button>
+    </div>
+    <div class="cap">In setting mode, drag the slider to move the hands directly — the train stays frozen, only the friction-fit pinion turns.</div>
+  </div>
+
+  <div class="chq" data-ch="motion"></div>
+</section>
+
+<!-- ============ 09 AUTOMATIC ============ -->
+<section id="automatic">
+  <div class="chapnum">Chapter 09 · Automatic winding</div>
+  <h2>A pendulum on your wrist</h2>
+  <p>An automatic adds a weighted <span class="pt brass">rotor</span> that swings with every movement of your arm. Its rotation passes through a pair of <span class="pt steel">reverser wheels</span> — tiny ratcheting gears that rectify motion so that <i>both</i> directions of rotor swing wind the mainspring the same way. Because the wearer never stops winding, automatic barrels contain a <span class="pt ruby">slipping bridle</span>: past full wind, the mainspring's outer end simply skids along the greased barrel wall instead of breaking.</p>
+
+  <div class="demo">
+    <canvas id="cv-auto" width="880" height="420"></canvas>
+    <div class="bar">
+      <label>Wrist activity <input type="range" id="in-activity" min="0" max="100" value="35"><span class="val" id="out-activity">35%</span></label>
+      <button class="btn primary" id="btn-shake">Shake it</button>
+      <div class="readout"><span>Reserve <b id="out-autores">—</b></span><span id="out-slip"></span></div>
+    </div>
+    <div class="cap">A day of desk work barely keeps a watch topped up; a walk winds it fully. Rotor bearings and reverser wheels are the classic wear points of automatic calibers.</div>
+  </div>
+
+  <div class="bench">Diagnostic tell: if hand-winding runs the watch fine but wearing it doesn't keep it alive, suspect the <b>automatic module</b> — worn rotor bearing (rotor wobbles and scrapes the caseback, leaving a shiny ring) or failed reversers (rotor spins freely both ways, ratchet never turns). On many calibers reversers are replaced, never oiled — ordinary oil makes them slip.</div>
+
+  
+  <details class="deep"><summary>Go deeper — magic levers, micro-rotors, and the bumper era</summary><div class="deep-body">
+  <p><b>Seiko's magic lever</b> replaces the delicate Swiss reverser wheels with one eccentric pin driving two spring pawls — one pulls, one pushes, both rotor directions wind, and there are about four parts to break instead of forty. It's the reason a neglected Seiko 7S26 winds happily after decades in a drawer.</p>
+  <p><b>Micro-rotors</b> sink a small heavy (platinum, tungsten) rotor into the movement plane for slimness — Piaget and Patek territory — trading winding efficiency for elegance. <b>Peripheral rotors</b> run a weighted ring around the movement's rim, keeping the view of the caliber unobstructed. And before full rotors were patented-around, 1940s–50s <b>bumper automatics</b> swung through ~120° and bounced off buffer springs — you can feel the thump on the wrist; collectors love them, and their buffer springs are a known service item.</p>
+  <p><b>Bench note on unwinding automatics:</b> the sliding bridle means you can never fully "let down" an automatic through the crown — the last portion slips. And when re-greasing an automatic barrel wall, the braking grease (e.g., 8213) is applied in a few spots only: too much and the bridle slips early (poor reserve), too little and it knocks at full wind.</p>
+  </div></details>
+  <div class="chq" data-ch="automatic"></div>
+</section>
+
+<!-- ============ 10 SHOCK & HAIRSPRING ============ -->
+<section id="shock">
+  <div class="chapnum">Chapter 10 · Shock protection &amp; hairspring health</div>
+  <h2>Protecting the two most fragile parts</h2>
+  <p>The balance staff's pivots are thinner than a human hair — around 0.10 mm — and before the 1930s a dropped watch usually meant a snapped pivot. Shock protection (<i>Incabloc</i> is the famous name) mounts the balance jewels in a spring-loaded setting: a <span class="pt brass">chaton</span> holding the hole jewel and cap jewel, retained by a <span class="pt ruby">lyre spring</span>. Under shock, the whole jewel setting moves and the sturdy shoulder of the staff takes the blow instead of its fragile tip.</p>
+
+  <div class="demo">
+    <canvas id="cv-shock" width="880" height="380"></canvas>
+    <div class="bar">
+      <button class="btn primary" id="btn-drop">Drop the watch</button>
+      <button class="btn" id="btn-protect">Shock protection: ON</button>
+      <button class="btn" id="btn-fixstaff" style="display:none">Fit a new staff</button>
+      <div class="readout"><span id="out-shockmsg">1 m onto a wooden floor ≈ 5,000 g at the pivot.</span></div>
+    </div>
+  </div>
+
+  <h3>Reading a sick hairspring</h3>
+  <p>The hairspring must breathe concentrically, in one flat plane, with every coil clear of its neighbors. Anything else shows up instantly on the timegrapher. Learn the four states:</p>
+
+  <div class="demo">
+    <div class="chips" id="hs-chips">
+      <button class="chip sel" data-h="healthy">Healthy</button>
+      <button class="chip" data-h="magnet">Magnetized</button>
+      <button class="chip" data-h="round">Out of round</button>
+      <button class="chip" data-h="flat">Out of flat</button>
+    </div>
+    <canvas id="cv-hspring" width="880" height="330"></canvas>
+    <div class="cap" id="hs-cap">Coils open and close evenly around the collet — the spring "breathes". This is what you want to see.</div>
+  </div>
+
+  <div class="bench">Hairspring truing is the highest art in repair: two pairs of tweezers, working at the collet or stud, never mid-coil. But <b>magnetism needs no skill to fix</b> — a €20 demagnetizer and two seconds. It should always be your first test on a wildly fast watch: hold a compass near the movement, or just demagnetize on principle.</div>
+
+  <div class="chq" data-ch="shock"></div>
+</section>
+
+<!-- ============ 11 REGULATION ============ -->
+<section id="regulation">
+  <div class="chapnum">Chapter 11 · Regulation</div>
+  <h2 data-frh="Régler la montre à &lt;i&gt;votre&lt;/i&gt; heure">Making it keep <i>your</i> time</h2>
+  <p>A freshly assembled watch never runs perfectly. Two adjustments live on the balance bridge. The <span class="pt brass">regulator</span> is a lever carrying two pins that straddle the hairspring's outer coil: sliding it changes the spring's <b>effective length</b>, and a shorter spring is a stiffer spring — the watch runs faster. The <span class="pt steel">stud carrier</span> rotates the spring's fixed end to center the balance's resting position, correcting <b>beat error</b> — the asymmetry between tick and tock.</p>
+  <p>You're the watchmaker now. The target is <b>0.0 s/day</b> and a beat error under <b>0.3 ms</b>:</p>
+
+  <div class="demo">
+    <canvas id="cv-reg" width="880" height="440"></canvas>
+    <div class="bar">
+      <label>Regulator (rate) <input type="range" id="in-reg" min="-100" max="100" value="62"><span class="val" id="out-reg"></span></label>
+      <label>Stud carrier (beat) <input type="range" id="in-stud" min="-100" max="100" value="-45"><span class="val" id="out-stud"></span></label>
+      <div class="readout"><span>Rate <b id="out-rate">—</b></span><span>Beat error <b id="out-beat">—</b></span><span id="out-regok"></span></div>
+    </div>
+    <div class="cap">Real regulator scales are marked A/R (avance/retard) or +/−. Moves are tiny: a visible nudge of the lever is worth tens of seconds per day.</div>
+  </div>
+
+  
+  <details class="deep"><summary>Go deeper — Etachron, timing washers, and why beat comes first</summary><div class="deep-body">
+  <p><b>The Etachron system</b>, on most modern ETA/Sellita movements, mounts the stud in a rotatable holder and the regulator pins in a slotted rotatable boot. It gives three tools: rotate the stud carrier for beat, slide the regulator for rate, and rotate the pin boot to open or close the pin gap — the gap itself changes isochronism (tight pins: amplitude-insensitive but positionally worse; open pins: the opposite). Turning the pin boot with a wound balance in place is delicate work; many hairsprings have died there.</p>
+  <p><b>Mean-time screws and washers.</b> On screwed balances, opposite pairs of <b>mean-time screws</b> turn out symmetrically to slow (adds I) without disturbing poise; <b>timing washers</b> slipped under a screw do the same in coarser steps. Rule of thumb kept in every drawer: washers are chosen in pairs, always opposite, or you've just created Chapter 12's poise error yourself.</p>
+  <p><b>Why beat before rate:</b> moving the stud rotates the whole spring, which drags the coil's position between the regulator pins and shifts effective length — so a beat correction changes the rate, but a rate correction barely touches beat. Fix the asymmetry first, then chase seconds.</p>
+  </div></details>
+  <div class="chq" data-ch="regulation"></div>
+</section>
+
+<!-- ============ 12 POSITIONS ============ -->
+<section id="positions">
+  <div class="chapnum">Chapter 12 · Positional timing &amp; poise</div>
+  <h2>Why the same watch keeps six different times</h2>
+  <p>Lay a watch dial-up and gravity presses along the balance staff; hang it crown-down and gravity pulls <i>across</i> the pivots. Friction changes, amplitude drops 30–50°, and any spot on the balance rim that is a few micrograms heavy — a <b>poise error</b> — starts stealing or adding time depending on where it hangs. Chronometer testing exists because of this: a certified movement must agree with itself across positions within a few seconds a day.</p>
+  <p>Here is the deep expert fact: a poise error's <b>sign flips with amplitude</b>. Below roughly 220° of swing, heavy-spot-down positions run slow; above 220°, the same error makes them run fast. Turn the watch, move the heavy spot, and change amplitude to see it:</p>
+
+  <div class="demo">
+    <div class="chips" id="pos-chips">
+      <button class="chip sel" data-p="DU">Dial up</button>
+      <button class="chip" data-p="DD">Dial down</button>
+      <button class="chip" data-p="CD">Crown down</button>
+      <button class="chip" data-p="CL">Crown left</button>
+      <button class="chip" data-p="CU">Crown up</button>
+      <button class="chip" data-p="CR">Crown right</button>
+    </div>
+    <canvas id="cv-pos" width="880" height="400"></canvas>
+    <div class="bar">
+      <label>Poise error <input type="range" id="in-poise" min="0" max="100" value="55"><span class="val" id="out-poise"></span></label>
+      <label>Amplitude <input type="range" id="in-posamp" min="160" max="300" value="270"><span class="val" id="out-posamp"></span></label>
+      <div class="readout"><span>This position <b id="out-posrate">—</b></span><span>Δ across 6 positions <b id="out-posdelta">—</b></span></div>
+    </div>
+    <div class="cap">Watchmakers exploit the sign flip: check poise at full wind (high amplitude) and again 24 h later (low amplitude). If a vertical position flips from fast to slow, the balance is out of poise — material is removed from the heavy spot, or timing washers are added opposite it.</div>
+  </div>
+
+  
+  <details class="deep"><summary>Go deeper — what COSC actually tests</summary><div class="deep-body">
+  <p>The chronometer certificate is a 15-day gauntlet: rates recorded daily in <b>five positions</b> (dial up, dial down, crown left, crown up, crown down) and at <b>three temperatures</b> (8, 23, 38 °C). The headline spec is a mean daily rate of <b>−4/+6 s/d</b>, but the harder numbers are the consistency ones: mean variation ≤ 2 s/d, maximum positional difference ≤ 10 s/d (that's the delta you computed above), and a thermal coefficient ≤ ±0.6 s/d/°C — Chapter 05's metallurgy, examined. A watch that averages +1 s/d can still fail on delta; chronometry is about agreement with yourself, not a single lucky rate. Métas (Master Chronometer) piles magnetism on top: full rate spec maintained after 15,000 gauss.</p>
+  </div></details>
+  <div class="chq" data-ch="positions"></div>
+</section>
+
+<!-- ============ 13 TIMEGRAPHER ============ -->
+<section id="timegrapher">
+  <div class="chapnum">Chapter 13 · The timegrapher</div>
+  <h2>Reading a watch's ECG</h2>
+  <p>A timegrapher listens to the escapement through a microphone and plots every beat as a dot. A healthy watch draws two overlapping horizontal lines. Everything wrong with a movement has a signature in that trace — this machine is the single most important diagnostic tool on a repair bench.</p>
+  <p><b>Slope</b> = rate error (uphill runs fast, downhill runs slow). <b>Two separated lines</b> = beat error. <b>Scatter</b> = low amplitude or dirt. <b>Periodic waves</b> = a bent pivot or damaged tooth somewhere in the train. Play with the controls, then test yourself with the fault presets:</p>
+
+  <div class="demo">
+    <div class="chips" id="tg-chips">
+      <button class="chip sel" data-f="healthy">Healthy</button>
+      <button class="chip" data-f="fast">Running fast</button>
+      <button class="chip" data-f="beat">Beat error</button>
+      <button class="chip" data-f="magnet">Magnetized</button>
+      <button class="chip" data-f="dirty">Dirty / dry</button>
+      <button class="chip" data-f="tooth">Damaged tooth</button>
+      <button class="chip" data-f="knock">Knocking</button>
+    </div>
+    <canvas id="cv-tg" width="880" height="420"></canvas>
+    <div class="bar">
+      <label>Rate <input type="range" id="in-tgrate" min="-60" max="60" value="0"><span class="val" id="out-tgrate">+0 s/d</span></label>
+      <label>Beat error <input type="range" id="in-tgbeat" min="0" max="50" value="1"><span class="val" id="out-tgbeat">0.1 ms</span></label>
+      <label>Amplitude <input type="range" id="in-tgamp" min="120" max="310" value="285"><span class="val" id="out-tgamp">285°</span></label>
+      <div class="readout" id="tg-verdict"></div>
+    </div>
+    <div class="cap" id="tg-explain">A healthy movement: flat, tight, parallel lines. Rate ±5 s/d, beat error &lt; 0.5 ms, amplitude 250–300° dial-up.</div>
+  </div>
+
+  <h3>Diagnose the patient</h3>
+  <p>Now the trace appears without labels. Read it like a watchmaker — what's wrong with this movement?</p>
+  <div class="demo">
+    <canvas id="cv-quiz" width="880" height="330"></canvas>
+    <div class="quiz-opts" id="quiz-opts"></div>
+    <div class="quiz-feedback" id="quiz-fb"></div>
+    <div class="bar"><button class="btn primary" id="btn-nextcase">New case</button><div class="readout"><span>Solved <b id="quiz-score">0</b></span></div></div>
+  </div>
+
+  
+  <details class="deep"><summary>Go deeper — how the machine computes amplitude, and the knocking failure</summary><div class="deep-body">
+  <p>Each beat is not one sound but <b>three</b>: the unlock click, the impulse scrape, and the loud drop-lock. The machine times the gap Δt between the first and last — the time the balance spends crossing the lift angle. At mid-swing the balance's speed is proportional to its amplitude, so a shorter Δt means a bigger swing: A = lift ∕ (2·sin(π·f·Δt)). This is why the lift angle setting matters: feed it 52° when the caliber is 49° and every amplitude it prints is confidently wrong.</p>
+  <div class="demo">
+    <canvas id="cv-sound" width="840" height="300"></canvas>
+    <div class="bar">
+      <label>True amplitude <input type="range" id="in-sndamp" min="150" max="330" value="270"><span class="val" id="out-sndamp"></span></label>
+      <div class="readout"><span>Δt <b id="out-snddt"></b></span><span>Machine computes <b id="out-sndcalc"></b></span></div>
+    </div>
+    <div class="cap">Listen for it on a quiet bench: a healthy watch's tick is a tight triplet.</div>
+  </div>
+  <p><b>Knocking (rebanking).</b> Past ~330° of amplitude, the impulse jewel comes all the way around and strikes the <i>outside</i> of the fork horns. The tick turns into a gallop, the watch gains wildly, and the trace goes chaotic with an over-range amplitude reading. Causes: a too-strong replacement mainspring, or a freshly serviced, too-slippery escapement. Try the new <b>Knocking</b> preset in the simulator above — then remember it, because a watch that knocks dial-up right after your service is telling you about your own mainspring choice.</p>
+  </div></details>
+  <div class="chq" data-ch="timegrapher"></div>
+</section>
+
+<!-- ============ 14 SERVICE ============ -->
+<section id="service">
+  <div class="chapnum">Chapter 14 · Service</div>
+  <h2>The anatomy of an overhaul</h2>
+  <p>Everything above is why a mechanical watch needs periodic service: oils age, amplitude falls, wear begins. A full service follows a strict order — largely the reverse of how this course built the movement. The sequence below is the classic routine for a simple hand-wound caliber:</p>
+
+  <div class="steps">
+    <div class="step"><div><h4>Let down the mainspring</h4><p>Release all stored power via the click before touching anything. The single most important safety step.</p></div></div>
+    <div class="step"><div><h4>Remove hands, dial, and motion works</h4><p>Hand levers with dial protection; cannon pinion, minute wheel, hour wheel off the front.</p></div></div>
+    <div class="step"><div><h4>Remove the balance assembly</h4><p>The most fragile part comes off early and rests safely on the bench, hairspring untouched.</p></div></div>
+    <div class="step"><div><h4>Strip the train: pallet fork, bridges, wheels, barrel</h4><p>Photograph everything. Screws sorted by bridge — they are not interchangeable.</p></div></div>
+    <div class="step"><div><h4>Clean</h4><p>Ultrasonic or cleaning machine, multiple rinses. Shellac-set jewels (pallet stones, roller jewel) get gentler treatment.</p></div></div>
+    <div class="step"><div><h4>Inspect under magnification</h4><p>Pivots for wear, jewels for cracks, teeth for damage, hairspring for true. Replace, don't hope.</p></div></div>
+    <div class="step"><div><h4>Reassemble and oil — sparingly</h4><p>Rebuild in reverse. Lubrication is placed by the jewel cup, not flooded.</p><span class="oil">Train jewels: thin synthetic oil (9010) · Barrel &amp; high-torque: grease (HP-1300 / 8200) · Pallet faces: 9415 · Keyless works: grease</span></div></div>
+    <div class="step"><div><h4>Regulate on the timegrapher</h4><p>Set beat error first, then rate — in several positions (dial up, dial down, crown down). Chapter 09 is the final exam of every service.</p></div></div>
+  </div>
+
+
+  <h3>The master diagnostic matrix</h3>
+  <p>The complete repair mindset in one table. Symptom first, trace signature second, then the two or three most probable causes in order — this is how an experienced watchmaker triages before ever lifting a bridge:</p>
+
+  <div class="matrix"><table>
+    <tr><th>Symptom</th><th>Trace signature</th><th>Most likely cause</th><th>Fix</th></tr>
+    <tr><td>Fast by 20–60 s/d, steady</td><td>clean upslope</td><td>Simple regulation drift; hairspring pins too tight</td><td>Regulator toward − / R</td></tr>
+    <tr><td>Gaining minutes per hour</td><td>near-vertical, wrapping</td><td>Magnetized hairspring (coils sticking)</td><td>Demagnetizer, 2 seconds</td></tr>
+    <tr><td>Slow + low amplitude</td><td>downslope, fuzzy</td><td>Dried oils; dirt in train; weak mainspring</td><td>Full service; new mainspring</td></tr>
+    <tr><td>Two separated lines</td><td>parallel rails, gap</td><td>Beat error — collet/stud position</td><td>Rotate stud carrier (or collet)</td></tr>
+    <tr><td>Slow wave, period minutes</td><td>sinusoid on trace</td><td>Bent pivot or eccentric wheel — slow train (center/third)</td><td>Repivot or replace wheel</td></tr>
+    <tr><td>Fast ripple, period seconds</td><td>tight ripple</td><td>Escape wheel or fourth-wheel fault; bent escape pivot</td><td>Replace escape wheel/staff</td></tr>
+    <tr><td>Big spread between positions</td><td>slope changes when turned</td><td>Balance out of poise; worn/rusty balance pivots</td><td>Dynamic poise; new staff; clean caps</td></tr>
+    <tr><td>Great trace, loses time on wrist</td><td>looks healthy</td><td><b>Loose cannon pinion</b> — hands slip on the train</td><td>Tighten cannon pinion (nippers)</td></tr>
+    <tr><td>Amplitude collapses vertical only</td><td>vertical scatter</td><td>Short/worn balance pivots; cracked balance jewels</td><td>New staff; replace jewels</td></tr>
+    <tr><td>Runs dial-up, stops dial-down</td><td>trace dies</td><td>Broken/chipped cap jewel one side; hairspring touching</td><td>Replace jewel; true the spring</td></tr>
+    <tr><td>Won't wind, crown spins free</td><td>—</td><td>Stripped clutch/winding pinion; broken stem square</td><td>Replace keyless parts</td></tr>
+    <tr><td>Hand-winds fine, dies on the wrist</td><td>—</td><td>Failed reversers; worn rotor bearing</td><td>Replace reversers/rotor axle</td></tr>
+    <tr><td>Stops at the same time daily</td><td>periodic dropout</td><td>Bent hand touching dial/glass; date mechanism binding</td><td>Refit hands; inspect calendar</td></tr>
+    <tr><td>Ticks but hands never move</td><td>healthy</td><td>Cannon pinion completely loose; slipped hand</td><td>Tighten pinion; restake hand</td></tr>
+  </table></div>
+
+  <h3>Building your bench</h3>
+  <div class="tools">
+    <div><h4>First teardown · ~€150</h4><ul>
+      <li><b>Screwdrivers</b> 0.6–1.6 mm, hollow-ground</li>
+      <li><b>Brass + fine steel tweezers</b> (#2, #5)</li>
+      <li><b>Loupe</b> ×3–5 and ×10</li>
+      <li><b>Movement holder</b>, hand levers, hand-set tool</li>
+      <li><b>Rodico</b> putty, pegwood, dust blower</li>
+      <li><b>Practice caliber</b>: Seagull ST36 / Unitas 6497</li>
+    </ul></div>
+    <div><h4>Real servicing · ~€600</h4><ul>
+      <li><b>Timegrapher</b> (Weishi 1000/1900)</li>
+      <li><b>Demagnetizer</b></li>
+      <li><b>Oils</b>: 9010, HP-1300, 9415, grease + oilers &amp; cups</li>
+      <li><b>Mainspring winder</b> set</li>
+      <li><b>Case tools</b>: knife, Jaxa wrench, press</li>
+      <li><b>Cleaning</b>: ultrasonic + rinse jars</li>
+    </ul></div>
+    <div><h4>Expert work · the deep end</h4><ul>
+      <li><b>Staking set</b> — staffs, hands, bushings</li>
+      <li><b>Jeweling tool</b> (Seitz/Horia) — press-fit jewels</li>
+      <li><b>Watchmaker's lathe</b> — turn new staffs &amp; stems</li>
+      <li><b>Poising tool</b> + timing washers</li>
+      <li><b>Microscope</b> 10–40× stereo</li>
+      <li><b>Escapement meter</b> / depthing tool</li>
+    </ul></div>
+  </div>
+
+  <div class="bench">The classic beginner path: buy a running <b>Seagull ST36</b> or a vintage <b>Unitas 6497</b> (large, cheap, honest), a screwdriver set, brass tweezers, a loupe, and Rodico — then strip and rebuild it until you can do it without notes. Every demo on this page maps to a part you'll hold in those sessions.</div>
+
+  <p>You now know what a beginner doesn't: that a watch is not a mystery box but a chain of five ideas — a spring, a speed-multiplying train, a gatekeeper, an oscillator, and the small diplomacy of the parts that let humans wind and set it. Everything else in horology, from chronographs to tourbillons, is a variation on this page.</p>
+
+  
+  <details class="deep"><summary>Go deeper — epilame, end-shake, and hand height</summary><div class="deep-body">
+  <p><b>Epilame</b> (Fixodrop) is an invisible anti-spread coating applied before oiling to parts where oil must stay put against centrifugal force and capillary creep: escape wheel teeth, pallet stones, cap jewels, reverser wheels. The classic co-axial-era rule: treat, run dry for a few minutes to scuff a track, then oil — the lubricant then sits in the scuffed channel like water in a groove. Skipping epilame on the escape wheel is why some services come back in a year with the amplitude down 40°.</p>
+  <p><b>End-shake and side-shake.</b> Every arbor needs measurable but tiny axial play (end-shake, ~0.02–0.05 mm — lift each wheel gently with tweezers and watch for a just-visible tick of movement) and radial play in its jewel (side-shake). Too little: friction, stops when warm. Too much: depthing errors, wobble, that Chapter 13 wavy trace. Adjustment is a jeweling-tool job — pressing jewels micrometrically deeper or shallower — and it separates parts-swappers from watchmakers.</p>
+  <p><b>Hand-fitting heights</b> cause more comebacks than escapements: the hour hand must clear the dial, the minute hand the hour hand, the second hand everything — with a case-back's worth of clearance to the crystal. Check with the movement dial-down and the watch turned in every position <i>before</i> casing: a hand that only touches crown-down will stop the watch on the owner's wrist and never on your timegrapher.</p>
+  </div></details>
+  
+  <details class="deep"><summary>Go deeper — identifying calibers, lignes, and the Jacot tool</summary><div class="deep-body">
+  <p><b>Every repair starts with identification.</b> The caliber number hides under the balance or the dial on the mainplate (Swiss ébauches), or on the rotor/bridges. Movement size is quoted in <b>lignes</b> (‴): one ligne = 2.256 mm, so the classic 11½‴ men's movement is ~25.6 mm. With caliber and size you enter the parts world: bestfit/Ronda interchange books map thousands of vintage calibers to shared staffs and stems, and suppliers (Cousins UK, Jules Borel, Boley) list by caliber. Rule of the trade: identify before you disassemble — the photo of the markings costs nothing, the wrong mainspring costs a week.</p>
+  <p><b>The Jacot tool</b> is where worn pivots go to be reborn: a miniature lathe bed with hardened, grooved runners. The pivot spins in a matching groove while a carbide burnisher work-hardens and polishes it a few microns smaller — restoring a scored pivot's mirror finish without replacing the staff. Burnishing, not cutting: the steel is compressed smooth, which actually hardens the surface. Together with the staking set (driving riveted staffs in and out) and the jeweling tool (Chapter 14's end-shake adjustments), it completes the trinity that separates restoration from parts-swapping — and all three tools outlive their owners.</p>
+  </div></details>
+  <details class="deep"><summary>Go deeper — the lubrication challenge: oil this movement</summary><div class="deep-body">
+  <p>Nine lubrication points, five choices each. This is the exam hidden inside every service — and it contains the fact that surprises everyone: one place in the watch must stay <b>dry</b>.</p>
+  <div class="chq" id="oilgame">
+    <div class="chq-head"><b>Oil the movement</b><span class="chq-score" id="oil-score">0 / 9</span></div>
+  </div>
+  </div></details>
+  <div class="chq" data-ch="service"></div>
+</section>
+
+
+<!-- ============ 15 COMPLICATIONS ============ -->
+<section id="complications">
+  <div class="chapnum">Chapter 15 · Complications</div>
+  <h2>Everything beyond the time</h2>
+  <p>A <i>complication</i> is any function beyond hours, minutes and seconds. Almost all of them are geared off the motion works you already understand — the art is in switching, snapping, and remembering. The most universal complication is the date, and it hides a beautiful mechanism: the <b>jumper</b>.</p>
+  <p>The date ring can't simply be geared to the hour wheel — it would creep under the window all day, unreadable. Instead a <span class="pt brass">date finger</span> (one turn per 24 h) slowly loads the ring against a sprung <span class="pt ruby">jumper</span>; around midnight the jumper wins and <b>snaps</b> the ring one full tooth in a fraction of a second. Scrub through an evening:</p>
+
+  <div class="demo">
+    <canvas id="cv-date" width="880" height="420"></canvas>
+    <div class="bar">
+      <label>Time of day <input type="range" id="in-datet" min="0" max="1000" value="120"><span class="val" id="out-datet">20:00</span></label>
+      <button class="btn" id="btn-dateplay">▶ Play</button>
+      <div class="readout"><span id="out-datephase">finger approaching…</span></div>
+    </div>
+    <div class="cap" id="date-cap">This is also why "never set the date between ~21:00 and 03:00" is real advice: in that window the finger is engaged with the ring — forcing the quickset can snap the finger or the jumper.</div>
+  </div>
+
+  <h3>The rest of the family, in one tour</h3>
+  <p><b>Chronograph.</b> A second, independent gear train for the stopwatch hands, coupled to the going train on demand. Cheap movements switch it with a stamped <b>cam</b>; fine ones use a <b>column wheel</b> — a tiny castle turret whose pillars lift the levers, giving that crisp, light pusher feel. The coupling itself is either <b>horizontal</b> (two toothed wheels swing into mesh — simple, but the chrono hand can stutter on start) or a <b>vertical clutch</b> (friction plates, like a car — buttery start, can run permanently).</p>
+  <p><b>Moonphase.</b> A disc with two moons behind a window, driven one tooth per day on a <b>59-tooth wheel</b>: two lunar months of 29.5 days. Since a lunation is really 29.53 days, the display drifts one day every ~2.7 years — a fact worth quoting at dinner parties.</p>
+  <p><b>GMT / second time zone.</b> A fourth hand geared 1 turn per 24 h; on "true" GMTs the keyless works can jump the local hour hand in one-hour steps without stopping the watch — a keyless-works trick, straight out of Chapter 07.</p>
+  <p><b>Power reserve indicator.</b> A differential between the winding side and the running side of the barrel arbor: it literally displays the difference between energy in and energy out, pointing at a scale.</p>
+  <p><b>Tourbillon.</b> The whole escapement and balance mounted in a rotating cage (usually 1 rev/min) so positional errors in the vertical positions average out — Chapter 12's problem, solved with 70+ extra parts. Glorious, and on the wrist, mostly ceremonial.</p>
+
+  <div class="bench">Repair triage for complications: they fail at their <b>switching surfaces</b>. Chronographs: worn clutch teeth or an eccentric out of adjustment (chrono hand stutters). Calendars: bent date finger or fatigued jumper spring from forced quicksets — always check whether the last owner set the date at midnight. Diagnose the base movement first; a sick going train makes every complication look broken.</div>
+
+  
+  <details class="deep"><summary>Go deeper — perpetual calendars and minute repeaters</summary><div class="deep-body">
+  <p><b>A perpetual calendar is mechanical memory.</b> Its heart is a 48-month cam — a metal disc whose circumference encodes four years of month lengths, February's leap-year notch included, read once a day by a feeler lever that decides how far to advance the date. Program, read head, output: a mechanical ROM from 1795, drift-free until 2100 (a century year the Gregorian rule skips, and the cam doesn't know). Repair reality: perpetuals fail from <i>owners</i>, not wear — quicksetting during the changeover window shears the feeler or the cam followers, which is why every perpetual manual repeats the danger-zone warning in bold.</p>
+  
+  <p><b>The heart cam — how a chronograph forgets.</b> Reset-to-zero is a mechanical impossibility solved with a heart-shaped cam on each chronograph wheel: press reset and a flat-faced hammer falls on the heart. Wherever the cam stopped, the hammer slides it downhill — both flanks descend to the same notch — and the hand arrives at zero from either direction, instantly. Try stopping it anywhere:</p>
+  <div class="demo">
+    <canvas id="cv-heart" width="840" height="360"></canvas>
+    <div class="bar">
+      <button class="btn primary" id="btn-chstart">Start</button>
+      <button class="btn" id="btn-chreset">Reset</button>
+      <div class="readout"><span id="out-chrono">00.0 s</span><span id="out-chstate" style="color:var(--faint)">stopped</span></div>
+    </div>
+    <div class="cap">The notch is machined so the hand's zero is exact; a chrono hand that resets slightly off zero means a loose hand tube or a worn hammer face — never bend the hand.</div>
+  </div>
+  <p><b>A minute repeater reads the time by touch.</b> Snail-shaped cams for hours, quarters and minutes rotate with the motion works; when the slide is pressed, spring-loaded racks fall onto the snails and their travel — how far each rack falls — <i>is</i> the time, converted to hammer strikes on tuned gongs curled around the movement. It is the motion works of Chapter 08 turned into a sensor, and the most unforgiving assembly in horology: a repairer's error doesn't lose seconds, it strikes the wrong hour out loud.</p>
+  </div></details>
+  <div class="chq" data-ch="complications"></div>
+</section>
+
+
+
+<!-- ============ FINAL EXAM ============ -->
+<section id="exam">
+  <div class="chapnum">Final · Master exam</div>
+  <h2>Twelve patients, no labels</h2>
+  <p>Everything above, integrated. These are the calls a working watchmaker makes daily — each scenario mixes at least two chapters. Diagnosis first, then the fix:</p>
+  <div class="chq" data-ch="master"></div>
+</section>
+
+<!-- ============ APPENDIX LEXICON ============ -->
+<section id="lexicon">
+  <div class="chapnum">Appendix · Lexique horloger FR–EN</div>
+  <h2>Speak both bench languages</h2>
+  <p>Most parts catalogs, vintage documentation, and half the world's watchmaking literature are in French — and several French terms don't map word-for-word (the cannon pinion is a <i>chaussée</i>, the balance cock a <i>coq</i>). The working vocabulary:</p>
+  <div class="matrix"><table>
+    <tr><th>Français</th><th>English</th><th>Français</th><th>English</th></tr>
+    <tr><td>le mouvement</td><td>movement</td><td>l'ancre</td><td>pallet fork</td></tr>
+    <tr><td>la platine</td><td>mainplate</td><td>les levées</td><td>pallet stones</td></tr>
+    <tr><td>le pont</td><td>bridge</td><td>le plateau</td><td>roller table</td></tr>
+    <tr><td>le coq</td><td>balance cock</td><td>l'ellipse / la cheville</td><td>impulse jewel</td></tr>
+    <tr><td>le barillet</td><td>barrel</td><td>le balancier</td><td>balance wheel</td></tr>
+    <tr><td>le ressort de barillet</td><td>mainspring</td><td>le spiral</td><td>hairspring</td></tr>
+    <tr><td>l'arbre (de barillet)</td><td>(barrel) arbor</td><td>la raquette</td><td>regulator</td></tr>
+    <tr><td>le rochet</td><td>ratchet wheel</td><td>le piton</td><td>stud</td></tr>
+    <tr><td>le cliquet</td><td>click</td><td>la virole</td><td>collet</td></tr>
+    <tr><td>la couronne</td><td>crown</td><td>l'axe de balancier</td><td>balance staff</td></tr>
+    <tr><td>la tige (de remontoir)</td><td>(winding) stem</td><td>le pivot</td><td>pivot</td></tr>
+    <tr><td>le pignon coulant</td><td>sliding clutch</td><td>le contre-pivot</td><td>cap jewel</td></tr>
+    <tr><td>la tirette</td><td>setting lever</td><td>l'amortisseur</td><td>shock protection</td></tr>
+    <tr><td>la bascule</td><td>yoke</td><td>la chaussée</td><td>cannon pinion</td></tr>
+    <tr><td>le rouage</td><td>going train</td><td>la roue de minuterie</td><td>minute wheel</td></tr>
+    <tr><td>la roue d'échappement</td><td>escape wheel</td><td>la roue des heures</td><td>hour wheel</td></tr>
+    <tr><td>le remontage</td><td>winding</td><td>l'aiguille / le cadran</td><td>hand / dial</td></tr>
+    <tr><td>la mise à l'heure</td><td>time-setting</td><td>le quantième</td><td>date (calendar)</td></tr>
+    <tr><td>la réserve de marche</td><td>power reserve</td><td>la masse oscillante</td><td>(automatic) rotor</td></tr>
+    <tr><td>la marche</td><td>rate</td><td>le repère / la mise en battement</td><td>beat / beat setting</td></tr>
+    <tr><td>l'amplitude</td><td>amplitude</td><td>le repassage</td><td>full service / overhaul</td></tr>
+    <tr><td>l'angle de levée</td><td>lift angle</td><td>l'emboîtage</td><td>casing (up)</td></tr>
+  </table></div>
+  <p>Two friendly traps: <i>la montre <b>avance</b></i> means it runs fast (gains), <i>elle <b>retarde</b></i> means it runs slow — hence the A and R on the regulator. And a <i>rhabilleur</i> is not someone who dresses you: it's the traditional word for a repair watchmaker. Bienvenue à l'établi.</p>
+</section>
+
+</main>
+
+<footer>
+  Built as an interactive teaching tool · Inspired by the tradition of explorable explanations,
+  notably <a href="https://ciechanow.ski/mechanical-watch/" rel="noopener">Bartosz Ciechanowski's Mechanical Watch</a>.
+  All simulations are original 2D models.
+</footer>
+<script>
+(function(){
+"use strict";
+const TAU = Math.PI*2;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const C = {
+  bg:'#0B0E11', panel:'#171C22', line:'#2A323C', line2:'#38424E',
+  text:'#E9E5DB', muted:'#98A0AC', faint:'#6B7480',
+  brass:'#D9A93C', brassDim:'#8F7127', ruby:'#E8446B', rubyDim:'#8C2A44',
+  steel:'#6FA2F2', steelDim:'#3D5C97', silver:'#C4CCD8', good:'#5FC98E'
+};
+const $ = id => document.getElementById(id);
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const ease=(t)=>t<0?0:t>1?1:t*t*(3-2*t);
+
+/* ---- tiny demo runner: HiDPI + only animate when on screen ---- */
+const demos=[];
+function makeDemo(canvasId, drawFn){
+  const cv=$(canvasId); if(!cv) return null;
+  const ctx=cv.getContext('2d');
+  const W=+cv.getAttribute('width'), H=+cv.getAttribute('height');
+  function fit(){
+    const dpr=Math.min(2, window.devicePixelRatio||1);
+    cv.width=W*dpr; cv.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  fit(); addEventListener('resize', fit);
+  const d={cv,ctx,W,H,visible:false,draw:drawFn,t:0,running:true};
+  new IntersectionObserver(e=>{d.visible=e[0].isIntersecting;},{rootMargin:'80px'}).observe(cv);
+  demos.push(d);
+  return d;
+}
+let last=performance.now();
+function loop(now){
+  const dt=Math.min(0.05,(now-last)/1000); last=now;
+  for(const d of demos){
+    if(!d.visible) continue;
+    if(d.running && !reduceMotion) d.t+=dt;
+    d.draw(d, dt);
+  }
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* ---- shared drawing helpers ---- */
+function gearPath(ctx,x,y,r,teeth,angle,depth=0.14){
+  const rr=r*(1-depth), p=TAU/teeth;
+  ctx.beginPath();
+  for(let i=0;i<teeth;i++){
+    const a=angle+i*p;
+    const a1=a+p*0.22, a2=a+p*0.42, a3=a+p*0.62, a4=a+p*0.82;
+    if(i===0) ctx.moveTo(x+rr*Math.cos(a),y+rr*Math.sin(a));
+    else ctx.lineTo(x+rr*Math.cos(a),y+rr*Math.sin(a));
+    ctx.lineTo(x+r*Math.cos(a1),y+r*Math.sin(a1));
+    ctx.lineTo(x+r*Math.cos(a2),y+r*Math.sin(a2));
+    ctx.lineTo(x+rr*Math.cos(a3),y+rr*Math.sin(a3));
+    ctx.lineTo(x+rr*Math.cos(a4),y+rr*Math.sin(a4));
+  }
+  ctx.closePath();
+}
+function drawGear(ctx,x,y,r,teeth,angle,color,opts={}){
+  const {spokes=0, hub=r*0.16, fill='rgba(255,255,255,0.045)'} = opts;
+  gearPath(ctx,x,y,r,teeth,angle);
+  ctx.fillStyle=fill; ctx.fill();
+  ctx.strokeStyle=color; ctx.lineWidth=1.6; ctx.stroke();
+  if(spokes>0){
+    const ro=r*0.78, ri=hub+5;
+    ctx.beginPath(); ctx.arc(x,y,ro,0,TAU); ctx.stroke();
+    ctx.beginPath();
+    for(let i=0;i<spokes;i++){
+      const a=angle+i*TAU/spokes;
+      ctx.moveTo(x+ri*Math.cos(a),y+ri*Math.sin(a));
+      ctx.lineTo(x+ro*Math.cos(a),y+ro*Math.sin(a));
+    }
+    ctx.stroke();
+  }
+  ctx.beginPath(); ctx.arc(x,y,hub,0,TAU);
+  ctx.fillStyle='#0B0E11'; ctx.fill(); ctx.stroke();
+  // rotation marker dot
+  ctx.beginPath(); ctx.arc(x+(r*0.9)*Math.cos(angle),y+(r*0.9)*Math.sin(angle),3,0,TAU);
+  ctx.fillStyle=color; ctx.fill();
+}
+function label(ctx,x,y,txt,color=C.faint,size=11,align='center'){
+  ctx.font=`500 ${size}px "IBM Plex Mono",monospace`;
+  ctx.fillStyle=color; ctx.textAlign=align; ctx.textBaseline='middle';
+  ctx.fillText(txt,x,y);
+}
+function spiral(ctx,x,y,r0,r1,turns,phase,squeeze=0){
+  // squeeze in [0,1]: pulls coils toward the center (winding)
+  ctx.beginPath();
+  const steps=Math.max(60, turns*40);
+  for(let i=0;i<=steps;i++){
+    const f=i/steps;
+    const fr=Math.pow(f, 1-0.55*squeeze); // bias radius inward when squeezed
+    const r=lerp(r0,r1,fr);
+    const a=phase+f*turns*TAU;
+    const px=x+r*Math.cos(a), py=y+r*Math.sin(a);
+    if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+  }
+  ctx.stroke();
+}
+function rubyDot(ctx,x,y,r=4.5){
+  ctx.beginPath(); ctx.arc(x,y,r,0,TAU);
+  ctx.fillStyle='rgba(232,68,107,0.35)'; ctx.fill();
+  ctx.strokeStyle=C.ruby; ctx.lineWidth=1.4; ctx.stroke();
+}
+
+/* =====================================================
+   SWISS LEVER ESCAPEMENT — geometric model
+   15-tooth wheel (24° pitch). Pallet span = 2.5 teeth =
+   60°, so each beat advances the wheel exactly 12° and a
+   tooth tip lands precisely on the opposite stone.
+   Fork angle is DRIVEN by the roller jewel and clamped at
+   the banking pins — the same causality as the metal.
+   ===================================================== */
+const ESC={N:15,rE:78,amp:2.55,bank:0.145,rRoll:34,rBal:96};
+ESC.OE={x:0,y:-150};
+ESC.d=ESC.rE*1.155;
+ESC.OP={x:0,y:ESC.OE.y+ESC.d};          // pallet pivot
+ESC.OB={x:0,y:106};                      // balance center
+ESC.lever=(ESC.OB.y-ESC.rRoll)-ESC.OP.y; // pivot → slot
+const HALFP=Math.PI/ESC.N;               // 12° step per beat
+const AZ_IN=2*Math.PI/3, AZ_OUT=Math.PI/3;  // stone azimuths (y-down)
+const E_IN ={x:ESC.rE*Math.cos(AZ_IN),  y:ESC.OE.y+ESC.rE*Math.sin(AZ_IN)};
+const E_OUT={x:ESC.rE*Math.cos(AZ_OUT), y:ESC.OE.y+ESC.rE*Math.sin(AZ_OUT)};
+const ESC_FOCI={entry:E_IN, exit:E_OUT, roller:{x:0,y:ESC.OB.y-ESC.rRoll}};
+
+function escState(t){
+  const th=ESC.amp*Math.sin(TAU*t);                  // balance angle
+  const jx=ESC.OB.x+ESC.rRoll*Math.sin(th);          // roller jewel
+  const jy=ESC.OB.y-ESC.rRoll*Math.cos(th);
+  const raw=Math.atan2(jx-ESC.OP.x, jy-ESC.OP.y);    // jewel bearing from pivot
+  // while the jewel is in the slot, it drives the fork (clamped at the banks);
+  // once it leaves, the fork RESTS on the bank it was pushed to
+  const fork = Math.abs(th)>1.2 ? -Math.sign(th)*ESC.bank
+                                : -clamp(raw,-ESC.bank,ESC.bank);
+  const u=2*t, k=Math.round(u), local=u-k;           // beats; crossings at integers
+  const g=ease(local/0.14+0.5);                      // wheel eases through the window
+  const wheel=-HALFP*(k+g);
+  let phase;
+  if(Math.abs(raw)>=ESC.bank || Math.abs(th)>1.2) phase='locked';
+  else if(g<0.22) phase='unlock';
+  else if(g<0.8) phase='impulse';
+  else phase='drop → lock';
+  const engaged=((Math.floor(u)+1)%2===0)?'entry':'exit';
+  return {th,fork,wheel,jx,jy,phase,engaged,raw};
+}
+
+function drawEscScene(g,t,withLabels){
+  const s=escState(t);
+  /* ---- balance ---- */
+  g.strokeStyle=C.steel; g.lineWidth=1.2;
+  spiral(g,ESC.OB.x,ESC.OB.y,7,46,5.5,s.th*0.35-Math.PI/2,0.07*Math.sin(s.th));
+  g.strokeStyle=C.brass; g.lineWidth=4.5;
+  g.beginPath(); g.arc(ESC.OB.x,ESC.OB.y,ESC.rBal,0,TAU); g.stroke();
+  g.lineWidth=2;
+  for(let i=0;i<2;i++){const a=s.th+i*Math.PI+0.5;
+    g.beginPath(); g.moveTo(ESC.OB.x+9*Math.cos(a),ESC.OB.y+9*Math.sin(a));
+    g.lineTo(ESC.OB.x+(ESC.rBal-3)*Math.cos(a),ESC.OB.y+(ESC.rBal-3)*Math.sin(a)); g.stroke();}
+  for(let i=0;i<8;i++){const a=s.th+i*TAU/8+0.25;
+    g.beginPath(); g.arc(ESC.OB.x+ESC.rBal*Math.cos(a),ESC.OB.y+ESC.rBal*Math.sin(a),3.2,0,TAU);
+    g.fillStyle=C.brassDim; g.fill();}
+  /* safety roller with crescent (passing hollow) */
+  g.beginPath(); g.arc(ESC.OB.x,ESC.OB.y,17,0,TAU);
+  g.fillStyle='rgba(196,204,216,0.10)'; g.fill();
+  g.strokeStyle=C.silver; g.lineWidth=1.3; g.stroke();
+  g.save(); g.beginPath(); g.arc(s.jx,s.jy,7,0,TAU); g.fillStyle='#0B0E11'; g.fill(); g.restore();
+  g.beginPath(); g.arc(ESC.OB.x,ESC.OB.y,5.5,0,TAU);
+  g.fillStyle='#0B0E11'; g.fill(); g.strokeStyle=C.brass; g.lineWidth=1.4; g.stroke();
+  rubyDot(g,s.jx,s.jy,5);
+
+  /* ---- escape wheel: club teeth ---- */
+  g.save(); g.translate(ESC.OE.x,ESC.OE.y); g.rotate(s.wheel);
+  const N=ESC.N,p=TAU/N,r0=ESC.rE*0.76;
+  g.beginPath();
+  for(let i=0;i<N;i++){
+    const a=i*p;
+    const tx=ESC.rE*Math.cos(a),ty=ESC.rE*Math.sin(a);
+    if(i===0)g.moveTo(tx,ty);else g.lineTo(tx,ty);
+    g.lineTo(ESC.rE*0.965*Math.cos(a+p*0.13),ESC.rE*0.965*Math.sin(a+p*0.13)); // impulse face
+    g.lineTo(r0*Math.cos(a+p*0.30),r0*Math.sin(a+p*0.30));
+    g.lineTo(r0*Math.cos(a+p*0.90),r0*Math.sin(a+p*0.90));
+  }
+  g.closePath();
+  g.fillStyle='rgba(217,169,60,0.06)'; g.fill();
+  g.strokeStyle=C.brass; g.lineWidth=1.6; g.stroke();
+  g.beginPath();
+  for(let i=0;i<5;i++){const a=i*TAU/5;
+    g.moveTo(10*Math.cos(a),10*Math.sin(a)); g.lineTo(r0*0.88*Math.cos(a),r0*0.88*Math.sin(a));}
+  g.lineWidth=1.2; g.stroke();
+  g.beginPath(); g.arc(0,0,9,0,TAU); g.fillStyle='#0B0E11'; g.fill(); g.stroke();
+  g.restore();
+
+  /* ---- banking pins (fixed to plate) ---- */
+  const bpy=ESC.OP.y+ESC.lever-30, bpx=Math.sin(ESC.bank)*(ESC.lever-30)+9;
+  g.fillStyle=C.faint;
+  g.beginPath(); g.arc(-bpx,bpy,3.6,0,TAU); g.fill();
+  g.beginPath(); g.arc( bpx,bpy,3.6,0,TAU); g.fill();
+
+  /* ---- pallet fork ---- */
+  g.save(); g.translate(ESC.OP.x,ESC.OP.y); g.rotate(s.fork);
+  const AL={x:E_IN.x-ESC.OP.x,  y:E_IN.y-ESC.OP.y};
+  const AR={x:E_OUT.x-ESC.OP.x, y:E_OUT.y-ESC.OP.y};
+  g.strokeStyle=C.silver; g.lineWidth=5; g.lineCap='round';
+  g.beginPath(); g.moveTo(0,0); g.lineTo(AL.x*0.92,AL.y*0.92); g.stroke();
+  g.beginPath(); g.moveTo(0,0); g.lineTo(AR.x*0.92,AR.y*0.92); g.stroke();
+  /* pallet stones: long axis along the wheel radial → tooth tip lands on the stone */
+  for(const [pt,az] of [[AL,AZ_IN],[AR,AZ_OUT]]){
+    g.save(); g.translate(pt.x,pt.y); g.rotate(az);
+    g.fillStyle='rgba(232,68,107,0.42)';
+    g.strokeStyle=C.ruby; g.lineWidth=1.5;
+    /* offset tangentially: tooth tip rests against the locking FACE, not mid-stone */
+    g.beginPath(); g.rect(-17,0.3,24,9); g.fill(); g.stroke();
+    g.restore();
+  }
+  /* lever, horns, guard pin */
+  g.strokeStyle=C.silver; g.lineWidth=5;
+  g.beginPath(); g.moveTo(0,0); g.lineTo(0,ESC.lever-16); g.stroke();
+  g.lineWidth=3.2;
+  g.beginPath();
+  g.moveTo(-8,ESC.lever-16); g.lineTo(-8,ESC.lever+3);
+  g.moveTo( 8,ESC.lever-16); g.lineTo( 8,ESC.lever+3); g.stroke();
+  g.lineWidth=1.8;
+  g.beginPath(); g.moveTo(0,ESC.lever-10); g.lineTo(0,ESC.lever+9); g.stroke(); // guard pin
+  g.beginPath(); g.arc(0,0,6,0,TAU); g.fillStyle='#0B0E11'; g.fill();
+  g.strokeStyle=C.silver; g.lineWidth=1.4; g.stroke();
+  g.restore();
+
+  if(withLabels){
+    label(g,ESC.OE.x+ESC.rE+16,ESC.OE.y-44,'escape wheel',C.brass,11,'left');
+    label(g,E_IN.x-30,E_IN.y-16,'entry stone',C.ruby,10,'right');
+    label(g,E_OUT.x+30,E_OUT.y-16,'exit stone',C.ruby,10,'left');
+    label(g,64,ESC.OP.y+34,'pallet fork',C.silver,11,'left');
+    label(g,-bpx-10,bpy,'banking pin',C.faint,9.5,'right');
+    label(g,ESC.OB.x+ESC.rBal+12,ESC.OB.y-30,'balance wheel',C.brass,11,'left');
+    label(g,ESC.OB.x-ESC.rBal-12,ESC.OB.y+16,'hairspring',C.steel,11,'right');
+    label(g,s.jx+16,s.jy+14,'impulse jewel',C.ruby,10,'left');
+    label(g,ESC.OB.x+26,ESC.OB.y+24,'safety roller',C.silver,9.5,'left');
+  }
+  return s;
+}
+
+function drawEscapement(ctx,cx,cy,scale,t,opts={}){
+  const {labels=true, mag=null, lensX=0, lensY=0, lensR=88}=opts;
+  ctx.save(); ctx.translate(cx,cy+16*scale); ctx.scale(scale,scale);
+  const s=drawEscScene(ctx,t,labels);
+  ctx.restore();
+  if(mag && ESC_FOCI[mag]){
+    const F=ESC_FOCI[mag], zoom=scale*2.9;
+    // connector
+    const fx=cx+F.x*scale, fy=cy+16*scale+F.y*scale;
+    ctx.strokeStyle='rgba(217,169,60,0.35)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(fx,fy); ctx.lineTo(lensX,lensY); ctx.stroke();
+    ctx.beginPath(); ctx.arc(fx,fy,10,0,TAU); ctx.stroke();
+    ctx.save();
+    ctx.beginPath(); ctx.arc(lensX,lensY,lensR,0,TAU); ctx.clip();
+    ctx.fillStyle='#0B0E11'; ctx.fillRect(lensX-lensR,lensY-lensR,lensR*2,lensR*2);
+    ctx.translate(lensX,lensY); ctx.scale(zoom,zoom); ctx.translate(-F.x,-F.y);
+    drawEscScene(ctx,t,false);
+    ctx.restore();
+    ctx.strokeStyle=C.brass; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(lensX,lensY,lensR,0,TAU); ctx.stroke();
+    label(ctx,lensX,lensY+lensR+16,'loupe ×2.9 · '+mag,C.brass,10.5);
+  }
+  return s;
+}
+
+/* ===================== HERO ===================== */
+{
+  const d=makeDemo('cv-hero',(d)=>{
+    const {ctx,W,H}=d;
+    ctx.clearRect(0,0,W,H);
+    // 4Hz feel: one full cycle in 1s (scaled for readability at 0.9s)
+    drawEscapement(ctx,W/2,H/2-16,0.92,d.t/1.1,{labels:true});
+  });
+  const btn=$('hero-pause');
+  btn.addEventListener('click',()=>{
+    d.running=!d.running;
+    btn.textContent=d.running?'Pause':'Run';
+  });
+  if(reduceMotion){d.running=false;btn.textContent='Run';}
+}
+
+/* ===================== CH01 POWER ===================== */
+{
+  let wind=0.15, releasing=false, relV=0, handA=0, handV=0;
+  const inW=$('in-wind');
+  const d=makeDemo('cv-spring',(d,dt)=>{
+    const {ctx,W,H}=d;
+    ctx.clearRect(0,0,W,H);
+    if(releasing && !reduceMotion){
+      // spring dumps energy: hand spins per remaining torque
+      const torque=0.25+wind*1.5;
+      handV += torque*38*dt;
+      handV *= 0.995;
+      wind = Math.max(0, wind - dt*0.55*(0.3+wind));
+      handA += handV*dt;
+      if(wind<=0.001){ handV*=Math.pow(0.02,dt*3); if(handV<0.05){releasing=false; handV=0;} }
+      inW.value=Math.round(wind*100);
+      syncOut();
+    }
+    const bx=225, by=H/2, R=118;
+    // barrel
+    ctx.strokeStyle=C.brass; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.arc(bx,by,R+14,0,TAU); ctx.stroke();
+    ctx.strokeStyle='rgba(217,169,60,0.25)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.arc(bx,by,R+7,0,TAU); ctx.stroke();
+    // mainspring
+    const turns=lerp(5.5,12.5,wind);
+    ctx.strokeStyle=C.steel; ctx.lineWidth=3;
+    spiral(ctx,bx,by,20,R, turns, -handA*0.15, wind*0.75);
+    // arbor + hook
+    ctx.beginPath(); ctx.arc(bx,by,14,0,TAU);
+    ctx.fillStyle='#0B0E11'; ctx.fill();
+    ctx.strokeStyle=C.silver; ctx.lineWidth=2.4; ctx.stroke();
+    ctx.beginPath(); ctx.arc(bx,by,5,0,TAU); ctx.fillStyle=C.silver; ctx.fill();
+    label(ctx,bx,by-R-30,'barrel',C.brass);
+    label(ctx,bx+40,by+6,'arbor',C.silver,10,'left');
+    label(ctx,bx-R+6,by+R-6,'mainspring',C.steel,11,'left');
+
+    // demo hand (what if we attached a hand directly?)
+    const hx=505,hy=H/2, hr=64;
+    ctx.strokeStyle=C.line2; ctx.lineWidth=1.6;
+    ctx.beginPath(); ctx.arc(hx,hy,hr,0,TAU); ctx.stroke();
+    for(let i=0;i<12;i++){const a=i*TAU/12;
+      ctx.beginPath();ctx.moveTo(hx+(hr-6)*Math.cos(a),hy+(hr-6)*Math.sin(a));
+      ctx.lineTo(hx+hr*Math.cos(a),hy+hr*Math.sin(a));ctx.stroke();}
+    ctx.strokeStyle=C.ruby; ctx.lineWidth=3; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(hx,hy);
+    ctx.lineTo(hx+(hr-12)*Math.cos(handA-Math.PI/2),hy+(hr-12)*Math.sin(handA-Math.PI/2)); ctx.stroke();
+    label(ctx,hx,hy+hr+22,'a hand bolted straight to the barrel',C.faint,10.5);
+    if(releasing) label(ctx,hx,hy-hr-16,'uncontrolled!',C.ruby,11);
+
+    // torque curve
+    const gx=650,gy=90,gw=190,gh=240;
+    ctx.strokeStyle=C.line; ctx.lineWidth=1;
+    ctx.strokeRect(gx,gy,gw,gh);
+    ctx.beginPath();
+    for(let i=0;i<=40;i++){const f=i/40;
+      const tq=0.18+0.82*Math.pow(f,1.35);
+      const px=gx+f*gw, py=gy+gh-tq*gh;
+      i?ctx.lineTo(px,py):ctx.moveTo(px,py);}
+    ctx.strokeStyle=C.brassDim; ctx.lineWidth=1.6; ctx.stroke();
+    const tqNow=0.18+0.82*Math.pow(wind,1.35);
+    ctx.beginPath(); ctx.arc(gx+wind*gw, gy+gh-tqNow*gh, 5,0,TAU);
+    ctx.fillStyle=C.brass; ctx.fill();
+    // ideal band
+    ctx.fillStyle='rgba(95,201,142,0.08)';
+    ctx.fillRect(gx+gw*0.35,gy,gw*0.45,gh);
+    label(ctx,gx+gw/2,gy-16,'torque vs. wind',C.muted,11);
+    label(ctx,gx+gw/2,gy+gh+18,'wind →',C.faint,10);
+    label(ctx,gx+gw*0.575,gy+14,'ideal band',C.good,9.5);
+  });
+  function syncOut(){
+    $('out-wind').textContent=Math.round(wind*100)+'%';
+    $('out-reserve').textContent=Math.round(wind*40)+' h';
+    $('out-torque').textContent=wind>0.75?'high':wind>0.3?'ideal':'low';
+    $('out-torque').style.color = wind>0.75||wind<0.3 ? C.ruby : C.good;
+  }
+  inW.addEventListener('input',()=>{wind=+inW.value/100;releasing=false;handV=0;syncOut();});
+  $('btn-release').addEventListener('click',()=>{
+    if(reduceMotion){wind=0;inW.value=0;syncOut();return;}
+    releasing=true;
+  });
+  syncOut();
+}
+
+/* ===================== CH02 GEAR RATIO ===================== */
+{
+  let t1=64,t2=8, a1=0, rev1=0;
+  const d=makeDemo('cv-ratio',(d,dt)=>{
+    const {ctx,W,H}=d;
+    ctx.clearRect(0,0,W,H);
+    a1+=dt*0.5; 
+    const ratio=t1/t2;
+    const r1=60+t1*1.15, r2=12+t2*2.6;      // radius ∝ teeth → pitch matches
+    const cy=H/2, contact=W/2+20;
+    const x1=contact-r1+3, x2=contact+r2-3;  // rims interpenetrate 6px = mesh
+    drawGear(ctx,x1,cy,r1,t1,a1,C.brass,{spokes:5});
+    drawGear(ctx,x2,cy,r2,t2,-a1*ratio+Math.PI/t2,C.ruby);
+    label(ctx,x1,cy+r1+26,'driving wheel · '+t1+'t',C.brass);
+    label(ctx,x2,cy+r2+26,'pinion · '+t2+'t',C.ruby);
+    // rev counters
+    const revs1=a1/TAU, revs2=revs1*ratio;
+    label(ctx,x1,cy-r1-24,revs1.toFixed(1)+' rev',C.muted,12);
+    label(ctx,x2,cy-r2-24,revs2.toFixed(1)+' rev',C.muted,12);
+  });
+  function sync(){
+    $('out-t1').textContent=t1; $('out-t2').textContent=t2;
+    $('out-ratio').textContent=(t1/t2).toFixed(1)+' : 1';
+    $('out-tq2').textContent='×'+(t2/t1).toFixed(2);
+  }
+  $('in-t1').addEventListener('input',e=>{t1=+e.target.value;sync();});
+  $('in-t2').addEventListener('input',e=>{t2=+e.target.value;sync();});
+  sync();
+}
+
+/* ===================== CH03 GOING TRAIN ===================== */
+{
+  let spd=60, flow=false, base=0;
+  const wheels=[
+    {name:'barrel',      color:C.brass, r:110,teeth:54, x:250, mul:1,   spokes:0},
+    {name:'center wheel',color:C.silver,r:90, teeth:44, x:382, mul:6.4, spokes:5},
+    {name:'third wheel', color:C.steel, r:74, teeth:36, x:494, mul:48,  spokes:5},
+    {name:'fourth wheel',color:C.good,  r:64, teeth:30, x:590, mul:360, spokes:4},
+    {name:'escape wheel',color:C.ruby,  r:50, teeth:15, x:676, mul:3600,spokes:5},
+  ];
+  const pinion={r:22,teeth:10};
+  makeDemo('cv-train',(d,dt)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    base += dt * 0.0009 * spd; // barrel angle
+    const cy=H/2-14;
+    // mesh lines / power flow
+    if(flow){
+      const g=(d.t*2)%1;
+      ctx.strokeStyle='rgba(217,169,60,0.5)'; ctx.lineWidth=2; ctx.setLineDash([6,10]);
+      ctx.lineDashOffset=-d.t*60;
+      ctx.beginPath(); ctx.moveTo(wheels[0].x,cy);
+      for(const w of wheels) ctx.lineTo(w.x,cy);
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    wheels.forEach((w,i)=>{
+      const dir=(i%2?-1:1);
+      const ang=base*w.mul*dir;
+      // pinion under each wheel except barrel
+      if(i>0) drawGear(ctx,w.x,cy,pinion.r,pinion.teeth,ang,w.color,{hub:7,fill:'rgba(0,0,0,0)'});
+      drawGear(ctx,w.x,cy,w.r,w.teeth,ang,w.color,{spokes:w.spokes});
+      label(ctx,w.x,cy+w.r+24,w.name,w.color,10.5);
+      label(ctx,w.x,cy+w.r+40,'×'+w.mul,C.faint,10);
+    });
+    label(ctx,W/2,34,'each wheel drives the next axis\u2019s pinion — speed multiplies at every mesh',C.faint,11);
+  });
+  const map=v=>Math.round(Math.pow(10, lerp(0,3.56,v/100))); // ×1 .. ×3600
+  $('in-trainspd').addEventListener('input',e=>{
+    spd=map(+e.target.value);
+    $('out-trainspd').textContent='×'+spd;
+  });
+  spd=map(35); $('out-trainspd').textContent='×'+spd;
+  $('btn-flow').addEventListener('click',e=>{flow=!flow;e.target.classList.toggle('on',flow);});
+}
+
+/* ===================== CH04 ESCAPEMENT (scrub) ===================== */
+{
+  let phase=0, playing=true, mag='entry';
+  const d=makeDemo('cv-esc',(d,dt)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    if(playing && !reduceMotion){
+      phase=(phase+dt*0.09)%1;
+      $('in-esc').value=Math.round(phase*1000);
+    }
+    const s=drawEscapement(ctx,W/2-120,H/2-14,0.86,phase,
+      {labels:true, mag:mag==='off'?null:mag, lensX:W-150, lensY:160, lensR:96});
+    $('out-escphase').textContent=s.phase+(s.phase!=='locked'?'':' · '+s.engaged+' stone');
+    // phase timeline strip
+    const gx=70,gw=W-140,gy=H-26;
+    ctx.strokeStyle=C.line2; ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(gx,gy);ctx.lineTo(gx+gw,gy);ctx.stroke();
+    for(const c of [0,0.5,1]){ctx.fillStyle=C.ruby;ctx.fillRect(gx+c*gw-1,gy-7,2,14);}
+    ctx.beginPath();ctx.arc(gx+phase*gw,gy,5,0,TAU);ctx.fillStyle=C.brass;ctx.fill();
+    label(ctx,gx,gy-16,'tick (exit)',C.ruby,10,'left');
+    label(ctx,gx+gw/2,gy-16,'tock (entry)',C.ruby,10);
+    label(ctx,gx+gw,gy-16,'tick',C.ruby,10,'right');
+  });
+  $('in-esc').addEventListener('input',e=>{playing=false;$('btn-escplay').textContent='\u25B6 Play slowly';phase=+e.target.value/1000;});
+  $('btn-escplay').addEventListener('click',e=>{
+    playing=!playing;
+    e.target.textContent=playing?'\u23F8 Pause':'\u25B6 Play slowly';
+  });
+  document.querySelectorAll('#esc-mags .chip').forEach(ch=>{
+    ch.addEventListener('click',()=>{
+      document.querySelectorAll('#esc-mags .chip').forEach(c=>c.classList.remove('sel'));
+      ch.classList.add('sel'); mag=ch.dataset.m;
+    });
+  });
+}
+
+/* ===================== CH05 BALANCE OSCILLATOR ===================== */
+{
+  let k=55,I=55, th=0, w=0;
+  const trace=[];
+  function flick(){ w = 9; }
+  makeDemo('cv-bal',(d,dt)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    // physics (semi-implicit Euler, light damping)
+    const steps=4, h=dt/steps, kk=k/22, II=I/22;
+    for(let i=0;i<steps;i++){
+      const acc = -(kk/II)*th - 0.018*w;
+      w+=acc*h*60; th+=w*h;
+    }
+    if(Math.abs(th)<0.25 && Math.abs(w)<0.9 && !reduceMotion) w+= (w>=0?1:-1)*0.5; // escapement keeps it alive
+    trace.push(th); if(trace.length>360) trace.shift();
+
+    const bx=250,by=170,R=98;
+    ctx.strokeStyle=C.steel; ctx.lineWidth=1.2;
+    spiral(ctx,bx,by,7, lerp(30,52,(k-20)/80), lerp(7,4,(k-20)/80), th*0.35-Math.PI/2, 0.06*Math.sin(th));
+    const rimW=lerp(2.5,7,(I-20)/80);
+    ctx.strokeStyle=C.brass; ctx.lineWidth=rimW;
+    ctx.beginPath(); ctx.arc(bx,by,R,0,TAU); ctx.stroke();
+    ctx.lineWidth=2;
+    for(let i=0;i<2;i++){const a=th+i*Math.PI+0.5;
+      ctx.beginPath();ctx.moveTo(bx+9*Math.cos(a),by+9*Math.sin(a));
+      ctx.lineTo(bx+(R-4)*Math.cos(a),by+(R-4)*Math.sin(a));ctx.stroke();}
+    for(let i=0;i<8;i++){const a=th+i*TAU/8+0.25;
+      ctx.beginPath();ctx.arc(bx+R*Math.cos(a),by+R*Math.sin(a),lerp(2,4.5,(I-20)/80),0,TAU);
+      ctx.fillStyle=C.brassDim;ctx.fill();}
+    ctx.beginPath();ctx.arc(bx,by,6,0,TAU);ctx.fillStyle='#0B0E11';ctx.fill();
+    ctx.strokeStyle=C.brass;ctx.lineWidth=1.5;ctx.stroke();
+    rubyDot(ctx,bx+40*Math.sin(th),by-40*Math.cos(th),4.5);
+    label(ctx,bx,by+R+26,'rim mass sets inertia I · spring sets k',C.faint,10.5);
+
+    // angle trace
+    const gx=470,gy=60,gw=350,gh=220;
+    ctx.strokeStyle=C.line;ctx.strokeRect(gx,gy,gw,gh);
+    ctx.strokeStyle=C.line2;
+    ctx.beginPath();ctx.moveTo(gx,gy+gh/2);ctx.lineTo(gx+gw,gy+gh/2);ctx.stroke();
+    ctx.beginPath();
+    trace.forEach((v,i)=>{
+      const px=gx+i/360*gw, py=gy+gh/2 - clamp(v,-3.2,3.2)/3.2*(gh/2-8);
+      i?ctx.lineTo(px,py):ctx.moveTo(px,py);
+    });
+    ctx.strokeStyle=C.brass;ctx.lineWidth=1.6;ctx.stroke();
+    label(ctx,gx+gw/2,gy-14,'balance angle over time',C.muted,11);
+    label(ctx,gx+gw/2,gy+gh+18,'same period at any amplitude — isochronism',C.faint,10.5);
+
+    // readouts
+    const T = TAU*Math.sqrt(II/kk)/25.13; // scaled: k=I → 0.25 s → 28,800 bph
+    $('out-T').textContent=T.toFixed(2)+' s';
+    $('out-bph').textContent=Math.round(2*3600/T).toLocaleString()+' bph';
+  });
+  $('in-k').addEventListener('input',e=>{k=+e.target.value;$('out-k').textContent=k;});
+  $('in-I').addEventListener('input',e=>{I=+e.target.value;$('out-I').textContent=I;});
+  $('btn-flick').addEventListener('click',flick);
+  flick();
+}
+
+/* ===================== CH06 CLICK ===================== */
+{
+  let crown=0, jam=0, clicks=0;
+  const msg=$('out-clickmsg');
+  makeDemo('cv-click',(d,dt)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    jam=Math.max(0,jam-dt*2.2);
+    const shake=jam>0? Math.sin(d.t*70)*3*jam : 0;
+    const cx1=290+shake, cy=H/2+6, R1=108;   // ratchet wheel
+    const cx2=cx1+R1+82-6, R2=82;            // crown wheel — meshed
+    const ratchetA=-crown*0.9;
+    // ratchet wheel: saw teeth
+    const N=24,p=TAU/N;
+    ctx.save();ctx.translate(cx1,cy);ctx.rotate(ratchetA);
+    ctx.beginPath();
+    for(let i=0;i<N;i++){const a=i*p;
+      const x1=R1*Math.cos(a),y1=R1*Math.sin(a);
+      i?ctx.lineTo(x1,y1):ctx.moveTo(x1,y1);
+      ctx.lineTo(R1*0.9*Math.cos(a+p*0.75),R1*0.9*Math.sin(a+p*0.75));
+    }
+    ctx.closePath();
+    ctx.fillStyle='rgba(217,169,60,0.06)';ctx.fill();
+    ctx.strokeStyle=C.brass;ctx.lineWidth=1.8;ctx.stroke();
+    ctx.beginPath();
+    for(let i=0;i<4;i++){const a=i*TAU/4;
+      ctx.moveTo(14*Math.cos(a),14*Math.sin(a));ctx.lineTo(R1*0.8*Math.cos(a),R1*0.8*Math.sin(a));}
+    ctx.lineWidth=1.2;ctx.stroke();
+    ctx.fillStyle='#0B0E11';
+    ctx.fillRect(-11,-11,22,22);ctx.strokeStyle=C.silver;ctx.strokeRect(-11,-11,22,22);
+    ctx.restore();
+    label(ctx,cx1,cy+R1+26,'ratchet wheel (on the arbor)',C.brass,11);
+
+    // crown wheel — meshed, geared rotation
+    drawGear(ctx,cx2,cy,R2,20,crown*0.9*(R1/R2)+Math.PI/20,C.silver,{spokes:0,hub:16});
+    label(ctx,cx2,cy+R2+26,'crown wheel (turned by the crown)',C.silver,11);
+
+    // the click: pawl whose TIP rides the ratchet teeth
+    const engA=-0.62;                                     // engagement azimuth on ratchet
+    const toothPhase=((-ratchetA)%p+p)%p;
+    const hop = jam>0 ? -0.09*jam : Math.sin(toothPhase/p*Math.PI)*0.075;
+    const tip={x:cx1+(R1-2)*Math.cos(engA), y:cy+(R1-2)*Math.sin(engA)};
+    const piv={x:tip.x+64, y:tip.y-42};
+    ctx.save(); ctx.translate(piv.x,piv.y); ctx.rotate(hop);
+    ctx.strokeStyle=C.ruby; ctx.lineWidth=6; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(tip.x-piv.x,tip.y-piv.y); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0,0,6,0,TAU); ctx.fillStyle='#0B0E11'; ctx.fill();
+    ctx.strokeStyle=C.ruby; ctx.lineWidth=1.6; ctx.stroke();
+    ctx.restore();
+    // beak at the true rotated tip
+    const dx=tip.x-piv.x, dy=tip.y-piv.y, ch=Math.cos(hop), sh=Math.sin(hop);
+    const bx=piv.x+dx*ch-dy*sh, by=piv.y+dx*sh+dy*ch;
+    ctx.fillStyle=C.ruby;
+    ctx.beginPath(); ctx.arc(bx,by,3.6,0,TAU); ctx.fill();
+    // click spring
+    ctx.strokeStyle=C.rubyDim; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(piv.x+12,piv.y-14);
+    ctx.quadraticCurveTo(piv.x+44,piv.y-42,piv.x+72,piv.y-16); ctx.stroke();
+    label(ctx,piv.x+46,piv.y-52,'click + spring',C.ruby,10.5);
+    if(jam>0.2) label(ctx,cx1,cy-R1-22,'JAMMED — the click blocks reverse rotation',C.ruby,11.5);
+  });
+  $('in-crown').addEventListener('input',e=>{
+    const v=+e.target.value/14;
+    if(v<crown){ e.target.value=crown*14; jam=1;
+      msg.innerHTML='<span class="warn">Blocked.</span> The click has jammed against a ratchet tooth.'; return; }
+    const prevClicks=Math.floor(crown*0.9/(TAU/24));
+    crown=v;
+    clicks=Math.floor(crown*0.9/(TAU/24));
+    $('out-crown').textContent=clicks+' clicks';
+    if(clicks>prevClicks) msg.innerHTML='<span class="ok">click…</span> the pawl hops over a tooth and snaps back.';
+  });
+  $('btn-reverse').addEventListener('click',()=>{
+    jam=1;
+    msg.innerHTML='<span class="warn">Blocked.</span> Reverse torque wedges the click into the tooth — the spring stays wound.';
+  });
+}
+
+/* ===================== CH07 MOTION WORKS ===================== */
+{
+  let tmul=600, setting=false, simT=10*3600+8*60; // 10:08
+  const slider=$('in-tspeed');
+  makeDemo('cv-motion',(d,dt)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    if(!setting) simT += dt*tmul;
+    const cx=290, cy=H/2, R=150;
+    // dial
+    ctx.strokeStyle=C.line2;ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(cx,cy,R,0,TAU);ctx.stroke();
+    for(let i=0;i<60;i++){const a=i*TAU/60-Math.PI/2;
+      const big=i%5===0, r0=big?R-13:R-7;
+      ctx.strokeStyle=big?C.silver:C.line2;ctx.lineWidth=big?2:1;
+      ctx.beginPath();ctx.moveTo(cx+r0*Math.cos(a),cy+r0*Math.sin(a));
+      ctx.lineTo(cx+(R-3)*Math.cos(a),cy+(R-3)*Math.sin(a));ctx.stroke();}
+    // hands
+    const sec=simT%60, min=(simT/60)%60, hr=(simT/3600)%12;
+    function hand(frac,len,wdt,color){
+      const a=frac*TAU-Math.PI/2;
+      ctx.strokeStyle=color;ctx.lineWidth=wdt;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(cx-len*0.16*Math.cos(a),cy-len*0.16*Math.sin(a));
+      ctx.lineTo(cx+len*Math.cos(a),cy+len*Math.sin(a));ctx.stroke();
+    }
+    hand(hr/12, R*0.52, 5, C.silver);
+    hand(min/60, R*0.8, 3.5, C.text);
+    hand(sec/60, R*0.9, 1.8, C.ruby);
+    ctx.beginPath();ctx.arc(cx,cy,5,0,TAU);ctx.fillStyle=C.brass;ctx.fill();
+    const hh=Math.floor(hr), mm=Math.floor(min), ss=Math.floor(sec);
+    label(ctx,cx,cy+R+26,String(hh===0?12:hh).padStart(2,'0')+':'+String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0'),C.muted,13);
+
+    // motion-works gear stack — hour wheel is COAXIAL with the cannon pinion
+    const P={x:640,y:cy-8};
+    const cpA=-(min/60)*TAU, hwA=-(hr/12)*TAU, mwA=(min/60)*TAU*0.62;
+    // hour wheel (bottom plane, big center hole)
+    drawGear(ctx,P.x,P.y,64,36,hwA,C.steel,{hub:34});
+    label(ctx,P.x+82,P.y-52,'hour wheel',C.steel,10.5,'left');
+    label(ctx,P.x+82,P.y-34,'cannon pinion (inside it)',C.brass,10.5,'left');
+    // minute wheel: big wheel (r50) meshes cannon pinion (r28) AND its pinion (r13)
+    // meshes the hour wheel (r64) — both at the same center distance of ~72.5
+    const MW={x:P.x-65,y:P.y-32};
+    drawGear(ctx,MW.x,MW.y,50,30,mwA,C.silver,{hub:8,fill:'rgba(16,19,23,0.92)'});
+    drawGear(ctx,MW.x,MW.y,13,8,mwA,C.silver,{hub:5,fill:'rgba(16,19,23,0.95)'});
+    label(ctx,MW.x-58,MW.y-42,'minute wheel',C.silver,10.5,'right');
+    label(ctx,MW.x-58,MW.y-26,'+ its pinion',C.faint,9.5,'right');
+    // drive from the train — meshes the cannon pinion (dist 28+20-5=43)
+    const fwA = setting?0.35 : (sec/60)*TAU;
+    const TR={x:P.x+30,y:P.y+31};
+    drawGear(ctx,TR.x,TR.y,20,10,fwA,setting?C.faint:C.good,{hub:6,fill:'rgba(16,19,23,0.92)'});
+    label(ctx,TR.x+34,TR.y+16,'from train',setting?C.faint:C.good,9.5,'left');
+    // cannon pinion on top — coaxial through the hour wheel's hole
+    drawGear(ctx,P.x,P.y,28,12,cpA,C.brass,{hub:8,fill:'rgba(16,19,23,0.95)'});
+    if(setting) label(ctx,P.x,P.y-96,'train frozen — cannon pinion slips on its friction fit',C.ruby,10.5);
+  });
+  const map=v=>Math.round(Math.pow(10,lerp(0,3.3,v/100)));
+  function syncSpd(){ if(setting) return;
+    tmul=map(+slider.value); $('out-tspeed').textContent='×'+tmul; }
+  slider.addEventListener('input',()=>{
+    if(setting){ simT = (+slider.value/100)*43200; }
+    else syncSpd();
+  });
+  $('btn-setmode').addEventListener('click',e=>{
+    setting=!setting; e.target.classList.toggle('on',setting);
+    if(setting){ slider.value=Math.round(((simT%43200)/43200)*100); $('out-tspeed').textContent='setting'; }
+    else syncSpd();
+  });
+  syncSpd();
+}
+
+/* ===================== CH08 REGULATION ===================== */
+{
+  let reg=62, stud=-45, ph=0;
+  function rate(){ return reg*0.5; }        // s/day
+  function beat(){ return Math.abs(stud)*0.05; } // ms
+  makeDemo('cv-reg',(d,dt)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    ph+=dt*4*(1+rate()/2000);
+    const bx=250, by=H/2+8, R=105;
+    // balance + hairspring
+    const th=1.4*Math.sin(ph)+ stud*0.004;
+    ctx.strokeStyle=C.steel;ctx.lineWidth=1.3;
+    spiral(ctx,bx,by,8,58,5,th*0.3-Math.PI/2,0.05*Math.sin(th));
+    ctx.strokeStyle=C.brass;ctx.lineWidth=4.5;
+    ctx.beginPath();ctx.arc(bx,by,R*0.62,0,TAU);ctx.stroke();
+    ctx.beginPath();ctx.arc(bx,by,5.5,0,TAU);ctx.fillStyle='#0B0E11';ctx.fill();
+    ctx.strokeStyle=C.brass;ctx.lineWidth=1.5;ctx.stroke();
+    // regulator lever with pins riding the outer coil
+    const regA=-Math.PI/2 + reg*0.0045;
+    ctx.save();ctx.translate(bx,by);ctx.rotate(regA);
+    ctx.strokeStyle=C.brass;ctx.lineWidth=4;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(0,-16);ctx.lineTo(0,-84);ctx.stroke();
+    ctx.fillStyle=C.brass;
+    ctx.fillRect(-6.5,-64,4,12); ctx.fillRect(2.5,-64,4,12); // two pins straddling coil
+    ctx.restore();
+    // stud carrier
+    const studA=-Math.PI/2 + 0.55 + stud*0.0045;
+    ctx.save();ctx.translate(bx,by);ctx.rotate(studA);
+    ctx.strokeStyle=C.steel;ctx.lineWidth=4;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(0,-R*0.55);ctx.lineTo(0,-R-2);ctx.stroke();
+    ctx.beginPath();ctx.arc(0,-R*0.56,5,0,TAU);ctx.fillStyle=C.steel;ctx.fill();
+    ctx.restore();
+    ctx.strokeStyle=C.line2;ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.arc(bx,by,R,-2.4,-0.35);ctx.stroke(); // balance cock edge
+    label(ctx,bx-R-8,by-64,'regulator',C.brass,10.5,'right');
+    label(ctx,bx+R*0.75,by-R*0.75,'stud',C.steel,10.5,'left');
+    label(ctx,bx,by+R*0.62+30,'sliding the pins changes effective spring length',C.faint,10.5);
+
+    // live mini-trace
+    const gx=470,gy=64,gw=350,gh=230;
+    ctx.strokeStyle=C.line;ctx.strokeRect(gx,gy,gw,gh);
+    const slope=rate()/86400*8000;
+    const gap=beat()*22;
+    ctx.fillStyle=C.brass;
+    for(let i=0;i<90;i++){
+      const px=gx+8+i/90*(gw-16);
+      let y=gy+gh/2+ (i-45)*slope/45;
+      const wrap=(v)=>{const h2=gh/2-10;return ((v-gy-gh/2+h2*3)%(h2*2))-h2+gy+gh/2;};
+      ctx.fillRect(px,wrap(y-gap/2),2,2);
+      ctx.fillStyle=C.steel;
+      ctx.fillRect(px,wrap(y+gap/2),2,2);
+      ctx.fillStyle=C.brass;
+    }
+    label(ctx,gx+gw/2,gy-14,'live trace',C.muted,11);
+  });
+  function sync(){
+    const r=rate(), b=beat();
+    $('out-reg').textContent=(reg>0?'+':'')+reg;
+    $('out-stud').textContent=(stud>0?'+':'')+stud;
+    $('out-rate').textContent=(r>0?'+':'')+r.toFixed(1)+' s/d';
+    $('out-beat').textContent=b.toFixed(2)+' ms';
+    const ok=Math.abs(r)<=1.0 && b<=0.3;
+    $('out-regok').innerHTML= ok ? '<span class="ok">✓ within chronometer spec</span>'
+      : '<span class="warn">adjust…</span>';
+    $('out-rate').style.color=Math.abs(r)<=1?C.good:'';
+    $('out-beat').style.color=b<=0.3?C.good:'';
+  }
+  $('in-reg').addEventListener('input',e=>{reg=+e.target.value;sync();});
+  $('in-stud').addEventListener('input',e=>{stud=+e.target.value;sync();});
+  sync();
+}
+
+/* ===================== CH09 TIMEGRAPHER ===================== */
+{
+  const P={rate:0, beatErr:0.1, amp:285, wave:0, wrapFast:false};
+  const FAULTS={
+    healthy:{rate:2, beatErr:0.1, amp:285, wave:0,
+      why:'Flat, tight, parallel lines. Nothing to do but admire it.'},
+    fast:{rate:35, beatErr:0.2, amp:270, wave:0,
+      why:'A clean upward slope: the watch gains ~35 s/day. Fix at the regulator (Ch. 08).'},
+    beat:{rate:3, beatErr:3.2, amp:265, wave:0,
+      why:'Two clean but separated lines: tick and tock are asymmetric. Rotate the stud carrier.'},
+    magnet:{rate:120, beatErr:0.4, amp:250, wave:0,
+      why:'A wildly steep, often wrapping trace with huge gain: hairspring coils are sticking magnetically. One pass through a demagnetizer usually cures it in seconds.'},
+    dirty:{rate:-12, beatErr:0.8, amp:165, wave:0,
+      why:'Low amplitude and a fuzzy, scattered trace: dried oils and dirt are stealing energy. This watch needs a full service, not regulation.'},
+    tooth:{rate:4, beatErr:0.3, amp:255, wave:1,
+      why:'A repeating wave over the trace: a periodic error, classically a bent pivot, out-of-round wheel, or damaged tooth. The wave period tells you which wheel.'},
+    knock:{rate:95, beatErr:0.7, amp:352, wave:0, jump:true,
+      why:'Galloping: amplitude so high (>~330\u00b0) the impulse jewel strikes the OUTSIDE of the fork horns \u2014 rebanking. The watch gains wildly with a chaotic, jumping trace and an over-range amplitude. Cause: too-strong mainspring or an over-slick fresh service.'}
+  };
+  function drawTrace(ctx,gx,gy,gw,gh,p,seed=1){
+    ctx.fillStyle='rgba(255,255,255,0.02)';ctx.fillRect(gx,gy,gw,gh);
+    ctx.strokeStyle=C.line;ctx.strokeRect(gx,gy,gw,gh);
+    ctx.strokeStyle='rgba(56,66,78,0.5)';
+    for(let i=1;i<6;i++){ctx.beginPath();ctx.moveTo(gx,gy+i*gh/6);ctx.lineTo(gx+gw,gy+i*gh/6);ctx.stroke();}
+    const n=170;
+    const slope=p.rate*0.10;
+    const gap=p.beatErr*9;
+    const noise=Math.max(0.4,(255-p.amp)*0.11);
+    let rnd=seed;
+    const rand=()=>{rnd=(rnd*16807)%2147483647;return rnd/2147483647-0.5;};
+    const h2=gh/2-8;
+    const wrap=v=>((v%(h2*2))+h2*3)%(h2*2)-h2;
+    for(let i=0;i<n;i++){
+      const px=gx+8+i/n*(gw-16);
+      let base=(i-n/2)*slope/9;
+      if(p.wave) base+=Math.sin(i*0.42)*13;
+      if(p.jump && ((i*7919)%13)<4) base+=((i*104729)%2?14:-11);
+      const y1=wrap(base-gap/2+rand()*noise*3);
+      const y2=wrap(base+gap/2+rand()*noise*3);
+      ctx.fillStyle=C.brass; ctx.fillRect(px,gy+gh/2+y1,2.2,2.2);
+      ctx.fillStyle=C.steel; ctx.fillRect(px,gy+gh/2+y2,2.2,2.2);
+    }
+  }
+  makeDemo('cv-tg',(d)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    drawTrace(ctx,20,18,W-40,H-70,P);
+    // instrument readout row
+    label(ctx,30,H-26,'RATE '+(P.rate>0?'+':'')+P.rate+' s/d',Math.abs(P.rate)<=8?C.good:C.ruby,13,'left');
+    label(ctx,220,H-26,'BEAT '+P.beatErr.toFixed(1)+' ms',P.beatErr<=0.5?C.good:C.ruby,13,'left');
+    label(ctx,400,H-26,'AMPL '+P.amp+'°',P.amp>=230?C.good:C.ruby,13,'left');
+    label(ctx,W-30,H-26,'28,800 bph · lift 52°',C.faint,12,'right');
+  });
+  function syncTG(){
+    $('out-tgrate').textContent=(P.rate>0?'+':'')+P.rate+' s/d';
+    $('out-tgbeat').textContent=(P.beatErr).toFixed(1)+' ms';
+    $('out-tgamp').textContent=P.amp+'°';
+    const v=[];
+    v.push(Math.abs(P.rate)<=8?'<span class="ok">rate ok</span>':'<span class="warn">rate out</span>');
+    v.push(P.beatErr<=0.5?'<span class="ok">beat ok</span>':'<span class="warn">beat error</span>');
+    v.push(P.amp>=230?'<span class="ok">amplitude ok</span>':'<span class="warn">low amplitude</span>');
+    $('tg-verdict').innerHTML=v.map(x=>'<span>'+x+'</span>').join('');
+  }
+  $('in-tgrate').addEventListener('input',e=>{P.rate=+e.target.value;P.jump=false;deselect();syncTG();});
+  $('in-tgbeat').addEventListener('input',e=>{P.beatErr=+e.target.value/10;deselect();syncTG();});
+  $('in-tgamp').addEventListener('input',e=>{P.amp=+e.target.value;deselect();syncTG();});
+  function deselect(){document.querySelectorAll('#tg-chips .chip').forEach(c=>c.classList.remove('sel'));}
+  document.querySelectorAll('#tg-chips .chip').forEach(ch=>{
+    ch.addEventListener('click',()=>{
+      deselect(); ch.classList.add('sel');
+      const f=FAULTS[ch.dataset.f];
+      Object.assign(P,{rate:f.rate,beatErr:f.beatErr,amp:f.amp,wave:f.wave,jump:!!f.jump});
+      $('in-tgrate').value=clamp(f.rate,-60,60);
+      $('in-tgbeat').value=f.beatErr*10;
+      $('in-tgamp').value=f.amp;
+      $('tg-explain').textContent=f.why;
+      syncTG();
+    });
+  });
+  syncTG();
+
+  /* ---- diagnosis quiz ---- */
+  const CASES=[
+    {f:'fast',   label:'Needs regulating (running fast)'},
+    {f:'beat',   label:'Beat error — adjust the stud'},
+    {f:'magnet', label:'Magnetized — demagnetize it'},
+    {f:'dirty',  label:'Dirty / dry — full service'},
+    {f:'tooth',  label:'Damaged tooth or bent pivot'},
+    {f:'knock',  label:'Knocking \u2014 amplitude too high'},
+    {f:'healthy',label:'Healthy — leave it alone'},
+  ];
+  let current=null, seed=7, score=0, locked=false;
+  const qc=makeDemo('cv-quiz',(d)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    if(current) drawTrace(ctx,20,16,W-40,H-32,FAULTS[current.f],seed);
+  });
+  function newCase(){
+    locked=false; $('quiz-fb').textContent='';
+    current=CASES[Math.floor(Math.random()*CASES.length)];
+    seed=1+Math.floor(Math.random()*99999);
+    const opts=[...CASES].sort(()=>Math.random()-0.5).slice(0,4);
+    if(!opts.some(o=>o.f===current.f)) opts[Math.floor(Math.random()*4)]=current;
+    const box=$('quiz-opts'); box.innerHTML='';
+    opts.forEach(o=>{
+      const b=document.createElement('button');
+      b.className='btn'; b.textContent=o.label;
+      b.addEventListener('click',()=>{
+        if(locked) return; locked=true;
+        if(o.f===current.f){
+          b.classList.add('correct'); score++;
+          $('quiz-score').textContent=score;
+          $('quiz-fb').innerHTML='<b>Correct.</b> '+FAULTS[current.f].why;
+        } else {
+          b.classList.add('wrong');
+          [...box.children].find(x=>x.textContent===CASES.find(c=>c.f===current.f).label)?.classList.add('correct');
+          $('quiz-fb').innerHTML='Not quite — this trace shows: '+FAULTS[current.f].why;
+        }
+      });
+      box.appendChild(b);
+    });
+  }
+  $('btn-nextcase').addEventListener('click',newCase);
+  newCase();
+}
+
+
+/* ===================== CH07 KEYLESS WORKS ===================== */
+{
+  let pos=1, clutchX=0, crownA=0, windA=0, setA=0, lastC=0;
+  const cap=$('keyless-cap');
+  makeDemo('cv-keyless',(d,dt)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    const target=pos===1?0:46;
+    clutchX+= (target-clutchX)*Math.min(1,dt*8);
+    const sy=H/2+10;
+    const crownX=782+(pos===2?12:0);
+
+    // stem
+    ctx.strokeStyle=C.silver; ctx.lineWidth=6; ctx.lineCap='butt';
+    ctx.beginPath(); ctx.moveTo(430,sy); ctx.lineTo(crownX-24,sy); ctx.stroke();
+    // square section (dashed to suggest facets)
+    ctx.strokeStyle=C.line2; ctx.lineWidth=12; ctx.setLineDash([10,6]); ctx.lineDashOffset=-crownA*8;
+    ctx.beginPath(); ctx.moveTo(506,sy); ctx.lineTo(662,sy); ctx.stroke(); ctx.setLineDash([]);
+    // stem groove (the setting lever's finger rides here)
+    const gx=700+(pos===2?12:0);
+    ctx.strokeStyle=C.faint; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(gx,sy-8); ctx.lineTo(gx,sy+8); ctx.stroke();
+
+    // crown
+    ctx.save(); ctx.translate(crownX,sy);
+    ctx.fillStyle='rgba(217,169,60,0.12)';
+    ctx.strokeStyle=C.brass; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.rect(-22,-30,44,60); ctx.fill(); ctx.stroke();
+    for(let i=0;i<7;i++){
+      const yy=-26+i*8.6+(crownA*6)%8.6;
+      if(yy>-27&&yy<27){ctx.beginPath();ctx.moveTo(-22,yy);ctx.lineTo(22,yy);
+      ctx.strokeStyle=C.brassDim;ctx.lineWidth=1.2;ctx.stroke();}
+    }
+    ctx.restore();
+    label(ctx,crownX,sy+48,'crown'+(pos===2?' (pulled)':''),C.brass,10.5);
+
+    // winding pinion (fixed, left of clutch)
+    drawGear(ctx,481,sy,26,12,windA,pos===1?C.good:C.faint,{hub:6});
+    label(ctx,481,sy+46,'winding pinion',pos===1?C.good:C.faint,10);
+    // sliding clutch / castle wheel
+    const cx=536+clutchX;
+    ctx.save(); ctx.translate(cx,sy);
+    ctx.fillStyle='rgba(217,169,60,0.14)';
+    ctx.strokeStyle=C.brass; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.rect(-24,-20,48,40); ctx.fill(); ctx.stroke();
+    // teeth on both ends
+    for(let i=-2;i<=2;i++){
+      ctx.beginPath();ctx.moveTo(-24,i*8);ctx.lineTo(-31,i*8+4);ctx.strokeStyle=C.brass;ctx.lineWidth=2;ctx.stroke();
+      ctx.beginPath();ctx.moveTo(24,i*8);ctx.lineTo(31,i*8+4);ctx.stroke();
+    }
+    ctx.restore();
+    label(ctx,cx,sy-34,'sliding clutch',C.brass,10.5);
+    // setting wheel — tangent to the clutch's right teeth when pulled out
+    const swx=628, swy=sy+26;
+    drawGear(ctx,swx,swy,28,14,setA,pos===2?C.steel:C.faint,{hub:7});
+    label(ctx,swx+42,swy+20,'setting wheel',pos===2?C.steel:C.faint,10,'left');
+
+    // setting lever (bell-crank on a fixed pivot) pushes the yoke, which forks the clutch
+    const LP={x:748,y:sy-56}, YP={x:562,y:sy-74};
+    ctx.strokeStyle=C.ruby; ctx.lineWidth=4; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(gx,sy-5); ctx.lineTo(LP.x,LP.y); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(LP.x,LP.y); ctx.lineTo(YP.x+24,YP.y+4); ctx.stroke();
+    ctx.beginPath(); ctx.arc(LP.x,LP.y,4.5,0,TAU); ctx.fillStyle=C.ruby; ctx.fill();
+    ctx.strokeStyle=C.steel; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(YP.x,YP.y); ctx.lineTo(cx,sy-40); ctx.stroke();
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.moveTo(cx-9,sy-40); ctx.lineTo(cx-9,sy-20);
+    ctx.moveTo(cx+9,sy-40); ctx.lineTo(cx+9,sy-20);
+    ctx.moveTo(cx-9,sy-40); ctx.lineTo(cx+9,sy-40); ctx.stroke();
+    ctx.beginPath(); ctx.arc(YP.x,YP.y,4.5,0,TAU); ctx.fillStyle=C.steel; ctx.fill();
+    label(ctx,LP.x+12,LP.y-6,'setting lever',C.ruby,10,'left');
+    label(ctx,YP.x-12,YP.y-6,'yoke',C.steel,10,'right');
+
+    // downstream indicators
+    // ratchet mini (winds)
+    drawGear(ctx,388,sy-70,34,18,-windA*0.55,pos===1?C.brass:C.faint,{hub:8});
+    label(ctx,388,sy-120,'\u2192 crown wheel \u2192 mainspring',pos===1?C.brass:C.faint,10);
+    // mini dial (sets)
+    const mx=330,my=sy+62,mr=44;
+    ctx.strokeStyle=pos===2?C.silver:C.line2; ctx.lineWidth=1.6;
+    ctx.beginPath(); ctx.arc(mx,my,mr,0,TAU); ctx.stroke();
+    ctx.strokeStyle=pos===2?C.text:C.faint; ctx.lineWidth=2.6;
+    ctx.beginPath(); ctx.moveTo(mx,my);
+    ctx.lineTo(mx+mr*0.75*Math.cos(setA*0.4-Math.PI/2),my+mr*0.75*Math.sin(setA*0.4-Math.PI/2)); ctx.stroke();
+    ctx.strokeStyle=pos===2?C.silver:C.faint; ctx.lineWidth=3.4;
+    ctx.beginPath(); ctx.moveTo(mx,my);
+    ctx.lineTo(mx+mr*0.5*Math.cos(setA*0.4/12-Math.PI/2),my+mr*0.5*Math.sin(setA*0.4/12-Math.PI/2)); ctx.stroke();
+    label(ctx,mx,my+mr+16,'\u2192 motion works \u2192 hands',pos===2?C.silver:C.faint,10);
+  });
+  function setPos(p){
+    pos=p;
+    $('btn-pos1').classList.toggle('primary',p===1);
+    $('btn-pos2').classList.toggle('primary',p===2);
+    cap.textContent = p===1
+      ? 'Position 1: the clutch\u2019s left (Breguet) teeth mesh with the winding pinion \u2014 turning the crown winds the barrel.'
+      : 'Position 2: the setting lever throws the yoke, the clutch slides out and meshes with the setting wheel \u2014 the crown now moves the hands.';
+  }
+  $('btn-pos1').addEventListener('click',()=>setPos(1));
+  $('btn-pos2').addEventListener('click',()=>setPos(2));
+  $('in-kcrown').addEventListener('input',e=>{
+    const v=+e.target.value/12, dv=v-lastC; lastC=v; crownA=v;
+    if(pos===1) windA+=dv; else setA+=dv*1.6;
+    $('out-kcrown').textContent=pos===1?'winding':'setting';
+  });
+  setPos(1);
+}
+
+/* ===================== CH09 AUTOMATIC ===================== */
+{
+  let act=35, rotA=0.6, rotW=0, reserve=14, kick=0;
+  makeDemo('cv-auto',(d,dt)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    // rotor physics: gravity pendulum + noise driven by activity
+    const noise=(Math.sin(d.t*3.1)+Math.sin(d.t*7.7+2)+Math.sin(d.t*1.7+5))/3;
+    const drive=noise*act*0.10 + kick;
+    kick*=Math.pow(0.02,dt);
+    const acc=-4.5*Math.sin(rotA) - 1.4*rotW + drive;
+    rotW+=acc*dt*4; rotA+=rotW*dt*4;
+    const winding=Math.abs(rotW)*dt*0.55;
+    const full=reserve>=40;
+    if(!full) reserve=Math.min(40,reserve+winding);
+    reserve=Math.max(0,reserve-dt*0.10);
+    $('out-autores').textContent=reserve.toFixed(1)+' h';
+    $('out-slip').innerHTML= full&&Math.abs(rotW)>0.4 ?
+      '<span class="warn">bridle slipping \u2014 full wind</span>':'';
+
+    const rx=270, ry=H/2+8;
+    // movement disc
+    ctx.strokeStyle=C.line2; ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.arc(rx,ry,150,0,TAU); ctx.stroke();
+    // rotor: half annulus, heavy rim
+    ctx.save(); ctx.translate(rx,ry); ctx.rotate(rotA+Math.PI/2);
+    ctx.beginPath(); ctx.arc(0,0,138,0,Math.PI); ctx.arc(0,0,64,Math.PI,0,true); ctx.closePath();
+    ctx.fillStyle='rgba(217,169,60,0.10)'; ctx.fill();
+    ctx.strokeStyle=C.brass; ctx.lineWidth=2; ctx.stroke();
+    ctx.beginPath(); ctx.arc(0,0,138,0.18,Math.PI-0.18);
+    ctx.strokeStyle=C.brass; ctx.lineWidth=10; ctx.stroke(); // heavy rim segment
+    ctx.restore();
+    ctx.beginPath(); ctx.arc(rx,ry,14,0,TAU); ctx.fillStyle='#0B0E11'; ctx.fill();
+    ctx.strokeStyle=C.brass; ctx.lineWidth=2; ctx.stroke();
+    label(ctx,rx,ry+176,'rotor \u2014 the heavy rim chases the floor',C.faint,10.5);
+
+    // reversers
+    const g1={x:560,y:120}, g2={x:626,y:120};
+    drawGear(ctx,g1.x,g1.y,28,14, rotA*1.6, C.steel,{hub:7});
+    drawGear(ctx,g2.x,g2.y,28,14, -Math.abs(rotA)*1.6, C.steel,{hub:7});
+    label(ctx,(g1.x+g2.x)/2,g1.y-44,'reverser wheels',C.steel,10.5);
+    label(ctx,(g1.x+g2.x)/2,g1.y+44,'either swing direction \u2192 one winding direction',C.faint,9.5);
+    // arrow to barrel
+    ctx.strokeStyle=C.brassDim; ctx.lineWidth=1.6;
+    ctx.beginPath(); ctx.moveTo(626,170); ctx.lineTo(626,214); ctx.lineTo(700,214); ctx.stroke();
+    // reserve gauge
+    const gx=700,gy=170,gw=120,gh=170;
+    ctx.strokeStyle=C.line2; ctx.strokeRect(gx,gy,gw,gh);
+    const f=reserve/40;
+    ctx.fillStyle= full?'rgba(232,68,107,0.35)':'rgba(217,169,60,0.30)';
+    ctx.fillRect(gx+2,gy+gh-2-(gh-4)*f,gw-4,(gh-4)*f);
+    ctx.strokeStyle=C.rubyDim;
+    label(ctx,gx+gw/2,gy-14,'power reserve',C.muted,10.5);
+    label(ctx,gx+gw/2,gy+gh+16,'40 h max \u00b7 bridle slips past full',C.faint,9.5);
+  });
+  $('in-activity').addEventListener('input',e=>{act=+e.target.value;$('out-activity').textContent=act+'%';});
+  $('btn-shake').addEventListener('click',()=>{kick=(Math.random()>0.5?1:-1)*22;});
+}
+
+/* ===================== CH10 SHOCK PROTECTION ===================== */
+{
+  let protON=true, jolt=0, broken=false;
+  makeDemo('cv-shock',(d,dt)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    jolt=Math.max(0,jolt-dt*2.4);
+    const j=ease(Math.min(1,jolt))* (protON?1:1);
+    const cx=W/2, base=H/2+30;
+    const lift=protON? j*16 : 0;
+    const shake=(!protON&&jolt>0)? Math.sin(d.t*80)*4*jolt : 0;
+
+    // main plate
+    ctx.fillStyle='rgba(255,255,255,0.04)';
+    ctx.strokeStyle=C.line2; ctx.lineWidth=1.6;
+    ctx.beginPath(); ctx.rect(cx-190,base-40,120,80); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.rect(cx+70,base-40,120,80); ctx.fill(); ctx.stroke();
+    label(ctx,cx-208,base-52,'balance cock',C.faint,10,'right');
+
+    // chaton + jewels (lift under shock when protected)
+    const cy=base-16-lift;
+    ctx.save(); ctx.translate(cx+shake,cy);
+    ctx.beginPath(); ctx.moveTo(-46,20); ctx.lineTo(-30,-14); ctx.lineTo(30,-14); ctx.lineTo(46,20); ctx.closePath();
+    ctx.fillStyle='rgba(217,169,60,0.14)'; ctx.strokeStyle=C.brass; ctx.lineWidth=2; ctx.fill(); ctx.stroke();
+    // hole jewel + cap jewel
+    ctx.fillStyle='rgba(232,68,107,0.4)'; ctx.strokeStyle=C.ruby; ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.rect(-18,2,36,10); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.rect(-14,-11,28,9); ctx.fill(); ctx.stroke();
+    // lyre spring
+    if(protON){
+      ctx.strokeStyle=C.ruby; ctx.lineWidth=2.4;
+      ctx.beginPath(); ctx.moveTo(-44,-16);
+      ctx.quadraticCurveTo(0,-34+lift*0.6,44,-16); ctx.stroke();
+      label(ctx,58,-24,'lyre spring',C.ruby,10,'left');
+    }
+    label(ctx,-58,4,'chaton',C.brass,10,'right');
+    ctx.restore();
+
+    // balance staff
+    const sx=cx+shake;
+    ctx.strokeStyle=C.silver; ctx.lineWidth=8; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(sx,base+96); ctx.lineTo(sx,base+8); ctx.stroke();
+    ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(sx,base+8); ctx.lineTo(sx,cy+16); ctx.stroke();
+    if(broken){
+      ctx.strokeStyle=C.ruby; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(sx-4,cy+24); ctx.lineTo(sx+5,cy+33); ctx.moveTo(sx+5,cy+24); ctx.lineTo(sx-4,cy+33); ctx.stroke();
+      // snapped tip lying on the plate, with a shadow so it reads as resting
+      ctx.fillStyle='rgba(0,0,0,0.5)';
+      ctx.beginPath(); ctx.ellipse(sx+128,base+96,17,3.5,0,0,TAU); ctx.fill();
+      ctx.strokeStyle=C.silver; ctx.lineWidth=4;
+      ctx.beginPath(); ctx.moveTo(sx+116,base+93); ctx.lineTo(sx+138,base+88); ctx.stroke();
+      label(ctx,sx+152,base+92,'snapped pivot',C.ruby,10,'left');
+    } else {
+      ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(sx,cy+16); ctx.lineTo(sx,cy+7); ctx.stroke(); // fragile pivot tip
+    }
+    label(ctx,sx-16,base+56,'balance staff',C.silver,10,'right');
+    label(ctx,sx+62,cy+22,'pivot \u2300 0.10 mm',C.faint,9.5,'left');
+    // balance rim hint — kept below the plates
+    ctx.strokeStyle=C.brassDim; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.arc(sx,base+236,150,Math.PI*1.28,Math.PI*1.72); ctx.stroke();
+    label(ctx,sx-172,base+92,'balance wheel (below)',C.faint,9.5,'left');
+  });
+  $('btn-drop').addEventListener('click',()=>{
+    jolt=1;
+    if(!protON){ broken=true;
+      $('out-shockmsg').innerHTML='<span class="warn">Crack.</span> The pivot snapped \u2014 the classic vintage failure. New staff: lathe or staking set, ~2 h.';
+      $('btn-fixstaff').style.display='';
+    } else {
+      $('out-shockmsg').innerHTML='<span class="ok">Absorbed.</span> The chaton lifted against the lyre spring; the staff\u2019s thick shoulder took the load.';
+    }
+  });
+  $('btn-protect').addEventListener('click',e=>{
+    protON=!protON;
+    e.target.textContent='Shock protection: '+(protON?'ON':'OFF');
+    e.target.classList.toggle('on',!protON);
+  });
+  $('btn-fixstaff').addEventListener('click',e=>{
+    broken=false; e.target.style.display='none';
+    $('out-shockmsg').textContent='New staff fitted, balance re-poised. Good as 1948.';
+  });
+}
+
+/* ===================== CH10b HAIRSPRING PATHOLOGY ===================== */
+{
+  let mode='healthy', ph=0;
+  const CAPS={
+    healthy:'Coils open and close evenly around the collet \u2014 the spring \u201cbreathes\u201d. This is what you want to see.',
+    magnet:'Adjacent coils snap together magnetically as they close. Effective length collapses \u2192 the watch gains minutes per hour. Fix: demagnetizer, 2 seconds.',
+    round:'The spring is bent eccentric \u2014 it breathes toward one side and can foul the regulator pins or the balance arms. Fix: tweezer work at the collet.',
+    flat:'Seen from the side, the spring is dished or tilted and drags on the balance rim or the cock. Trace shows chaotic scatter. Fix: careful truing in the flat.'
+  };
+  makeDemo('cv-hspring',(d,dt)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    ph+=dt*3.2;
+    const breathe=Math.sin(ph)*0.5+0.5;
+    const cx=W/2, cy=mode==='flat'? H/2-40 : H/2;
+    if(mode==='flat'){
+      // side view
+      ctx.strokeStyle=C.steel; ctx.lineWidth=1.6;
+      for(let c=0;c<7;c++){
+        const r=26+c*22;
+        const tilt=Math.sin(c*1.1+ph*0.5)*10;
+        ctx.beginPath(); ctx.ellipse(cx,cy+tilt*(c/7),r,7,0,0,TAU); ctx.stroke();
+      }
+      ctx.strokeStyle=C.line2; ctx.setLineDash([5,6]);
+      ctx.beginPath(); ctx.moveTo(cx-200,cy); ctx.lineTo(cx+200,cy); ctx.stroke(); ctx.setLineDash([]);
+      label(ctx,cx-210,cy-16,'flat plane',C.faint,10,'left');
+      label(ctx,cx,cy+86,'side view \u2014 coils out of flat, dragging',C.ruby,10.5);
+      ctx.strokeStyle=C.line2; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(cx-190,cy+64); ctx.lineTo(cx+190,cy+64); ctx.stroke();
+      label(ctx,cx+200,cy+64,'balance rim',C.faint,9.5,'left');
+    } else {
+      const turns=6.5, steps=turns*60;
+      ctx.strokeStyle=C.steel; ctx.lineWidth=1.6;
+      ctx.beginPath();
+      for(let i=0;i<=steps;i++){
+        const f=i/steps, a=f*turns*TAU-Math.PI/2;
+        let r=lerp(10,120,f)*(1+ (mode==='healthy'||mode==='magnet'? (breathe-0.5)*0.10*f : 0));
+        if(mode==='round') r*=1+0.16*f*Math.cos(a-0.6);
+        if(mode==='magnet' && f>0.55 && f<0.86){
+          // coils pinch together on one side
+          const pinch=Math.max(0,Math.cos(a-2.2));
+          r=lerp(r, lerp(10,120,0.70), pinch*0.85*breathe);
+        }
+        const x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
+        i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+      }
+      ctx.stroke();
+      // collet + stud + regulator pins
+      ctx.beginPath(); ctx.arc(cx,cy,7,0,TAU); ctx.fillStyle='#0B0E11'; ctx.fill();
+      ctx.strokeStyle=C.brass; ctx.lineWidth=1.6; ctx.stroke();
+      const spx=cx+120*Math.cos(turns*TAU-Math.PI/2), spy=cy+120*Math.sin(turns*TAU-Math.PI/2);
+      ctx.beginPath(); ctx.arc(spx,spy,5,0,TAU); ctx.fillStyle=C.steel; ctx.fill();
+      label(ctx,spx+12,spy,'stud',C.steel,10,'left');
+      if(mode==='magnet'){
+        const mx=cx+lerp(10,120,0.7)*Math.cos(2.2), my=cy+lerp(10,120,0.7)*Math.sin(2.2);
+        ctx.strokeStyle=C.ruby; ctx.lineWidth=1.4;
+        ctx.beginPath(); ctx.arc(mx,my,26+breathe*4,0,TAU); ctx.stroke();
+        label(ctx,mx,my-38,'coils sticking',C.ruby,10);
+      }
+      if(mode==='round'){
+        ctx.strokeStyle='rgba(232,68,107,0.5)'; ctx.setLineDash([4,6]);
+        ctx.beginPath(); ctx.arc(cx,cy,120,0,TAU); ctx.stroke(); ctx.setLineDash([]);
+        label(ctx,cx+134,cy-60,'true circle',C.ruby,9.5,'left');
+      }
+    }
+  });
+  document.querySelectorAll('#hs-chips .chip').forEach(ch=>{
+    ch.addEventListener('click',()=>{
+      document.querySelectorAll('#hs-chips .chip').forEach(c=>c.classList.remove('sel'));
+      ch.classList.add('sel'); mode=ch.dataset.h;
+      $('hs-cap').textContent=CAPS[mode];
+    });
+  });
+}
+
+/* ===================== CH12 POSITIONS ===================== */
+{
+  let pos='DU', poise=55, amp=270;
+  const BASE={DU:+2, DD:+3};
+  const ORIENT={CU:1, CD:-1, CL:0.45, CR:-0.45};
+  function rateFor(p){
+    if(p in BASE) return BASE[p];
+    const poiseEff = (poise/100)*16*((amp-220)/60);   // sign flips at 220°
+    return -4 + ORIENT[p]*poiseEff;                    // verticals lose a bit from friction
+  }
+  function allRates(){ return ['DU','DD','CU','CD','CL','CR'].map(rateFor); }
+  makeDemo('cv-pos',(d,dt)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    const cx=230, cy=H/2;
+    const vertical=!(pos in BASE);
+    const rot={DU:0,DD:0,CD:Math.PI/2,CU:-Math.PI/2,CL:Math.PI,CR:0}[pos];
+    // watch outline
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(vertical?rot:0);
+    ctx.strokeStyle=C.line2; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.arc(0,0,120,0,TAU); ctx.stroke();
+    // crown
+    ctx.fillStyle=C.silver;
+    ctx.beginPath(); ctx.rect(118,-10,14,20); ctx.fill();
+    // balance with heavy spot
+    ctx.strokeStyle=C.brass; ctx.lineWidth=3.4;
+    ctx.beginPath(); ctx.arc(0,0,64,0,TAU); ctx.stroke();
+    const hs=0.9; // heavy spot at fixed rim location
+    const hx=64*Math.cos(hs), hy=64*Math.sin(hs);
+    ctx.beginPath(); ctx.arc(hx,hy,5+poise*0.05,0,TAU);
+    ctx.fillStyle=C.ruby; ctx.fill();
+    ctx.restore();
+    label(ctx,cx+((vertical?Math.cos(rot+hs):Math.cos(hs))*64)+18,cy,'',C.ruby,10);
+    label(ctx,cx,cy+150,vertical?'gravity pulls ACROSS the pivots':'gravity pulls ALONG the staff',C.faint,10.5);
+    if(vertical){
+      ctx.strokeStyle=C.faint; ctx.lineWidth=1.4;
+      ctx.beginPath(); ctx.moveTo(cx,cy-160); ctx.lineTo(cx,cy-186); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx-4,cy-166); ctx.lineTo(cx,cy-158); ctx.lineTo(cx+4,cy-166); ctx.stroke();
+      label(ctx,cx+10,cy-172,'g',C.faint,11,'left');
+    }
+    label(ctx,cx,cy-150,{DU:'dial up',DD:'dial down',CU:'crown up',CD:'crown down',CL:'crown left',CR:'crown right'}[pos],C.silver,12);
+
+    // trace panel
+    const gx=440,gy=52,gw=400,gh=250;
+    ctx.fillStyle='rgba(255,255,255,0.02)'; ctx.fillRect(gx,gy,gw,gh);
+    ctx.strokeStyle=C.line; ctx.strokeRect(gx,gy,gw,gh);
+    const r=rateFor(pos);
+    const effAmp= vertical? amp-34 : amp;
+    const noise=Math.max(0.5,(250-effAmp)*0.10);
+    const slope=r*0.11;
+    let seed=13; const rand=()=>{seed=(seed*16807)%2147483647;return seed/2147483647-0.5;};
+    for(let i=0;i<130;i++){
+      const px=gx+8+i/130*(gw-16);
+      const y=gy+gh/2+(i-65)*slope/9;
+      ctx.fillStyle=C.brass; ctx.fillRect(px,y+rand()*noise*3,2.2,2.2);
+      ctx.fillStyle=C.steel; ctx.fillRect(px,y+3+rand()*noise*3,2.2,2.2);
+    }
+    label(ctx,gx+gw/2,gy-14,'trace in this position',C.muted,11);
+    label(ctx,gx+gw/2,gy+gh+18,'amplitude here: '+Math.round(effAmp)+'\u00b0'+(vertical?' (verticals always run lower)':''),C.faint,10);
+  });
+  function sync(){
+    $('out-poise').textContent=poise+' \u00b5g\u00b7cm';
+    $('out-posamp').textContent=amp+'\u00b0';
+    const r=rateFor(pos), rs=allRates();
+    const delta=Math.max(...rs)-Math.min(...rs);
+    $('out-posrate').textContent=(r>0?'+':'')+r.toFixed(1)+' s/d';
+    $('out-posdelta').textContent=delta.toFixed(1)+' s/d';
+    $('out-posdelta').style.color= delta<8?C.good:C.ruby;
+  }
+  document.querySelectorAll('#pos-chips .chip').forEach(ch=>{
+    ch.addEventListener('click',()=>{
+      document.querySelectorAll('#pos-chips .chip').forEach(c=>c.classList.remove('sel'));
+      ch.classList.add('sel'); pos=ch.dataset.p; sync();
+    });
+  });
+  $('in-poise').addEventListener('input',e=>{poise=+e.target.value;sync();});
+  $('in-posamp').addEventListener('input',e=>{amp=+e.target.value;sync();});
+  sync();
+}
+
+
+/* ===================== CH15 DATE JUMPER ===================== */
+{
+  let u=0.12, playing=false;   // u in [0,1] maps 20:00 → 01:00
+  function hourOf(u){return 20+u*5;}
+  makeDemo('cv-date',(d,dt)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    if(playing && !reduceMotion){ u=(u+dt*0.06)%1; $('in-datet').value=Math.round(u*1000); }
+    const h=hourOf(u);
+    // ring load/snap profile
+    let f, phase;
+    if(h<21.5){ f=0; phase='finger approaching…'; }
+    else if(h<24){ f=0.34*ease((h-21.5)/2.5); phase='finger engaged — loading the jumper'; }
+    else if(h<24.12){ f=lerp(0.34,1,ease((h-24)/0.12)); phase='SNAP — the jumper throws the ring'; }
+    else { f=1; phase='new date · finger clearing'; }
+    $('out-datet').textContent=(Math.floor(h)%24).toString().padStart(2,'0')+':'+
+      String(Math.floor((h%1)*60)).padStart(2,'0');
+    $('out-datephase').textContent=phase;
+
+    const cx=330, cyr=520, R=330;      // huge date ring, center below canvas
+    const stepA=TAU/31;
+    const ringA=-(f)*stepA;
+    // ring arc + teeth + numbers
+    ctx.save(); ctx.translate(cx,cyr); ctx.rotate(ringA);
+    ctx.strokeStyle=C.brass; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(0,0,R,-Math.PI*0.82,-Math.PI*0.18); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0,0,R-46,-Math.PI*0.82,-Math.PI*0.18); ctx.stroke();
+    for(let k=-5;k<=5;k++){
+      const a=-Math.PI/2+k*stepA;
+      // inner teeth
+      ctx.beginPath();
+      ctx.moveTo((R-46)*Math.cos(a),(R-46)*Math.sin(a));
+      ctx.lineTo((R-66)*Math.cos(a+stepA*0.5),(R-66)*Math.sin(a+stepA*0.5));
+      ctx.lineTo((R-46)*Math.cos(a+stepA),(R-46)*Math.sin(a+stepA));
+      ctx.strokeStyle=C.brass; ctx.lineWidth=1.6; ctx.stroke();
+      // date numerals
+      const num=((14+k)%31+31)%31+1;
+      ctx.save(); ctx.translate((R-22)*Math.cos(a+stepA/2),(R-22)*Math.sin(a+stepA/2));
+      ctx.rotate(a+stepA/2+Math.PI/2);
+      ctx.font='600 20px "IBM Plex Mono",monospace';
+      ctx.fillStyle=C.text; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(num,0,0);
+      ctx.restore();
+    }
+    ctx.restore();
+    // date window (fixed)
+    const wy=cyr-R+22;
+    ctx.strokeStyle=C.silver; ctx.lineWidth=2.4;
+    ctx.strokeRect(cx-26,wy-18,52,36);
+    label(ctx,cx,wy-32,'dial window',C.faint,9.5);
+
+    // jumper: sprung lever whose roller RIDES the sawtooth profile
+    const jaBase=-Math.PI/2+stepA*1.5;
+    const rel=(((jaBase-ringA+Math.PI/2)/stepA)%1+1)%1;   // position between two vertices
+    const tri=Math.abs(rel-0.5)*2;                        // 1 at a vertex, 0 mid-valley
+    const rprof=(R-66)+20*tri;                            // sawtooth radius at the roller
+    const jp={x:cx+(rprof-8)*Math.cos(jaBase), y:cyr+(rprof-8)*Math.sin(jaBase)};
+    const pivot={x:jp.x+66, y:jp.y+64};
+    ctx.strokeStyle=C.ruby; ctx.lineWidth=5; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(pivot.x,pivot.y); ctx.lineTo(jp.x,jp.y); ctx.stroke();
+    ctx.beginPath(); ctx.arc(jp.x,jp.y,7,0,TAU);
+    ctx.fillStyle='rgba(232,68,107,0.4)'; ctx.fill(); ctx.strokeStyle=C.ruby; ctx.lineWidth=1.6; ctx.stroke();
+    ctx.beginPath(); ctx.arc(pivot.x,pivot.y,5,0,TAU); ctx.fillStyle=C.ruby; ctx.fill();
+    ctx.strokeStyle=C.rubyDim; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(pivot.x+8,pivot.y-8);
+    ctx.quadraticCurveTo(pivot.x+52,pivot.y-30,pivot.x+66,pivot.y+8); ctx.stroke();
+    label(ctx,pivot.x-2,pivot.y+26,'jumper + spring',C.ruby,10.5);
+    if(f>0.05 && f<0.95) label(ctx,jp.x-16,jp.y+22,'loading…',C.ruby,9.5,'right');
+
+    // date finger (1 rev / 24 h) — its tip actually reaches the tooth zone
+    const azf=-Math.PI/2-stepA*1.15;
+    const FC={x:cx+(R-104)*Math.cos(azf), y:cyr+(R-104)*Math.sin(azf)};
+    const fa=azf+((h-22.75)/24)*TAU;                     // points at the ring at ~22:45
+    ctx.strokeStyle=C.line2; ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.arc(FC.x,FC.y,44,0,TAU); ctx.stroke();
+    ctx.strokeStyle=C.brass; ctx.lineWidth=4; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(FC.x,FC.y);
+    ctx.lineTo(FC.x+44*Math.cos(fa),FC.y+44*Math.sin(fa)); ctx.stroke();
+    ctx.beginPath(); ctx.arc(FC.x,FC.y,5,0,TAU); ctx.fillStyle=C.brass; ctx.fill();
+    label(ctx,FC.x,FC.y+62,'date finger · 1 rev / 24 h',C.brass,10);
+
+    // right-side annotation
+    label(ctx,W-190,90,'the whole day: nothing',C.faint,10.5);
+    label(ctx,W-190,112,'~21:30 → 24:00: finger loads the ring',C.muted,10.5);
+    label(ctx,W-190,134,'midnight: jumper snaps it one tooth',C.brass,10.5);
+    label(ctx,W-190,156,'0.1 s of motion in 24 hours',C.faint,10.5);
+  });
+  $('in-datet').addEventListener('input',e=>{playing=false;$('btn-dateplay').textContent='\u25B6 Play';u=+e.target.value/1000;});
+  $('btn-dateplay').addEventListener('click',e=>{playing=!playing;e.target.textContent=playing?'\u23F8 Pause':'\u25B6 Play';});
+}
+
+/* ===================== CHAPTER QUIZZES ===================== */
+{
+  const Q={
+  power:[
+    ["Why does a mechanical watch keep better time when wound every day?",["The spring stays warmer","It runs in the flat middle of the torque curve","The oils circulate","The click wears less"],1,"Balance rate varies slightly with drive torque; daily winding keeps the mainspring in its ideal middle band."],
+    ["The very first step of any service is…",["Remove the balance","Remove the hands","Let down the mainspring","Demagnetize"],2,"All stored energy is released through the click before anything else is touched — the number-one safety rule."],
+    ["Roughly how many turns does a barrel make on a full wind?",["1","7","60","400"],1,"About 6–8 turns store ~40 hours — the gear train multiplies that into thousands of hand rotations."],
+    ["The relaxed mainspring's S-shape exists to…",["Fit the barrel lid","Equalize tension along the whole coil","Reduce weight","Make winding quieter"],1,"The reverse-curved outer end keeps outer coils under similar stress to the tightly-bent inner coils."],
+    ["Torque delivered by the mainspring is highest when…",["Nearly unwound","Half wound","Fully wound","It is constant"],2,"Springs push hardest fully wound — one source of rate variation across the power reserve."],
+    ["A hand bolted directly to the barrel would…",["Turn once per hour","Spin wildly, then stop in seconds","Turn backward","Work fine"],1,"Nothing meters the energy — the whole reserve dumps at once. That problem is why the rest of the watch exists."]],
+  gears:[
+    ["A 64-tooth wheel drives an 8-tooth pinion. The pinion turns…",["8× slower","8× faster","64× faster","At the same speed"],1,"Both move tooth-for-tooth: fewer teeth means more revolutions in the same time."],
+    ["When a gear pair multiplies speed, torque…",["Also multiplies","Stays constant","Drops by the same ratio","Doubles"],2,"Energy is conserved: 8× the speed means 1/8 the torque at the pinion."],
+    ["Watch gear teeth typically use which profile?",["Involute","Cycloidal","Square","Helical"],1,"Cycloidal profiles suit the tiny, low-tooth-count pinions of horology."],
+    ["Why can't one gear pair provide the full ~343:1 reduction?",["Gears can't exceed 100:1","The proportions won't fit any case","Friction would stop it","Steel isn't strong enough"],1,"The wheel would be dinner-plate sized or the pinion microscopic — so ratios are chained instead."],
+    ["In watchmaking, a 'pinion' is…",["Any brass wheel","The small gear on an arbor","The barrel's lid","A type of screw"],1,"Each axis carries a large wheel driving the next axis's small pinion."],
+    ["If the driving gear has more teeth than the driven gear, the driven gear…",["Turns slower","Turns faster","Stops","Reverses"],1,"More driving teeth per revolution forces the smaller driven gear through more turns."]],
+  train:[
+    ["The second hand is mounted on which wheel?",["Barrel","Center wheel","Third wheel","Fourth wheel"],3,"The fourth wheel turns once per minute — the second hand rides its extended pivot."],
+    ["The center wheel completes one revolution every…",["Minute","Hour","6 seconds","12 hours"],1,"That's why the minute hand is driven from its arbor via the cannon pinion."],
+    ["Why are train wheels crossed out with spokes and holes?",["Style","To reduce rotational inertia","To save brass cost","For oil flow"],1,"The train stops and restarts 8 times a second; low inertia lets it accelerate instantly."],
+    ["The correct order of power flow is…",["Barrel → escape → fourth → third","Barrel → center → third → fourth → escape","Escape → fourth → third → barrel","Center → barrel → escape"],1,"Speed multiplies at every mesh from the slow barrel to the fast escape wheel."],
+    ["Compared to the barrel, torque at the escape wheel is…",["Much higher","The same","Much lower","Zero"],2,"The train trades force for speed — protecting the balance from being shoved too hard."],
+    ["The barrel is also counted as which wheel of the train?",["The zero wheel","The first wheel","The great wheel only in clocks","It isn't part of the train"],1,"Its toothed rim is the train's first wheel, driving the center pinion."]],
+  escapement:[
+    ["Per beat, a 15-tooth escape wheel advances exactly…",["24°","12°","6°","1 tooth"],1,"The pallets span 2.5 teeth (60°), so each release moves the wheel half a tooth pitch: 12°."],
+    ["Pallet stones are ruby because ruby is…",["Cheap","Pretty","Hard and low-friction on steel","Magnetic"],2,"They survive ~250 million impacts a year with minimal wear and drag."],
+    ["The 'impulse' is delivered when…",["The fork hits the banking pin","A tooth slides along the stone's angled face","The hairspring recoils","The jewel drops"],1,"That sliding push feeds energy through the fork into the balance — payment for every beat."],
+    ["Banking pins…",["Wind the spring","Limit the pallet fork's travel","Hold the balance jewels","Adjust the rate"],1,"They define the fork's two rest positions on either side."],
+    ["The guard pin and safety roller prevent…",["Overwinding","The fork switching sides at the wrong moment","Magnetism","Dust ingress"],1,"After a shock, they stop the fork from crossing while the jewel is elsewhere — 'overbanking'."],
+    ["'Drop' refers to…",["The watch falling","A tooth's brief free run between release and the next lock","Oil placement","Amplitude loss"],1,"A small deliberate clearance — under a loupe, healthy drop is a key inspection point."]],
+  balance:[
+    ["The period of a balance is T = …",["2π√(k/I)","2π√(I/k)","k/I","I·k"],1,"Inertia over stiffness: heavier rim → slower, stiffer spring → faster."],
+    ["'Isochronism' means the period barely depends on…",["Temperature","Amplitude","Gravity","Lubrication"],1,"Big swing or small, each beat takes the same time — the property that makes spring timekeeping possible."],
+    ["28,800 beats per hour equals a balance frequency of…",["1 Hz","2 Hz","4 Hz","8 Hz"],2,"8 beats/second = 4 full oscillations per second."],
+    ["Adding mass to the balance rim makes the watch run…",["Faster","Slower","The same","Erratically"],1,"More inertia lengthens the period — the basis of timing screws and washers."],
+    ["High beat rates are favored because they…",["Look smoother only","Average out disturbances like wrist motion","Use less power","Are quieter"],1,"A fast oscillator recovers from each perturbation before it accumulates."],
+    ["The balance receives its energy top-up from…",["The crown","The hairspring","The pallet fork via the impulse jewel","Gravity"],2,"Twice per oscillation, the fork pushes the roller jewel — like pushing a swing."]],
+  click:[
+    ["The click's job is to…",["Set the time","Stop the arbor unwinding backward","Count the teeth","Engage the date"],1,"A sprung pawl allows winding but jams against reverse rotation."],
+    ["The sound of winding a watch is literally…",["Gears meshing","The click snapping over ratchet teeth","The spring coiling","The crown bearing"],1,"Hence the part's name."],
+    ["The crown-wheel screw is famously…",["Plastic","Left-hand threaded","Glued","Two-piece"],1,"Turning it 'the normal way' loosens it — a classic beginner trap."],
+    ["A watch that 'was wound too tight and stopped' is almost always…",["Overwound","Magnetized","Dirty, with gummed oil","Missing its click"],2,"Full wind is normal; old oil turned to glue is what actually stops it."],
+    ["Letting down the mainspring safely means…",["Removing the barrel lid","Holding the crown, lifting the click, easing back slowly","Spinning the rotor","Pulling the stem"],1,"Controlled release, half a turn at a time, through your fingertips."],
+    ["The ratchet wheel is fixed to the…",["Barrel teeth","Center wheel","Square of the arbor","Balance staff"],2,"Matching squares make arbor and ratchet turn together."]],
+  keyless:[
+    ["The 'castle wheel' is another name for the…",["Crown","Sliding clutch","Setting lever","Winding pinion"],1,"Its crenellated teeth give it the name."],
+    ["Pulling the crown moves the clutch through the…",["Yoke pushed by the setting lever","Mainspring","Cannon pinion","Click"],0,"The lever's finger rides a groove in the stem and throws the yoke."],
+    ["The most common keyless failure a beginner meets is…",["Cracked jewel","Broken stem or setting-lever spring","Worn barrel","Bent balance"],1,"Crowns get yanked and stems snap — learn stem replacement early."],
+    ["To release a stem you usually…",["Pull harder","Press the dimple/screw gently with the crown pushed IN","Heat the case","Remove the balance"],1,"Pressing too hard or in the wrong position ejects the setting lever — a full teardown."],
+    ["In the setting position the clutch drives the…",["Winding pinion","Setting wheel toward the motion works","Escape wheel","Ratchet"],1,"Crown rotation now moves the hands instead of the barrel."],
+    ["The stem's square section exists so the clutch can…",["Spin freely","Slide along it while still turning with it","Lock the crown","Hold oil"],1,"Rotation is transmitted; axial position is free — the heart of one-crown-two-jobs."]],
+  motion:[
+    ["The cannon pinion grips its shaft by…",["A screw","Friction alone","Glue","A key"],1,"That slip-fit is what lets you set hands without fighting the train."],
+    ["The hour hand's 12:1 reduction comes from…",["The barrel","The minute wheel and hour wheel","The escape wheel","The click"],1,"Two small gears stacked around the same center."],
+    ["All three hands share one center because…",["Magic","Coaxial pipes: hour wheel rides around the cannon pinion","They're glued","Separate dials"],1,"Tube-within-tube construction around the center of the movement."],
+    ["A loose cannon pinion shows up as…",["A bad trace","Perfect trace, but the watch loses time on the wrist","Loud ticking","Overbanking"],1,"The escapement is fine — the hands are slipping on the train."],
+    ["Setting the time doesn't strip the train because…",["The train is disengaged","The cannon pinion slips on its friction fit","The click opens","The barrel unhooks"],1,"Turning the crown overpowers the fit; the train never feels it."],
+    ["The second hand turns once per minute because it rides the…",["Center wheel","Third wheel","Fourth wheel","Escape wheel"],2,"The fourth wheel's rate is designed for exactly this job."]],
+  automatic:[
+    ["Reverser wheels exist to…",["Slow the rotor","Turn both rotor directions into one winding direction","Stop overbanking","Drive the date"],1,"They rectify the rotor's swing so every movement winds."],
+    ["Automatics survive constant winding thanks to the…",["Click","Slipping bridle in the barrel","Rotor brake","Softer spring"],1,"Past full wind, the spring's outer end skids along the greased wall."],
+    ["A shiny circular scrape inside the caseback means…",["Normal wear","A worn rotor bearing letting the rotor drag","Magnetism","Water entry"],1,"The wobbling rotor is touching down — replace the axle/bearing."],
+    ["Hand-winding works but wrist-wearing doesn't keep it alive: suspect…",["The escapement","The automatic module (reversers/rotor)","The dial","The hairspring"],1,"The going side is proven fine; the winding side is the fault."],
+    ["Reverser wheels are typically…",["Oiled heavily","Replaced or surface-treated — plain oil makes them slip","Filed to fit","Magnetized"],1,"Their internal ratchets need special treatment (e.g., Lubeta), not ordinary oil."],
+    ["The rotor winds the watch because…",["It's motorized","Its heavy rim chases the floor as the wrist moves","Air resistance","The spring pulls it"],1,"Gravity plus wrist motion keep it swinging — a pendulum on your arm."]],
+  shock:[
+    ["Incabloc protects the…",["Mainspring","Balance pivots, via a sprung jewel setting","Crystal","Crown"],1,"The chaton floats on a lyre spring so the staff's strong shoulder takes shocks."],
+    ["Before shock protection, dropping a watch classically meant…",["A scratched dial","A snapped balance staff","A bent crown","Nothing"],1,"Fitting a new staff was the bread-and-butter repair of the vintage era."],
+    ["A magnetized hairspring typically makes the watch…",["Stop","Lose hours","Gain minutes per hour","Run perfectly"],2,"Sticking coils shorten the effective spring — the rate skyrockets."],
+    ["Your first move on a wildly fast watch should be…",["New mainspring","Demagnetize it","Replace the balance","Re-oil"],1,"Two seconds, no disassembly — always rule magnetism out first."],
+    ["A hairspring that is 'out of flat'…",["Runs fast only","Drags on the rim or cock, giving chaotic scatter","Is harmless","Improves amplitude"],1,"Coils touching anything destroys clean oscillation."],
+    ["Hairspring corrections are made…",["Anywhere along the coil","Only near the collet or stud","With pliers","By heating"],1,"Mid-coil bends multiply errors; work at the ends, with two tweezers."]],
+  regulation:[
+    ["The regulator changes the rate by altering the hairspring's…",["Material","Effective length","Thickness","Temperature"],1,"Pins straddle the outer coil; sliding them shortens or lengthens the active spring."],
+    ["A shorter effective hairspring makes the watch run…",["Slower","Faster","The same","Backward"],1,"Shorter = stiffer = higher frequency."],
+    ["Beat error is corrected with the…",["Regulator","Stud carrier (or collet)","Banking pins","Click"],1,"It centers the balance's rest so tick and tock are symmetric."],
+    ["The correct order of adjustment is…",["Rate, then beat","Beat first, then rate","Either, alternating","Amplitude first"],1,"Moving the stud changes effective geometry — set beat before chasing seconds."],
+    ["On French/Swiss regulators, A and R mean…",["Auto/Reset","Avance / Retard — faster / slower","Amplitude/Rate","Arrêt/Run"],1,"Push toward A to gain, R to lose."],
+    ["Proper regulation is checked…",["Dial-up only","In several positions on the timegrapher","By ear","Over one minute"],1,"Dial up, dial down, crown down at minimum — positions disagree, and the average matters."]],
+  positions:[
+    ["Vertical positions run at lower amplitude because…",["Gravity stops the spring","Friction acts on the pivot sides instead of the tips","The oil drains","The fork tilts"],1,"Side-loading the pivots costs 30–50° of swing."],
+    ["A poise error is…",["A bent hand","Uneven mass distribution on the balance rim","Loose screw in the cock","Wrong oil"],1,"A few micrograms off-center is enough to split the vertical rates."],
+    ["A poise error's effect flips sign at roughly what amplitude?",["100°","160°","220°","300°"],2,"Below ~220° heavy-spot-down loses; above, it gains — pure escapement physics."],
+    ["Watchmakers locate a heavy spot by…",["X-ray","Comparing vertical rates at high vs low amplitude","Listening","Weighing the balance"],1,"Dynamic poising: the position whose rate flips reveals where the mass hides."],
+    ["The fix for a heavy spot is…",["More oil","Removing material there or adding washers opposite","New hairspring","Bending the rim"],1,"Micro-adjustment of rim mass restores poise."],
+    ["'Delta' on a timing sheet means…",["Amplitude","The spread between best and worst positional rates","Beat error","Lift angle"],1,"Chronometer specs cap the delta — consistency matters more than any single rate."]],
+  timegrapher:[
+    ["The slope of the trace encodes…",["Amplitude","Rate error","Beat error","Lift angle"],1,"Uphill gains, downhill loses; flat is on time."],
+    ["Two clean parallel lines separated by a gap mean…",["Magnetism","Beat error","Low amplitude","Broken tooth"],1,"Tick and tock intervals differ — stud adjustment."],
+    ["A fuzzy, scattered trace usually means…",["Perfect health","Low amplitude — dirt, dry oil, weak spring","Fast rate","Wrong lift angle only"],1,"The escapement is stumbling; energy is being stolen somewhere."],
+    ["A repeating wave over the trace points to…",["The dial","A periodic fault — bent pivot or bad tooth; the period names the wheel","The case","The crystal"],1,"Slow wave = slow wheel (center/third); fast ripple = escape side."],
+    ["The machine computes amplitude from beat sounds plus the…",["Temperature","Lift angle you set","Case size","Hand length"],1,"A wrong lift angle gives a confidently wrong amplitude — check the caliber spec."],
+    ["Healthy dial-up numbers are roughly…",["±60 s/d, 2 ms, 150°","±5 s/d, <0.5 ms, 250–300°","0.0 s/d exactly","+30 s/d, 1 ms, 350°"],1,"Perfection isn't the target — spec is."]],
+  service:[
+    ["Cleaning solutions must treat pallet stones and roller jewels gently because…",["Ruby dissolves","They're set in shellac, which heat and solvents soften","They rust","They're glued with oil"],1,"Loose stones after cleaning are a classic self-inflicted fault."],
+    ["The lubrication philosophy is…",["Flood everything","Sparse, precise placement in the jewel cups","Oil once a year from outside","No oil at all"],1,"Excess oil migrates and drags; wrong placement is worse than none."],
+    ["9010 vs HP-1300: which goes where?",["9010 barrel, HP-1300 train","Thin 9010 on fast/low-torque train; HP-1300 on slow/high-torque","Either anywhere","Both on the pallet"],1,"Viscosity follows torque and speed."],
+    ["Screws are kept sorted by bridge because…",["Superstition","They differ in length/head and are not interchangeable","They're magnetic","Color coding"],1,"A long screw in the wrong hole can crater a jewel beneath."],
+    ["The balance comes off early in disassembly because…",["It's dirty","It's the most fragile assembly","It blocks the barrel","Tradition"],1,"It rests safe on the bench while heavier work proceeds."],
+    ["A service is finished when…",["It ticks","It's regulated across positions on the timegrapher","The case shines","48 h pass"],1,"Chapter 13 is the final exam of every service."]],
+  master:[
+    ["A watch gains 2 min/day dial-up, but crown-down it is near spec. First suspect?",["Magnetized hairspring","Hairspring out of flat, coils fouling only when horizontal","Loose cannon pinion","Weak mainspring"],1,"A position-specific gross gain means the spring touches something in that position — magnetism would poison every position."],
+    ["Right after your service the watch knocks at 355° dial-up. The correct fix is…",["Regulate it slower","Fit the correct (weaker) mainspring","Open the regulator pins","Add oil to the pallets"],1,"Knocking is an energy-budget error — usually your own 'stronger spring' choice. Regulation can't fix physics."],
+    ["Beat error reads 2.8 ms and is identical in every position. You adjust…",["The regulator","The stud carrier (or collet)","The banking pins","The mainspring"],1,"A constant symmetric offset is pure beat — rotate the spring's fixed end; never touch the bankings."],
+    ["Delta across positions is 18 s/d at full wind but shrinks to 5 s/d a day later. Diagnosis?",["Dirty train","Balance out of poise","Broken jewel","Magnetism"],1,"Poise error scales with amplitude and flips near 220° — exactly this signature. Dynamic-poise the balance."],
+    ["A watch suddenly loses 8 min/day, amplitude normal. Under the loupe you'd expect…",["A cracked jewel","The hairspring escaped outside a regulator pin","A bent second hand","A worn click"],1,"Running outside the pins makes the full spring length active — a massive, sudden loss with healthy amplitude."],
+    ["After cleaning, a pallet stone shifts in its slot. What happened?",["Ruby shrank","The shellac dissolved — solution too hot or soaked too long","Ultrasonic cracked it","Wrong oil"],1,"Shellac-set parts (pallets, roller jewel) get brief, cooler treatment. Re-seat with a heated pallet warmer."],
+    ["Crown winds normally, but in the pulled position it spins without setting the hands.",["Broken mainspring","Stripped sliding-clutch / setting-wheel teeth","Loose cannon pinion","Bent stem"],1,"Winding path proven fine; the setting path's teeth are gone. Keyless parts, Chapter 07."],
+    ["An automatic runs perfectly hand-wound but dies overnight after a day of wear.",["Escapement fault","Failed reversers or rotor — the wearer isn't actually winding it","Broken balance staff","Magnetism"],1,"The going side is proven by hand-winding; the automatic module is doing nothing all day."],
+    ["Perfect timegrapher trace in all positions, yet the owner loses 5 min/day on the wrist.",["Impossible","Loose cannon pinion — the hands slip on a healthy train","Temperature error","Knocking"],1,"The machine listens to the escapement; it cannot hear hands slipping. Tighten the cannon pinion."],
+    ["The date flips at noon instead of midnight.",["Broken jumper","Hands were fitted 12 hours out of phase","Wrong date ring","Worn hour wheel"],1,"The mechanism is fine — advance the time 12 hours (or refit hands at the changeover point)."],
+    ["A vintage watch is fully wound, the balance swings freely by puff, but the fork never flips.",["Broken mainspring","Overbanked — the guard pin is on the wrong side of the safety roller","Magnetized","No oil"],1,"A shock tripped the fork across; the jewel now strikes the horn's outside. Lift the fork back over — seconds to fix, if you know it exists."],
+    ["Chrono hand resets to 2 seconds past zero every time.",["Bend the hand back","Loose hand tube or worn hammer/heart contact — refit the hand at true zero","Weaker mainspring","Adjust the regulator"],1,"The heart cam defines zero mechanically; if the hand disagrees, the hand (or hammer face) is at fault — never the hand's shape."]],
+  complications:[
+    ["The date uses a jumper instead of direct gearing because…",["Gears can't do 31","Direct drive would creep the date all day under the window","It's cheaper","It saves power"],1,"The jumper stores the motion and releases it in one legible snap at midnight."],
+    ["A basic 31-day date ring means…",["It self-corrects","You correct it manually after short months","It tracks leap years","It never needs setting"],1,"Annual and perpetual calendars exist precisely to automate this."],
+    ["Never quickset the date around midnight because…",["Bad luck","The finger is engaged — forcing it can snap finger or jumper","The spring is weakest","The oil is cold"],1,"The danger window is roughly 21:00–03:00 on many calibers."],
+    ["A column wheel chronograph differs from a cam one by…",["Having no clutch","Crisper, lighter pusher control of the levers","Being quartz","Running backward"],1,"The turret's pillars lift the levers cleanly — the luxury feel."],
+    ["A vertical clutch's advantage is…",["Cheaper","No stutter at start; the chrono can run continuously","Louder","Smaller"],1,"Friction coupling instead of meshing teeth mid-motion."],
+    ["The classic moonphase drifts one day every ~2.7 years because…",["Ruby wears","59 teeth model 2×29.5 days, but a lunation is 29.53","Gravity varies","Magnetism"],1,"Precision moonphases use 135-tooth gearing to push the error past a century."]]
+  };
+  const TITLES={power:'01 · Power',gears:'02 · Gears',train:'03 · The going train',
+    escapement:'04 · The escapement',balance:'05 · The balance',click:'06 · Winding & the click',
+    keyless:'07 · Keyless works',motion:'08 · Motion works',automatic:'09 · Automatic winding',
+    shock:'10 · Shock & hairspring',regulation:'11 · Regulation',positions:'12 · Positions & poise',
+    timegrapher:'13 · The timegrapher',service:'14 · Service',complications:'15 · Complications',master:'Final · Master exam'};
+  document.querySelectorAll('.chq').forEach(box=>{
+    const ch=box.dataset.ch, qs=Q[ch]; if(!qs) return;
+    let score=0, answered=0;
+    const head=document.createElement('div'); head.className='chq-head';
+    head.innerHTML='<b>Check yourself · '+TITLES[ch]+'</b><span class="chq-score">0 / '+qs.length+'</span>';
+    box.appendChild(head);
+    const scoreEl=head.querySelector('.chq-score');
+    qs.forEach((q,qi)=>{
+      const div=document.createElement('div'); div.className='chq-q';
+      div.innerHTML='<div class="qt"><em>Q'+(qi+1)+'</em>'+q[0]+'</div>';
+      const opts=document.createElement('div'); opts.className='chq-opts';
+      const exp=document.createElement('div'); exp.className='chq-exp';
+      exp.textContent=q[3];
+      let done=false;
+      q[1].forEach((o,oi)=>{
+        const b=document.createElement('button'); b.className='btn'; b.textContent=o;
+        b.addEventListener('click',()=>{
+          if(done) return; done=true; answered++;
+          if(oi===q[2]){ b.classList.add('correct'); score++; }
+          else { b.classList.add('wrong'); opts.children[q[2]].classList.add('correct'); }
+          exp.style.display='block';
+          scoreEl.textContent=score+' / '+qs.length;
+          scoreEl.style.color = answered===qs.length ? (score/qs.length>=0.83?C.good:score/qs.length>=0.5?C.brass:C.ruby) : '';
+        });
+        opts.appendChild(b);
+      });
+      div.appendChild(opts); div.appendChild(exp); box.appendChild(div);
+    });
+  });
+}
+
+
+/* ===================== DEEP: ESCAPEMENT LAB (unrolled) ===================== */
+{
+  let lockD=5, dropD=6;
+  makeDemo('cv-esclab',(d,dt)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    const line=H/2+26;               // tooth-tip travel line
+    const pitch=170;
+    const mislock=lockD<2, nodrop=dropD<2, deep=lockD>8;
+    // cycle: locked pause → stone lifts → teeth advance one pitch → stone drops → lock
+    const T=2.6, ph=(d.t%T)/T;
+    let lift=0, adv=0;
+    if(ph<0.42){ lift=0; adv=0; }
+    else if(ph<0.58){ lift=ease((ph-0.42)/0.16); adv=ease((ph-0.42)/0.16)*0.5; }
+    else if(ph<0.74){ lift=1-ease((ph-0.58)/0.16); adv=0.5+ease((ph-0.58)/0.16)*0.5; }
+    else { lift=0; adv=1; }
+    if(mislock){ lift=Math.max(lift,0.75); adv=(d.t*0.9)%1; }   // stone can't hold — teeth stream past
+    if(nodrop){ lift=Math.min(lift,0.4); adv=Math.min(adv,0.5); } // heel butts, jams mid-pass
+    const strip=-adv*pitch + ((Math.floor(d.t/T))%1)*0;
+    // travel line
+    ctx.strokeStyle=C.line2; ctx.setLineDash([4,7]);
+    ctx.beginPath(); ctx.moveTo(30,line); ctx.lineTo(W-30,line); ctx.stroke(); ctx.setLineDash([]);
+    label(ctx,W-32,line+14,'tooth-tip path',C.faint,9.5,'right');
+    // teeth (club shapes, tips ON the line, moving left→right? draw advancing right)
+    ctx.save();
+    for(let k=-1;k<6;k++){
+      const x= 60 + k*pitch + strip + dropD*0; // base spacing
+      ctx.beginPath();
+      ctx.moveTo(x,line);                       // tip
+      ctx.lineTo(x+16,line-7);                  // impulse face
+      ctx.lineTo(x+44,line+30);
+      ctx.lineTo(x-70,line+30);
+      ctx.closePath();
+      ctx.fillStyle='rgba(217,169,60,0.08)'; ctx.fill();
+      ctx.strokeStyle=C.brass; ctx.lineWidth=1.8; ctx.stroke();
+    }
+    ctx.restore();
+    // pallet stone: hangs from above; face vertical at x=stoneX; engages lockD below the line
+    const stoneX=60+2*pitch+ dropD*4;           // drop = free gap the tooth flies before this stone
+    const sy=line - 58 + lift*(lockD*2+26);
+    ctx.fillStyle='rgba(232,68,107,0.42)';
+    ctx.strokeStyle=C.ruby; ctx.lineWidth=1.8;
+    ctx.beginPath(); ctx.rect(stoneX,sy,26,58+lockD*2); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle=C.silver; ctx.lineWidth=5; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(stoneX+13,sy); ctx.lineTo(stoneX+13,sy-40); ctx.stroke();
+    label(ctx,stoneX+13,sy-52,'pallet stone (on the fork)',C.ruby,10);
+    // dimension brackets
+    ctx.strokeStyle=C.steel; ctx.lineWidth=1.4;
+    // lock bracket: from line to stone bottom (when seated)
+    const seatBottom=line+lockD*2;
+    ctx.beginPath(); ctx.moveTo(stoneX+40,line); ctx.lineTo(stoneX+40,seatBottom);
+    ctx.moveTo(stoneX+34,line); ctx.lineTo(stoneX+46,line);
+    ctx.moveTo(stoneX+34,seatBottom); ctx.lineTo(stoneX+46,seatBottom); ctx.stroke();
+    label(ctx,stoneX+54,(line+seatBottom)/2,'lock',C.steel,10,'left');
+    // drop bracket: from previous tooth heel to stone face
+    const heelX=60+1*pitch+16+strip+dropD*0+28;
+    ctx.strokeStyle=C.good;
+    ctx.beginPath(); ctx.moveTo(heelX,line+44); ctx.lineTo(stoneX,line+44);
+    ctx.moveTo(heelX,line+38); ctx.lineTo(heelX,line+50);
+    ctx.moveTo(stoneX,line+38); ctx.lineTo(stoneX,line+50); ctx.stroke();
+    label(ctx,(heelX+stoneX)/2,line+62,'drop',C.good,10);
+    // verdict
+    const out=$('out-esclab');
+    if(mislock) out.innerHTML='<span class="warn">MISLOCK \u2014 tooth lands on the impulse face: the wheel skids through, the watch gallops or stops.</span>';
+    else if(nodrop) out.innerHTML='<span class="warn">NO DROP \u2014 the tooth heel butts the stone: the train jams solid.</span>';
+    else if(deep) out.innerHTML='<span style="color:'+C.brass+'">Deep lock \u2014 safe but every beat wastes energy unlocking: amplitude falls.</span>';
+    else out.innerHTML='<span class="ok">Healthy \u2014 secure lock, just-visible drop. This is what you check under the loupe.</span>';
+  });
+  $('in-lock').addEventListener('input',e=>{lockD=+e.target.value;$('out-lock').textContent=(lockD*0.3).toFixed(1)+'\u00b0';});
+  $('in-drop').addEventListener('input',e=>{dropD=+e.target.value;$('out-drop').textContent=(dropD*0.25).toFixed(1)+'\u00b0';});
+  $('out-lock').textContent='1.5\u00b0'; $('out-drop').textContent='1.5\u00b0';
+}
+
+/* ===================== DEEP: TEMPERATURE vs MATERIALS ===================== */
+{
+  let T=20;
+  const mats=[
+    {n:'blued steel', c:C.ruby,  f:t=>-10.8*(t-20)},
+    {n:'Nivarox',     c:C.brass, f:t=>-0.14*(t-20)-0.006*Math.pow(t-20,2)},
+    {n:'silicon',     c:C.steel, f:t=>-0.02*(t-20)}
+  ];
+  makeDemo('cv-temp',(d)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    const gx=70,gy=30,gw=W-130,gh=H-90;
+    ctx.strokeStyle=C.line; ctx.strokeRect(gx,gy,gw,gh);
+    // zero line + grid
+    const y0=gy+gh/2;
+    ctx.strokeStyle=C.line2; ctx.beginPath(); ctx.moveTo(gx,y0); ctx.lineTo(gx+gw,y0); ctx.stroke();
+    label(ctx,gx-8,y0,'0',C.faint,10,'right');
+    label(ctx,gx-8,gy+8,'+120 s/d',C.faint,9.5,'right');
+    label(ctx,gx-8,gy+gh-8,'\u2212120 s/d',C.faint,9.5,'right');
+    const X=t=>gx+(t+10)/50*gw, Y=r=>y0-clamp(r,-120,120)/120*(gh/2-6);
+    for(const m of mats){
+      ctx.beginPath();
+      for(let t=-10;t<=40;t+=1){
+        const x=X(t),y=Y(m.f(t));
+        t>-10?ctx.lineTo(x,y):ctx.moveTo(x,y);
+      }
+      ctx.strokeStyle=m.c; ctx.lineWidth=2; ctx.stroke();
+      label(ctx,gx+gw+10,Y(m.f(40)),m.n,m.c,10,'left');
+    }
+    // temperature marker
+    ctx.strokeStyle=C.silver; ctx.setLineDash([3,5]);
+    ctx.beginPath(); ctx.moveTo(X(T),gy); ctx.lineTo(X(T),gy+gh); ctx.stroke(); ctx.setLineDash([]);
+    for(const m of mats){
+      ctx.beginPath(); ctx.arc(X(T),Y(m.f(T)),4.5,0,TAU); ctx.fillStyle=m.c; ctx.fill();
+    }
+    label(ctx,X(T),gy+gh+18,T+'\u00b0C',C.silver,11);
+    label(ctx,gx+gw/2,gy+gh+38,'a century of metallurgy, one chart \u2014 steel loses ~11 s/d per \u00b0C of warmth',C.faint,10);
+  });
+  function sync(){
+    $('out-temp').textContent=T+'\u00b0C';
+    $('out-tsteel').textContent=(mats[0].f(T)>0?'+':'')+mats[0].f(T).toFixed(0)+' s/d';
+    $('out-tniv').textContent=(mats[1].f(T)>0?'+':'')+mats[1].f(T).toFixed(1)+' s/d';
+    $('out-tsi').textContent=(mats[2].f(T)>0?'+':'')+mats[2].f(T).toFixed(1)+' s/d';
+  }
+  $('in-temp').addEventListener('input',e=>{T=+e.target.value;sync();});
+  sync();
+}
+
+/* ===================== DEEP: AMPLITUDE FROM SOUND ===================== */
+{
+  let A=270;
+  const LIFT=52, F=4; // deg, Hz
+  // Δt = asin(L/(2A)) / (π f) — the L/2A ratio is unit-free
+  function dtms(amp){ return Math.asin((LIFT/2)/amp)/(Math.PI*F)*1000; }
+  makeDemo('cv-sound',(d)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    const gx=60,gy=44,gw=W-120,gh=H-110;
+    // one beat window = 125 ms
+    const beat=125, dt=dtms(A);
+    ctx.strokeStyle=C.line; ctx.strokeRect(gx,gy,gw,gh);
+    const y0=gy+gh*0.62;
+    ctx.strokeStyle=C.line2; ctx.beginPath(); ctx.moveTo(gx,y0); ctx.lineTo(gx+gw,y0); ctx.stroke();
+    const Xms=ms=>gx+ms/beat*gw;
+    // three sound spikes: unlock at t0, impulse mid, drop at t0+dt
+    const t0=42;
+    const spikes=[[t0,0.45,'unlock'],[t0+dt*0.45,0.7,'impulse'],[t0+dt,1.0,'drop-lock']];
+    for(const [ms,h,name] of spikes){
+      const x=Xms(ms);
+      // little burst
+      ctx.strokeStyle=C.brass; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(x,y0); ctx.lineTo(x,y0-h*(gh*0.5)); ctx.stroke();
+      for(let j=1;j<=3;j++){
+        ctx.lineWidth=1;
+        ctx.beginPath(); ctx.moveTo(x+j*3,y0); ctx.lineTo(x+j*3,y0-h*(gh*0.5)*Math.exp(-j*0.8)); ctx.stroke();
+      }
+      label(ctx,x,y0+16,name,C.muted,9.5);
+    }
+    // Δt bracket
+    ctx.strokeStyle=C.steel; ctx.lineWidth=1.4;
+    const x1=Xms(t0),x2=Xms(t0+dt),yb=gy+14;
+    ctx.beginPath(); ctx.moveTo(x1,yb); ctx.lineTo(x2,yb);
+    ctx.moveTo(x1,yb-5); ctx.lineTo(x1,yb+5); ctx.moveTo(x2,yb-5); ctx.lineTo(x2,yb+5); ctx.stroke();
+    label(ctx,(x1+x2)/2,yb-12,'\u0394t = '+dt.toFixed(1)+' ms',C.steel,10.5);
+    label(ctx,gx+gw-8,gy+gh-10,'one beat \u00b7 125 ms @ 28,800 vph',C.faint,9.5,'right');
+    label(ctx,gx+gw/2,gy+gh+26,'A = lift \u2044 (2\u00b7sin(\u03c0\u00b7f\u00b7\u0394t)) \u2014 faster crossing \u21d2 bigger swing',C.faint,10.5);
+  });
+  function sync(){
+    const dt=dtms(A);
+    $('out-sndamp').textContent=A+'\u00b0';
+    $('out-snddt').textContent=dt.toFixed(1)+' ms';
+    const calc=(LIFT/2)/Math.sin(Math.PI*F*dt/1000);
+    $('out-sndcalc').textContent=Math.round(calc)+'\u00b0';
+  }
+  $('in-sndamp').addEventListener('input',e=>{A=+e.target.value;sync();});
+  sync();
+}
+
+
+/* ===================== DEEP: BARREL ENGINEERING LAB ===================== */
+{
+  let e=0.110, L=345;                       // mm
+  const R=5.2, r=1.7, FREE=Math.PI*(R*R-r*r); // free annulus area
+  function calc(){
+    const A=L*e;
+    if(A>=FREE) return {fit:false};
+    const r1=Math.sqrt(r*r+A/Math.PI);      // wound on arbor
+    const r2=Math.sqrt(R*R-A/Math.PI);      // relaxed against wall
+    const n=(r1+r2-R-r)/e;
+    return {fit:true,r1,r2,n,A};
+  }
+  makeDemo('cv-barrel',(d)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    const c=calc();
+    const S=26;                              // px per mm
+    // two barrel cross-sections: wound / relaxed
+    for(const [cx,state] of [[190,'wound'],[430,'relaxed']]){
+      const cy=H/2-6;
+      ctx.strokeStyle=C.brass; ctx.lineWidth=3;
+      ctx.beginPath(); ctx.arc(cx,cy,R*S,0,TAU); ctx.stroke();
+      ctx.strokeStyle=C.silver; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(cx,cy,r*S,0,TAU); ctx.stroke();
+      if(c.fit){
+        const [ri,ro]= state==='wound' ? [r,c.r1] : [c.r2,R];
+        ctx.beginPath(); ctx.arc(cx,cy,ro*S,0,TAU); ctx.arc(cx,cy,ri*S,0,TAU,true);
+        ctx.fillStyle= state==='wound' ? 'rgba(111,162,242,0.28)' : 'rgba(111,162,242,0.13)';
+        ctx.fill();
+        // coil rings
+        ctx.strokeStyle= state==='wound'?C.steel:C.steelDim; ctx.lineWidth=1;
+        for(let rr=ri+e; rr<ro; rr+=e){
+          ctx.beginPath(); ctx.arc(cx,cy,rr*S,0,TAU); ctx.stroke();
+        }
+      } else {
+        label(ctx,cx,cy,'does not fit',C.ruby,12);
+      }
+      label(ctx,cx,cy+R*S+20,state==='wound'?'fully wound (on the arbor)':'run down (against the wall)',C.muted,10.5);
+    }
+    // turns-vs-length curve with optimum
+    const gx=590,gy=44,gw=220,gh=210;
+    ctx.strokeStyle=C.line; ctx.strokeRect(gx,gy,gw,gh);
+    let maxN=0;
+    ctx.beginPath();
+    for(let i=0;i<=60;i++){
+      const Li=200+i/60*360, A=Li*e;
+      let n=0;
+      if(A<FREE){
+        const r1=Math.sqrt(r*r+A/Math.PI), r2=Math.sqrt(R*R-A/Math.PI);
+        n=Math.max(0,(r1+r2-R-r)/e);
+      }
+      maxN=Math.max(maxN,n);
+      const x=gx+i/60*gw, y=gy+gh-(n/9)*gh;
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    }
+    ctx.strokeStyle=C.brassDim; ctx.lineWidth=1.6; ctx.stroke();
+    // optimum: L·e = FREE/2
+    const Lopt=FREE/2/e;
+    if(Lopt>=200&&Lopt<=560){
+      const xo=gx+(Lopt-200)/360*gw;
+      ctx.strokeStyle='rgba(95,201,142,0.55)'; ctx.setLineDash([3,5]);
+      ctx.beginPath(); ctx.moveTo(xo,gy); ctx.lineTo(xo,gy+gh); ctx.stroke(); ctx.setLineDash([]);
+      label(ctx,xo,gy-10,'half-area optimum',C.good,9.5);
+    }
+    if(c.fit){
+      const x=gx+(L-200)/360*gw, y=gy+gh-(c.n/9)*gh;
+      ctx.beginPath(); ctx.arc(x,y,5,0,TAU); ctx.fillStyle=C.brass; ctx.fill();
+    }
+    label(ctx,gx+gw/2,gy+gh+18,'turns vs. spring length',C.faint,10);
+    // readouts
+    const oute=$('out-be'),outl=$('out-bl');
+    oute.textContent=e.toFixed(3)+' mm'; outl.textContent=L+' mm';
+    if(c.fit){
+      $('out-bturns').textContent=c.n.toFixed(1);
+      $('out-bres').textContent=(c.n*6.4).toFixed(0)+' h';
+      const fill=c.A/FREE;
+      $('out-bmsg').innerHTML= fill>0.62 ? '<span class="warn">over-sprung \u2014 the spring chokes its own barrel</span>'
+        : fill<0.38 ? '<span style="color:'+C.brass+'">under-sprung \u2014 wasted volume</span>'
+        : '<span class="ok">\u2713 near the half-area optimum</span>';
+    } else {
+      $('out-bturns').textContent='\u2014'; $('out-bres').textContent='\u2014';
+      $('out-bmsg').innerHTML='<span class="warn">spring exceeds the barrel\u2019s free volume</span>';
+    }
+  });
+  $('in-be').addEventListener('input',ev=>{e=+ev.target.value/1000;});
+  $('in-bl').addEventListener('input',ev=>{L=+ev.target.value;});
+}
+
+/* ===================== DEEP: HEART CAM RESET ===================== */
+{
+  let running=false, ang=2.3, resetT=-1, elapsed=18.4;
+  const NOTCH=0;
+  function heartR(a){ // two spirals meeting at the notch: r grows with |angle from notch|
+    let d=((a-NOTCH)%TAU+TAU)%TAU; if(d>Math.PI) d=TAU-d;   // 0..π
+    return 22+ (d/Math.PI)*46;
+  }
+  makeDemo('cv-heart',(d,dt)=>{
+    const {ctx,W,H}=d; ctx.clearRect(0,0,W,H);
+    if(running && !reduceMotion){ ang+=dt*TAU/8; elapsed+=dt; } // 1 rev / 8 s for visibility
+    if(resetT>=0){
+      resetT+=dt*2.2;
+      const k=ease(Math.min(1,resetT));
+      // rotate downhill: shortest signed path to notch
+      let a=((ang-NOTCH+Math.PI)%TAU+TAU)%TAU-Math.PI;
+      ang=NOTCH+a*(1-k);
+      elapsed*= (1-k);
+      if(resetT>=1){resetT=-1; ang=NOTCH; elapsed=0;}
+    }
+    const cx=300, cy=H/2+14;
+    // heart cam
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(ang);
+    ctx.beginPath();
+    for(let i=0;i<=120;i++){
+      const a=i/120*TAU, rr=heartR(a);
+      const x=rr*Math.cos(a-Math.PI/2), y=rr*Math.sin(a-Math.PI/2);
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    }
+    ctx.closePath();
+    ctx.fillStyle='rgba(217,169,60,0.10)'; ctx.fill();
+    ctx.strokeStyle=C.brass; ctx.lineWidth=2; ctx.stroke();
+    ctx.beginPath(); ctx.arc(0,0,7,0,TAU); ctx.fillStyle='#0B0E11'; ctx.fill(); ctx.stroke();
+    ctx.restore();
+    // hammer: flat face resting on the cam from above at azimuth "up"
+    const contactR=heartR(-ang);            // cam radius currently facing up (world up = local -ang)
+    const hammering=resetT>=0;
+    const hy= cy - (hammering? contactR : 96) - 0;
+    ctx.strokeStyle=hammering?C.ruby:C.rubyDim; ctx.lineWidth=6; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(cx-58,hy-8); ctx.lineTo(cx+58,hy-8); ctx.stroke();  // flat face
+    ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(cx+58,hy-8); ctx.lineTo(cx+112,hy-46); ctx.stroke(); // arm
+    ctx.beginPath(); ctx.arc(cx+112,hy-46,5,0,TAU); ctx.fillStyle=C.ruby; ctx.fill();
+    label(ctx,cx+126,hy-52,'hammer',C.ruby,10,'left');
+    label(ctx,cx-70,hy-8,'flat face',C.faint,9,'right');
+    // chrono subdial mirrors the cam
+    const sx=620, sr=76;
+    ctx.strokeStyle=C.line2; ctx.lineWidth=1.6;
+    ctx.beginPath(); ctx.arc(sx,cy,sr,0,TAU); ctx.stroke();
+    for(let i=0;i<12;i++){const a=i*TAU/12-Math.PI/2;
+      ctx.beginPath();ctx.moveTo(sx+(sr-6)*Math.cos(a),cy+(sr-6)*Math.sin(a));
+      ctx.lineTo(sx+sr*Math.cos(a),cy+sr*Math.sin(a));ctx.stroke();}
+    ctx.strokeStyle=C.ruby; ctx.lineWidth=2.6;
+    ctx.beginPath(); ctx.moveTo(sx,cy);
+    ctx.lineTo(sx+(sr-10)*Math.cos(ang-Math.PI/2),cy+(sr-10)*Math.sin(ang-Math.PI/2)); ctx.stroke();
+    ctx.beginPath(); ctx.arc(sx,cy,4,0,TAU); ctx.fillStyle=C.brass; ctx.fill();
+    label(ctx,sx,cy+sr+18,'chrono hand \u2014 same axis as the heart',C.faint,10);
+    label(ctx,cx,cy+96,'both flanks descend to the notch \u2192 zero from either side',C.faint,10);
+    $('out-chrono').textContent=elapsed.toFixed(1)+' s';
+    $('out-chstate').textContent= resetT>=0?'RESET \u2014 hammer riding downhill':running?'running':'stopped';
+    $('out-chstate').style.color= resetT>=0?C.ruby:running?C.good:C.faint;
+  });
+  $('btn-chstart').addEventListener('click',e=>{
+    if(resetT>=0) return;
+    running=!running;
+    e.target.textContent=running?'Stop':'Start';
+    e.target.classList.toggle('primary',!running);
+  });
+  $('btn-chreset').addEventListener('click',()=>{
+    running=false; $('btn-chstart').textContent='Start'; $('btn-chstart').classList.add('primary');
+    if(resetT<0) resetT=0;
+  });
+}
+
+/* ===================== DEEP: OILING CHALLENGE ===================== */
+{
+  const OPTS=['9010 thin oil','HP-1300 heavy oil','9415 pallet grease','Grease','Dry / special'];
+  const PTS=[
+    ['Balance cap jewels (shock settings)',0,'A dot half the size of the jewel basin \u2014 more migrates up the staff and drowns the hairspring.'],
+    ['Train pivots: third, fourth, escape',0,'Fast, low-torque pivots want the thinnest synthetic oil.'],
+    ['Center wheel & barrel arbor pivots',1,'Slow and torque-loaded: viscous oil stays put under pressure.'],
+    ['Mainspring & barrel wall',3,'Mainspring grease; on automatics, braking grease in a few spots on the wall \u2014 quantity sets where the bridle slips.'],
+    ['Pallet stone impulse faces',2,'9415 is thixotropic: a gel at rest, liquid at each impact \u2014 made for exactly this.'],
+    ['Pallet fork pivots',4,'The famous exception: they run DRY. Oil here damps the fork\u2019s flick and kills amplitude.'],
+    ['Keyless works: clutch, yoke, stem',3,'High-pressure sliding steel on steel \u2014 grease, and generously by watch standards.'],
+    ['Cannon pinion friction fit',1,'A controlled-slip joint: heavy oil keeps the grip consistent so hand-setting stays smooth.'],
+    ['Reverser wheels (automatic)',4,'Never plain-oiled \u2014 dipped in Lubeta V105 or replaced; ordinary oil makes them freewheel.']
+  ];
+  const box=$('oilgame');
+  if(box){
+    let score=0, answered=0;
+    const scoreEl=$('oil-score');
+    PTS.forEach((p,pi)=>{
+      const div=document.createElement('div'); div.className='chq-q';
+      div.innerHTML='<div class="qt"><em>'+(pi+1)+'</em>'+p[0]+'</div>';
+      const opts=document.createElement('div'); opts.className='chq-opts';
+      opts.style.gridTemplateColumns='repeat(auto-fit,minmax(140px,1fr))';
+      const exp=document.createElement('div'); exp.className='chq-exp'; exp.textContent=p[2];
+      let done=false;
+      OPTS.forEach((o,oi)=>{
+        const b=document.createElement('button'); b.className='btn'; b.textContent=o;
+        b.addEventListener('click',()=>{
+          if(done)return; done=true; answered++;
+          if(oi===p[1]){b.classList.add('correct');score++;}
+          else{b.classList.add('wrong');opts.children[p[1]].classList.add('correct');}
+          exp.style.display='block';
+          scoreEl.textContent=score+' / 9';
+          scoreEl.style.color=answered===9?(score>=8?C.good:score>=5?C.brass:C.ruby):'';
+        });
+        opts.appendChild(b);
+      });
+      div.appendChild(opts); div.appendChild(exp); box.appendChild(div);
+    });
+  }
+}
+
+
+/* ===================== FR / EN TOGGLE ===================== */
+{
+  const FR={"An interactive course · 15 chapters": "Un cours interactif · 15 chapitres", "Level": "Niveau", "beginner → expert": "débutant → expert", "Demos": "Démos", "23 interactive · 111 quiz questions": "23 simulations · 111 questions", "Time": "Durée", "~90 min": "~90 min", "Swiss lever escapement · slowed ≈4×": "Échappement à ancre suisse · ralenti ≈4×", "Pause": "Pause", "Run": "Reprendre", "Beginner": "Débutant", "Intermediate": "Intermédiaire", "Advanced": "Avancé", "01 Power": "01 Énergie", "02 Gears": "02 Engrenages", "03 Train": "03 Rouage", "04 Escapement": "04 Échappement", "05 Balance": "05 Balancier", "06 Winding": "06 Remontage", "07 Keyless": "07 Tirette", "08 Motion": "08 Minuterie", "09 Automatic": "09 Automatique", "10 Shock & hairspring": "10 Antichoc & spiral", "11 Regulation": "11 Réglage", "13 Timegrapher": "13 Vibrographe", "14 Service": "14 Révision", "Final exam": "Examen final", "Chapter 01 · Power": "Chapitre 01 · L'énergie", "Chapter 02 · Gears": "Chapitre 02 · Les engrenages", "Chapter 03 · The going train": "Chapitre 03 · Le rouage de finissage", "Chapter 04 · The escapement": "Chapitre 04 · L'échappement", "Chapter 05 · The balance": "Chapitre 05 · Le balancier", "Chapter 06 · Winding & the click": "Chapitre 06 · Remontage & cliquet", "Chapter 07 · Keyless works": "Chapitre 07 · Le mécanisme de remontoir", "Chapter 08 · Motion works": "Chapitre 08 · La minuterie", "Chapter 09 · Automatic winding": "Chapitre 09 · Le remontage automatique", "Chapter 10 · Shock protection & hairspring health": "Chapitre 10 · Antichoc & santé du spiral", "Chapter 11 · Regulation": "Chapitre 11 · Le réglage", "Chapter 12 · Positional timing & poise": "Chapitre 12 · Marche aux positions & équilibrage", "Chapter 13 · The timegrapher": "Chapitre 13 · Le vibrographe", "Chapter 14 · Service": "Chapitre 14 · La révision", "Chapter 15 · Complications": "Chapitre 15 · Les complications", "Final · Master exam": "Final · Examen de maîtrise", "Everything begins with a wound spring": "Tout commence par un ressort armé", "Trading force for speed": "Échanger la force contre la vitesse", "Four wheels between the spring and the tick": "Quatre roues entre le ressort et le tic-tac", "The Swiss lever, frame by frame": "L'ancre suisse, image par image", "The heartbeat: a wheel on a hairspring": "Le cœur battant : un balancier sur son spiral", "Why the crown ratchets": "Pourquoi la couronne cliquette", "The mechanism under your crown": "Le mécanisme sous votre couronne", "Three hands from one train": "Trois aiguilles pour un seul rouage", "A pendulum on your wrist": "Un pendule à votre poignet", "Protecting the two most fragile parts": "Protéger les deux pièces les plus fragiles", "Why the same watch keeps six different times": "Pourquoi la même montre donne six heures différentes", "Reading a watch's ECG": "Lire l'ECG d'une montre", "The anatomy of an overhaul": "L'anatomie d'une révision", "Everything beyond the time": "Tout ce qui dépasse l'heure", "Twelve patients, no labels": "Douze patients, sans étiquette", "Speak both bench languages": "Parler les deux langues de l'établi", "Reading a sick hairspring": "Reconnaître un spiral malade", "Diagnose the patient": "Diagnostiquez le patient", "The master diagnostic matrix": "La matrice diagnostique", "Building your bench": "Monter votre établi", "The rest of the family, in one tour": "Le reste de la famille, en un tour", "Go deeper — spring metallurgy, the fusee, and where \"40 hours\" comes from": "Aller plus loin — métallurgie du ressort, la fusée, et l'origine des « 40 heures »", "Go deeper — barrel engineering: fitting a mainspring by the numbers": "Aller plus loin — ingénierie du barillet : choisir un ressort par le calcul", "Go deeper — lock, drop, draw: the five adjustments, and the rival escapements": "Aller plus loin — repos, chute, tirage : les cinq réglages et les échappements rivaux", "Go deeper — overcoils, free-sprung balances, temperature, and the hi-beat wars": "Aller plus loin — courbes Breguet, balanciers à inertie variable et haute fréquence", "Go deeper — magic levers, micro-rotors, and the bumper era": "Aller plus loin — magic lever, micro-rotors et l'ère des « bumpers »", "Go deeper — Etachron, timing washers, and why beat comes first": "Aller plus loin — Etachron, rondelles de réglage, et pourquoi le repère passe avant la marche", "Go deeper — what COSC actually tests": "Aller plus loin — ce que le COSC teste vraiment", "Go deeper — how the machine computes amplitude, and the knocking failure": "Aller plus loin — le calcul de l'amplitude, et le rebattement", "Go deeper — epilame, end-shake, and hand height": "Aller plus loin — épilame, jeu axial et hauteur d'aiguilles", "Go deeper — identifying calibers, lignes, and the Jacot tool": "Aller plus loin — identifier les calibres, les lignes et le tour Jacot", "Go deeper — the lubrication challenge: oil this movement": "Aller plus loin — le défi lubrification : huilez ce mouvement", "Go deeper — perpetual calendars and minute repeaters": "Aller plus loin — quantièmes perpétuels et répétitions minutes", "Wind": "Remontage", "Let go of the arbor": "Lâcher l'arbre", "Power reserve": "Réserve de marche", "Torque": "Couple", "Wheel teeth": "Dents de la roue", "Pinion teeth": "Dents du pignon", "Ratio": "Rapport", "Pinion torque": "Couple du pignon", "Simulation speed": "Vitesse de simulation", "Show power flow": "Voir le flux d'énergie", "Scrub one beat": "Parcourir une alternance", "▶ Play slowly": "▶ Lecture lente", "⏸ Pause": "⏸ Pause", "▶ Play": "▶ Lecture", "🔍 entry stone": "🔍 levée d'entrée", "🔍 exit stone": "🔍 levée de sortie", "🔍 roller & horns": "🔍 plateau & cornes", "loupe off": "sans loupe", "Hairspring stiffness k": "Raideur du spiral k", "Wheel inertia I": "Inertie du balancier I", "Flick the wheel": "Lancer le balancier", "Period": "Période", "Rate": "Marche", "Turn the crown": "Tourner la couronne", "Try to unwind ↩": "Tenter de dérouler ↩", "Push in — wind": "Enfoncée — remontage", "Pull out — set": "Tirée — mise à l'heure", "Time speed": "Vitesse du temps", "Setting mode (slip the cannon pinion)": "Mise à l'heure (glissement de la chaussée)", "Wrist activity": "Activité du poignet", "Shake it": "Secouer", "Reserve": "Réserve", "Drop the watch": "Faire tomber la montre", "Shock protection: ON": "Antichoc : ACTIF", "Shock protection: OFF": "Antichoc : RETIRÉ", "Fit a new staff": "Poser un axe neuf", "Healthy": "Sain", "Magnetized": "Aimanté", "Out of round": "Décentré", "Out of flat": "Voilé", "Regulator (rate)": "Raquette (marche)", "Stud carrier (beat)": "Porte-piton (repère)", "Dial up": "Cadran en haut", "Dial down": "Cadran en bas", "Crown down": "Couronne en bas", "Crown left": "Couronne à gauche", "Crown up": "Couronne en haut", "Crown right": "Couronne à droite", "Poise error": "Défaut d'équilibrage", "Amplitude": "Amplitude", "This position": "Cette position", "Δ across 6 positions": "Δ sur 6 positions", "Running fast": "Avance", "Beat error": "Repère (erreur)", "Dirty / dry": "Encrassée / sèche", "Damaged tooth": "Dent abîmée", "Knocking": "Rebattement", "New case": "Nouveau cas", "Solved": "Résolus", "Time of day": "Heure de la journée", "Lock depth": "Profondeur de repos", "Drop": "Chute", "Temperature": "Température", "Steel": "Acier", "Silicon": "Silicium", "True amplitude": "Amplitude réelle", "Machine computes": "La machine calcule", "Spring thickness": "Épaisseur du ressort", "Spring length": "Longueur du ressort", "Turns": "Tours", "Start": "Démarrer", "Stop": "Arrêter", "Reset": "Remise à zéro", "Check yourself · 01 · Power": "Vérifiez vos acquis · 01 · L'énergie", "Check yourself · 02 · Gears": "Vérifiez vos acquis · 02 · Engrenages", "Check yourself · 03 · The going train": "Vérifiez vos acquis · 03 · Le rouage", "Check yourself · 04 · The escapement": "Vérifiez vos acquis · 04 · L'échappement", "Check yourself · 05 · The balance": "Vérifiez vos acquis · 05 · Le balancier", "Check yourself · 06 · Winding & the click": "Vérifiez vos acquis · 06 · Remontage & cliquet", "Check yourself · 07 · Keyless works": "Vérifiez vos acquis · 07 · Le remontoir", "Check yourself · 08 · Motion works": "Vérifiez vos acquis · 08 · La minuterie", "Check yourself · 09 · Automatic winding": "Vérifiez vos acquis · 09 · L'automatique", "Check yourself · 10 · Shock & hairspring": "Vérifiez vos acquis · 10 · Antichoc & spiral", "Check yourself · 11 · Regulation": "Vérifiez vos acquis · 11 · Le réglage", "Check yourself · 12 · Positions & poise": "Vérifiez vos acquis · 12 · Les positions", "Check yourself · 13 · The timegrapher": "Vérifiez vos acquis · 13 · Le vibrographe", "Check yourself · 14 · Service": "Vérifiez vos acquis · 14 · La révision", "Check yourself · 15 · Complications": "Vérifiez vos acquis · 15 · Les complications", "Check yourself · Final · Master exam": "Vérifiez vos acquis · Final · Examen de maîtrise", "Oil the movement": "Huilez le mouvement"};
+  const EN={}; for(const k in FR) EN[FR[k]]=k;
+  let lang='en';
+  function swapText(map){
+    const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+    const nodes=[]; while(w.nextNode()) nodes.push(w.currentNode);
+    for(const n of nodes){
+      const t=n.textContent.trim();
+      if(t && map[t]) n.textContent=n.textContent.replace(t,map[t]);
+    }
+    document.querySelectorAll('[data-frh]').forEach(el=>{
+      const other=el.getAttribute('data-frh');
+      el.setAttribute('data-frh',el.innerHTML);
+      el.innerHTML=other;
+    });
+  }
+  const btn=$('lang-toggle');
+  if(btn) btn.addEventListener('click',()=>{
+    lang = lang==='en' ? 'fr' : 'en';
+    swapText(lang==='fr'?FR:EN);
+    document.documentElement.classList.toggle('fr',lang==='fr');
+    btn.textContent = lang==='fr' ? 'EN' : 'FR';
+  });
+}
+
+/* ===================== rail scrollspy ===================== */
+{
+  const links=[...document.querySelectorAll('#rail a')];
+  const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+  const spy=new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){
+        links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id));
+      }
+    });
+  },{rootMargin:'-30% 0px -60% 0px'});
+  secs.forEach(s=>s&&spy.observe(s));
+}
+})();
+</script>
+</body>
+</html>
