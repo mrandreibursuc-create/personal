@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Du muscle au geste — Présentation du projet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E1116;
+  --ink-2:#151A21;
+  --ink-3:#1C232C;
+  --bone:#EFE9DD;
+  --bone-dim:#C8C3B8;
+  --muted:#8A94A3;
+  --line:rgba(239,233,221,.12);
+  --line-strong:rgba(239,233,221,.22);
+  --carmine:#C63A2E;
+  --carmine-br:#E45747;
+  --nerve:#E3B23C;
+  --echo:#6FB7B0;
+  --shadow:0 24px 60px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--ink);
+  color:var(--bone);
+  font-family:"Inter",system-ui,sans-serif;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"IBM Plex Mono",monospace}
+
+/* ---- deck shell ---- */
+#deck{position:fixed;inset:0}
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(28px,5vw,84px);
+  opacity:0;visibility:hidden;
+  transform:translateY(14px);
+  transition:opacity .5s ease,transform .5s ease,visibility .5s;
+  overflow:hidden;
+}
+.slide.active{opacity:1;visibility:visible;transform:none;z-index:2}
+.slide-inner{width:100%;max-width:1180px;margin:0 auto;position:relative;z-index:2}
+
+/* subtle atlas grid ground */
+.slide::before{
+  content:"";position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(1200px 700px at 82% -10%, rgba(198,58,46,.10), transparent 60%),
+    radial-gradient(900px 600px at -8% 108%, rgba(227,178,60,.06), transparent 55%);
+  pointer-events:none;
+}
+
+/* ---- typography ---- */
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:clamp(11px,1.05vw,13px);
+  letter-spacing:.28em;text-transform:uppercase;
+  color:var(--carmine-br);
+  display:flex;align-items:center;gap:14px;margin-bottom:26px;
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--carmine)}
+h1{
+  font-family:"Fraunces",serif;font-weight:600;
+  font-size:clamp(46px,8.2vw,124px);line-height:.94;
+  letter-spacing:-.015em;
+}
+h2{
+  font-family:"Fraunces",serif;font-weight:600;
+  font-size:clamp(30px,4.6vw,60px);line-height:1.02;
+  letter-spacing:-.01em;margin-bottom:6px;
+}
+h3{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(19px,1.7vw,23px);line-height:1.15}
+.statement{font-size:clamp(38px,6.2vw,86px);line-height:1;letter-spacing:-.015em}
+.lede{
+  font-size:clamp(16px,1.55vw,21px);line-height:1.5;color:var(--bone-dim);
+  max-width:60ch;font-weight:400;
+}
+p{line-height:1.55}
+em{font-style:italic;color:var(--bone)}
+.accent{color:var(--carmine-br)}
+.gold{color:var(--nerve)}
+
+/* ---- hero ---- */
+#s-hero .slide-inner{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+.hero-authors{margin-top:34px;font-size:clamp(13px,1.15vw,15.5px);color:var(--bone-dim);line-height:1.9}
+.hero-authors b{color:var(--bone);font-weight:600}
+.hero-foot{margin-top:30px;display:flex;gap:26px;flex-wrap:wrap;color:var(--muted);
+  font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.06em}
+.hero-title small{
+  display:block;font-family:"IBM Plex Mono",monospace;font-weight:400;
+  font-size:clamp(12.5px,1.35vw,16px);letter-spacing:.02em;line-height:1.5;
+  color:var(--bone-dim);margin-top:22px;max-width:44ch;text-transform:none;
+}
+.hero-art{position:relative;height:min(66vh,560px)}
+
+/* ---- generic layout helpers ---- */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,2.4vw,40px);align-items:start}
+.stack>*+*{margin-top:18px}
+.section-head{margin-bottom:clamp(22px,3.2vh,42px)}
+
+/* pillars */
+.pillars{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:8px}
+.pillar{
+  background:var(--ink-2);border:1px solid var(--line);border-radius:14px;
+  padding:22px 18px 20px;position:relative;overflow:hidden;
+  transition:transform .3s ease,border-color .3s ease;
+}
+.pillar:hover{transform:translateY(-4px);border-color:var(--line-strong)}
+.pillar .num{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--carmine-br);letter-spacing:.1em}
+.pillar h3{margin:14px 0 9px;font-size:clamp(15px,1.35vw,18px)}
+.pillar p{font-size:clamp(12.5px,1.05vw,14px);color:var(--muted);line-height:1.5}
+.pillar .ic{position:absolute;top:18px;right:16px;opacity:.5}
+
+/* chapter anatomy slide */
+.gabarit{display:grid;grid-template-columns:.9fr 1.1fr;gap:40px;align-items:center}
+.flow{position:relative;padding-left:26px}
+.flow-step{position:relative;padding:16px 0}
+.flow-step+.flow-step{border-top:1px solid var(--line)}
+.flow-step::before{content:"";position:absolute;left:-26px;top:22px;width:9px;height:9px;border-radius:50%;
+  background:var(--carmine);box-shadow:0 0 0 4px rgba(198,58,46,.18)}
+.flow::after{content:"";position:absolute;left:-22px;top:16px;bottom:16px;width:1px;background:var(--line-strong)}
+.flow-step .k{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--nerve)}
+.flow-step h3{margin:6px 0 4px;font-size:17px}
+.flow-step p{font-size:13.5px;color:var(--muted);line-height:1.5}
+.pearl{
+  background:linear-gradient(180deg,var(--ink-2),var(--ink-3));
+  border:1px solid var(--line);border-left:3px solid var(--carmine);
+  border-radius:12px;padding:26px 28px;
+}
+.pearl .tag{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--carmine-br);margin-bottom:14px}
+.pearl h3{margin-bottom:12px;font-size:20px}
+.pearl p{font-size:14.5px;color:var(--bone-dim);line-height:1.6}
+.pearl .stat{font-family:"IBM Plex Mono",monospace;color:var(--nerve);font-weight:500}
+
+/* chapters map */
+.intro-row{display:flex;align-items:center;gap:16px;margin:0 0 18px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.intro-row .region-name{margin-bottom:0}
+.mapwrap{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,3vw,56px);margin-top:6px}
+.region-col h3{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--line-strong)}
+.region-col h3 .lbl{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:400}
+.region{margin-bottom:16px}
+.region-name{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--nerve);margin-bottom:8px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--ink-2);border:1px solid var(--line);border-radius:8px;
+  padding:6px 10px;font-size:12.5px;color:var(--bone-dim);
+  transition:all .22s ease;cursor:default;
+}
+.chip:hover{border-color:var(--carmine);color:var(--bone);background:var(--ink-3);transform:translateY(-2px)}
+.chip .cc{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--carmine-br)}
+.chip.syn{border-style:dashed;color:var(--muted)}
+.chip.syn .cc{color:var(--nerve)}
+
+/* team + roles */
+.team{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:26px}
+.person{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.person .nm{font-family:"Fraunces",serif;font-weight:600;font-size:16.5px}
+.person .rl{font-size:12.5px;color:var(--muted);margin-top:5px;line-height:1.45}
+.person .rl .dot{color:var(--carmine-br)}
+.roles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.role{border:1px solid var(--line-strong);border-radius:14px;padding:22px 20px;background:var(--ink-2);position:relative}
+.role.author{border-color:rgba(198,58,46,.5);background:linear-gradient(180deg,rgba(198,58,46,.10),var(--ink-2))}
+.role .rtag{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--carmine-br);margin-bottom:6px}
+.role h3{font-size:18px;margin-bottom:10px}
+.role ul{list-style:none;font-size:13px;color:var(--muted);line-height:1.5}
+.role li{padding-left:16px;position:relative;margin-bottom:6px}
+.role li::before{content:"—";position:absolute;left:0;color:var(--carmine)}
+.role .cover{margin-top:12px;font-size:11.5px;font-family:"IBM Plex Mono",monospace;color:var(--nerve)}
+
+/* order slide */
+.cover-preview{
+  background:radial-gradient(120% 140% at 50% 0%,var(--ink-3),var(--ink));
+  border:1px solid var(--line-strong);border-radius:16px;
+  padding:clamp(30px,4vw,54px);text-align:center;box-shadow:var(--shadow);
+}
+.cover-preview .kicker{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.cover-preview .bt{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(30px,4.4vw,54px);line-height:1;letter-spacing:-.01em}
+.cover-preview .bt small{display:block;font-family:"IBM Plex Mono",monospace;font-weight:400;font-size:clamp(11px,1.1vw,13.5px);letter-spacing:.02em;color:var(--bone-dim);margin-top:16px;text-transform:none;line-height:1.5}
+.cover-preview .authors{margin-top:26px;font-size:clamp(15px,1.5vw,19px);color:var(--bone);font-weight:500}
+.cover-preview .sub{margin-top:12px;font-size:13px;color:var(--muted)}
+.cover-preview .pre{margin-top:18px;font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;color:var(--nerve)}
+.order-note{font-size:13.5px;color:var(--muted);line-height:1.6}
+.order-note b{color:var(--bone-dim)}
+
+/* author scenarios */
+.scenario{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:12px;transition:border-color .3s ease}
+.scenario:hover{border-color:var(--line-strong)}
+.scenario .sc-name{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(15px,1.4vw,18px);margin-bottom:14px;display:flex;align-items:baseline;gap:10px}
+.scenario .sc-name .sc-tag{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--carmine-br);font-weight:500}
+.scenario .row{display:grid;grid-template-columns:88px 1fr;gap:12px;align-items:baseline;padding:5px 0}
+.scenario .rl{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding-top:2px}
+.scenario .rl.au{color:var(--carmine-br)}
+.scenario .rl.co{color:var(--muted)}
+.scenario .nm{font-size:14px;color:var(--bone-dim);line-height:1.4}
+.scenario .row.au .nm{color:var(--bone)}
+.ord-close{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(18px,2vw,26px);color:var(--bone);margin-top:18px;line-height:1.2}
+.ord-close .gold{color:var(--nerve)}
+.author-panel{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:24px 26px}
+.author-panel .row{display:grid;grid-template-columns:130px 1fr;gap:16px;align-items:baseline;padding:14px 0;border-top:1px solid var(--line)}
+.author-panel .row:first-child{border-top:none}
+.author-panel .rl{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--carmine-br)}
+.author-panel .nm{font-size:clamp(15px,1.5vw,21px);color:var(--bone);line-height:1.42}
+.author-panel .sub{font-size:clamp(13px,1.05vw,15px);color:var(--muted);line-height:1.55}
+.author-panel .note{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line-strong);font-size:13px;color:var(--bone-dim);line-height:1.55}
+
+/* preface (surprise) */
+#s-preface{text-align:center;align-items:center}
+#s-preface .slide-inner{max-width:900px}
+.reveal-name{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(40px,7vw,92px);line-height:1;
+  background:linear-gradient(180deg,var(--bone),var(--nerve));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  margin:24px 0}
+.reveal-sub{color:var(--bone-dim);font-size:clamp(15px,1.6vw,20px);line-height:1.5;max-width:52ch;margin:0 auto}
+
+/* timeline */
+.timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:20px;position:relative}
+.tl{position:relative;padding:0 14px}
+.tl::before{content:"";position:absolute;top:9px;left:0;right:0;height:2px;background:var(--line-strong)}
+.tl:first-child::before{left:50%}
+.tl:last-child::before{right:50%}
+.tl .node{position:relative;width:18px;height:18px;border-radius:50%;background:var(--ink);border:2px solid var(--carmine);margin:0 auto 18px;z-index:2}
+.tl.hot .node{background:var(--carmine);box-shadow:0 0 0 5px rgba(198,58,46,.2)}
+.tl .mo{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--nerve);text-align:center;margin-bottom:8px}
+.tl .who{font-size:13px;font-weight:600;text-align:center;margin-bottom:6px}
+.tl .desc{font-size:11.5px;color:var(--muted);text-align:center;line-height:1.45}
+
+/* editor */
+.ed-main{display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center}
+.ed-card{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:30px 32px}
+.ed-card .badge{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--carmine-br);margin-bottom:10px}
+.ed-card .name{font-family:"Fraunces",serif;font-weight:600;font-size:30px;margin-bottom:14px}
+.ed-card .name small{display:block;font-family:"IBM Plex Mono",monospace;font-weight:400;font-size:12px;letter-spacing:.08em;color:var(--nerve);margin-top:6px;text-transform:uppercase}
+.ed-list{list-style:none}
+.ed-list li{padding:11px 0;border-top:1px solid var(--line);font-size:14px;color:var(--bone-dim);display:flex;gap:12px}
+.ed-list li .n{font-family:"IBM Plex Mono",monospace;color:var(--nerve);font-size:12px;padding-top:2px}
+.ed-list li b{color:var(--bone);font-weight:600}
+.plan-b{margin-top:16px;font-size:12.5px;color:var(--muted);font-family:"IBM Plex Mono",monospace}
+
+/* next steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
+.step{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:24px 22px}
+.step .sn{font-family:"IBM Plex Mono",monospace;font-size:26px;color:var(--carmine);opacity:.6}
+.step h3{margin:10px 0 8px;font-size:17px}
+.step p{font-size:13px;color:var(--muted);line-height:1.5}
+
+/* ---- chrome: rail, nav, toggle ---- */
+#rail{position:fixed;left:22px;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:11px}
+.rdot{width:8px;height:8px;border-radius:50%;background:rgba(239,233,221,.2);border:none;cursor:pointer;padding:0;transition:all .3s ease}
+.rdot:hover{background:var(--bone-dim)}
+.rdot.on{background:var(--carmine);transform:scale(1.35)}
+#topbar{position:fixed;top:20px;right:22px;z-index:20;display:flex;align-items:center;gap:16px}
+#counter{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);letter-spacing:.08em}
+#counter b{color:var(--bone)}
+.lang{display:flex;border:1px solid var(--line-strong);border-radius:20px;overflow:hidden}
+.lang button{background:none;border:none;color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:11px;
+  padding:6px 12px;cursor:pointer;letter-spacing:.08em;transition:all .2s}
+.lang button.on{background:var(--carmine);color:#fff}
+#nav{position:fixed;bottom:20px;right:22px;z-index:20;display:flex;gap:8px}
+.nbtn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line-strong);background:var(--ink-2);
+  color:var(--bone);cursor:pointer;font-size:17px;display:grid;place-items:center;transition:all .2s}
+.nbtn:hover{border-color:var(--carmine);background:var(--ink-3)}
+.nbtn:disabled{opacity:.3;cursor:default}
+#hint{position:fixed;bottom:26px;left:22px;z-index:20;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);letter-spacing:.05em}
+kbd{border:1px solid var(--line-strong);border-radius:4px;padding:1px 6px;font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--bone-dim)}
+
+@media (max-width:900px){
+  #s-hero .slide-inner{grid-template-columns:1fr}
+  .hero-art{display:none}
+  .pillars{grid-template-columns:1fr 1fr}
+  .gabarit,.ed-main,.mapwrap{grid-template-columns:1fr;gap:24px}
+  .team,.roles,.steps{grid-template-columns:1fr}
+  .timeline{grid-template-columns:1fr 1fr;gap:22px}
+  .tl::before{display:none}
+  #rail{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:opacity .2s ease!important}
+}
+
+/* keyword anchors — the slide anchors, the speaker narrates */
+.anchors{list-style:none;margin-top:6px}
+.anchors li{
+  display:flex;align-items:baseline;gap:16px;
+  padding:clamp(11px,1.5vh,18px) 0;border-top:1px solid var(--line);
+  font-family:"Fraunces",serif;font-weight:500;
+  font-size:clamp(19px,2.3vw,30px);line-height:1.12;letter-spacing:-.005em;
+}
+.anchors li:first-child{border-top:none}
+.anchors li .m{
+  font-family:"IBM Plex Mono",monospace;font-weight:500;
+  font-size:clamp(11px,1vw,13px);color:var(--carmine-br);
+  letter-spacing:.05em;flex:0 0 auto;position:relative;top:-2px;
+}
+.anchors.sm li{font-size:clamp(16px,1.7vw,22px);padding:clamp(9px,1.2vh,14px) 0}
+.anchors .sub{color:var(--muted);font-family:"IBM Plex Mono",monospace;font-weight:400;
+  font-size:clamp(11px,1vw,13px);letter-spacing:.03em}
+
+/* gabarit pearl: align the descriptive/functional labels in a column */
+#s-gabarit .pearl .anchors li{align-items:flex-start;gap:18px}
+#s-gabarit .pearl .anchors .m{width:clamp(110px,12vw,150px);white-space:normal;line-height:1.35;top:2px;text-transform:uppercase;letter-spacing:.08em}
+
+/* hero SVG colours (CSS vars don't resolve in SVG presentation attributes) */
+#s-hero .apo{stroke:var(--bone-dim)}
+#s-hero .fib{stroke:var(--carmine)}
+#s-hero .band{fill:var(--nerve)}
+#s-hero .nbr{stroke:var(--nerve)}
+#s-hero .needle line{stroke:var(--bone)}
+#s-hero .needle polygon{fill:var(--bone)}
+#s-hero .mp{fill:var(--nerve)}
+#s-hero .mp-ring{stroke:var(--nerve)}
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- 1 · HERO -->
+  <section class="slide active" id="s-hero">
+    <div class="slide-inner">
+      <div>
+        <div class="eyebrow" data-t="hero.eyebrow">Projet d'ouvrage · Neuro-orthopédie</div>
+        <div class="hero-title">
+          <h1 data-t="hero.title">Du muscle<br>au geste</h1>
+          <small data-t="hero.sub">Anatomie fonctionnelle du muscle en neuro-orthopédie — échographie et cibles thérapeutiques dans le traitement de la spasticité.</small>
+        </div>
+        <div class="hero-foot" style="margin-top:34px">
+          <span data-t="hero.f1">30 chapitres · brouillon complet</span>
+          <span data-t="hero.f2">Présentation du projet</span>
+        </div>
+      </div>
+      <div class="hero-art">
+        <svg viewBox="0 0 400 520" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <!-- central aponeurosis / tendon -->
+          <line class="apo" x1="200" y1="40" x2="200" y2="480" stroke="var(--bone-dim)" stroke-width="2.5" opacity=".5"/>
+          <!-- pennate muscle fibers -->
+          <g class="fibers" stroke="var(--carmine)" stroke-width="2" opacity=".85" fill="none"></g>
+          <!-- endplate band (motor point zone) mid-third -->
+          <rect class="band" x="150" y="230" width="100" height="60" fill="var(--nerve)" opacity="0" rx="4"/>
+          <!-- nerve arborization -->
+          <g class="nerve" stroke="var(--nerve)" stroke-width="2.2" fill="none" stroke-linecap="round"></g>
+          <!-- needle -->
+          <g class="needle">
+            <line x1="330" y1="90" x2="252" y2="248" stroke="var(--bone)" stroke-width="2.4"/>
+            <polygon points="252,248 258,240 262,250" fill="var(--bone)"/>
+          </g>
+          <!-- motor point pulse -->
+          <circle class="mp" cx="200" cy="260" r="5" fill="var(--nerve)" opacity="0"/>
+          <circle class="mp-ring" cx="200" cy="260" r="5" fill="none" stroke="var(--nerve)" stroke-width="2" opacity="0"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · VISION -->
+  <section class="slide" id="s-vision">
+    <div class="slide-inner">
+      <div class="eyebrow" data-t="vision.eyebrow">L'intention du livre</div>
+      <h2 class="statement" data-t="vision.h">Dépasser l'anatomie descriptive.<br><span class="accent">Aller à l'anatomie fonctionnelle.</span></h2>
+      <p class="lede" style="margin-top:28px" data-t="vision.sub">Non pas ce qu'un muscle <em>est</em>, mais ce qu'il <em>fait</em> — dans le geste, en vrai.</p>
+    </div>
+  </section>
+
+  <!-- 3 · CINQ PARTIS PRIS -->
+  <section class="slide" id="s-pillars">
+    <div class="slide-inner">
+      <div class="section-head">
+        <div class="eyebrow" data-t="pil.eyebrow">Ce qui rend l'ouvrage singulier</div>
+        <h2 data-t="pil.h">Cinq partis pris</h2>
+      </div>
+      <div class="pillars">
+        <div class="pillar">
+          <div class="num">01</div>
+          <h3 data-t="pil.1h">Anatomie fonctionnelle</h3>
+          <p data-t="pil.1p">Levier · PCSA · ténodèse</p>
+        </div>
+        <div class="pillar">
+          <div class="num">02</div>
+          <h3 data-t="pil.2h">Échographie</h3>
+          <p data-t="pil.2p">Vidéos · accès QR</p>
+        </div>
+        <div class="pillar">
+          <div class="num">03</div>
+          <h3 data-t="pil.3h">Cibles thérapeutiques</h3>
+          <p data-t="pil.3p">Cibler / préserver · dose</p>
+        </div>
+        <div class="pillar">
+          <div class="num">04</div>
+          <h3 data-t="pil.4h">Regard neuro-ortho</h3>
+          <p data-t="pil.4p">Transferts · neurectomie</p>
+        </div>
+        <div class="pillar">
+          <div class="num">05</div>
+          <h3 data-t="pil.5h">Niveau de preuve</h3>
+          <p data-t="pil.5p">Référencé — ou « avis »</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · ANATOMIE D'UN CHAPITRE -->
+  <section class="slide" id="s-gabarit">
+    <div class="slide-inner">
+      <div class="section-head">
+        <div class="eyebrow" data-t="gab.eyebrow">La structure</div>
+        <h2 data-t="gab.h">L'anatomie d'un chapitre</h2>
+      </div>
+      <div class="gabarit">
+        <div class="flow">
+          <div class="flow-step">
+            <div class="k" data-t="gab.s1k">Récit</div>
+            <h3 data-t="gab.s1h">Muscle par muscle</h3>
+            <p data-t="gab.s1p">Le texte suit la fonction, pas la liste. Origine, action, piège clinique.</p>
+          </div>
+          <div class="flow-step">
+            <div class="k" data-t="gab.s2k">Synthèse</div>
+            <h3 data-t="gab.s2h">Aide-mémoire</h3>
+            <p data-t="gab.s2p">L'essentiel condensé après chaque muscle, prêt pour le bord du lit.</p>
+          </div>
+          <div class="flow-step">
+            <div class="k" data-t="gab.s3k">Décision</div>
+            <h3 data-t="gab.s3h">Synthèse clinique régionale</h3>
+            <p data-t="gab.s3p">Tableaux cibler/préserver, moteur résiduel, tests d'orientation, repères de neurectomie.</p>
+          </div>
+        </div>
+        <div class="pearl">
+          <div class="tag" data-t="gab.ptag">Exemple · avant-bras, extenseurs</div>
+          <h3 style="margin-bottom:16px" data-t="gab.ph">Le brachioradial, l'intrus</h3>
+          <ul class="anchors sm">
+            <li data-t="gab.pa1"><span class="m">·</span> Fléchisseur… en loge postérieure</li>
+            <li data-t="gab.pa2"><span class="m">·</span> Le + spastique, le − injecté</li>
+            <li data-t="gab.pa3"><span class="m">·</span> ECRB / EDC le remplacent</li>
+            <li data-t="gab.pa4"><span class="m">7,7 cm</span> <span class="sub">levier · cloison absente ~12,5 %</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · LES 30 CHAPITRES -->
+  <section class="slide" id="s-map">
+    <div class="slide-inner">
+      <div class="section-head">
+        <div class="eyebrow" data-t="map.eyebrow">Le contenu · brouillon complet</div>
+        <h2 data-t="map.h">Trente chapitres, du corps entier</h2>
+      </div>
+      <div class="intro-row">
+        <span class="region-name" data-t="map.intro">Fondations</span>
+        <span class="chip"><span class="cc">00</span> <span data-t="c00">Introduction · biomécanique</span></span>
+      </div>
+      <div class="mapwrap">
+        <div class="region-col">
+          <h3><span data-t="map.ms">Membre supérieur</span> <span class="lbl mono">01 — 15</span></h3>
+          <div class="region">
+            <div class="region-name" data-t="map.epaule">Épaule</div>
+            <div class="chips">
+              <span class="chip"><span class="cc">01</span> <span data-t="c01">Grand pectoral</span></span>
+              <span class="chip"><span class="cc">02</span> <span data-t="c02">Deltoïde · grand rond · grand dorsal</span></span>
+              <span class="chip"><span class="cc">03</span> <span data-t="c03">Coiffe des rotateurs</span></span>
+              <span class="chip"><span class="cc">04</span> <span data-t="c04">Ceinture scapulothoracique</span></span>
+              <span class="chip"><span class="cc">05</span> <span data-t="c05">Petit pectoral · subclavier</span></span>
+              <span class="chip syn"><span class="cc">06</span> <span data-t="c06">Synthèse régionale</span></span>
+            </div>
+          </div>
+          <div class="region">
+            <div class="region-name" data-t="map.bras">Bras</div>
+            <div class="chips">
+              <span class="chip"><span class="cc">07</span> <span data-t="c07">Biceps · coracobrachial · triceps</span></span>
+              <span class="chip syn"><span class="cc">08</span> <span data-t="c08">Synthèse régionale</span></span>
+            </div>
+          </div>
+          <div class="region">
+            <div class="region-name" data-t="map.avb">Avant-bras</div>
+            <div class="chips">
+              <span class="chip"><span class="cc">09</span> <span data-t="c09">Pronateurs</span></span>
+              <span class="chip"><span class="cc">10</span> <span data-t="c10">Fléchisseurs poignet · doigts</span></span>
+              <span class="chip"><span class="cc">11</span> <span data-t="c11">Extenseurs</span></span>
+              <span class="chip syn"><span class="cc">12</span> <span data-t="c12">Synthèse régionale</span></span>
+            </div>
+          </div>
+          <div class="region">
+            <div class="region-name" data-t="map.main">Main</div>
+            <div class="chips">
+              <span class="chip"><span class="cc">13</span> <span data-t="c13">Thénar · hypothénar</span></span>
+              <span class="chip"><span class="cc">14</span> <span data-t="c14">Lombricaux · interosseux</span></span>
+              <span class="chip syn"><span class="cc">15</span> <span data-t="c15">Synthèse régionale</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="region-col">
+          <h3><span data-t="map.mi">Membre inférieur</span> <span class="lbl mono">16 — 29</span></h3>
+          <div class="region">
+            <div class="region-name" data-t="map.hanche">Hanche</div>
+            <div class="chips">
+              <span class="chip"><span class="cc">16</span> <span data-t="c16">Adducteurs</span></span>
+              <span class="chip"><span class="cc">17</span> <span data-t="c17">Iliopsoas · fléchisseurs</span></span>
+              <span class="chip"><span class="cc">18</span> <span data-t="c18">Région glutéale</span></span>
+              <span class="chip syn"><span class="cc">19</span> <span data-t="c19">Synthèse régionale</span></span>
+            </div>
+          </div>
+          <div class="region">
+            <div class="region-name" data-t="map.cuisse">Cuisse</div>
+            <div class="chips">
+              <span class="chip"><span class="cc">20</span> <span data-t="c20">Quadriceps</span></span>
+              <span class="chip"><span class="cc">21</span> <span data-t="c21">Ischio-jambiers</span></span>
+              <span class="chip syn"><span class="cc">22</span> <span data-t="c22">Synthèse régionale</span></span>
+            </div>
+          </div>
+          <div class="region">
+            <div class="region-name" data-t="map.jambe">Jambe</div>
+            <div class="chips">
+              <span class="chip"><span class="cc">23</span> <span data-t="c23">Triceps sural</span></span>
+              <span class="chip"><span class="cc">24</span> <span data-t="c24">Inverseurs · éverseurs</span></span>
+              <span class="chip"><span class="cc">25</span> <span data-t="c25">Fléchisseurs des orteils</span></span>
+              <span class="chip"><span class="cc">26</span> <span data-t="c26">Extenseurs des orteils</span></span>
+              <span class="chip syn"><span class="cc">27</span> <span data-t="c27">Synthèse régionale</span></span>
+            </div>
+          </div>
+          <div class="region">
+            <div class="region-name" data-t="map.pied">Pied</div>
+            <div class="chips">
+              <span class="chip"><span class="cc">28</span> <span data-t="c28">Muscles intrinsèques</span></span>
+              <span class="chip syn"><span class="cc">29</span> <span data-t="c29">Synthèse régionale</span></span>
+            </div>
+          </div>
+          <div class="region" style="margin-top:26px;padding-top:16px;border-top:1px dashed var(--line-strong)">
+            <p style="font-size:12.5px;color:var(--muted);line-height:1.55" data-t="map.note"><span class="gold mono" style="font-size:11px;letter-spacing:.1em">SCHÉMAS + QR</span> — illustration par schémas didactiques (le mécanisme, pas la dissection) et vidéos d'échographie en accès QR.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · ÉQUIPE D'AUTEURS -->
+  <section class="slide" id="s-order">
+    <div class="slide-inner">
+      <div class="section-head">
+        <div class="eyebrow" data-t="ord.eyebrow">L'équipe d'auteurs · Service des UPOH</div>
+        <h2 data-t="ord.h">Un ouvrage collectif du service</h2>
+      </div>
+      <div class="grid-2" style="align-items:start">
+        <div class="cover-preview">
+          <div class="kicker" data-t="ord.kicker">Maquette de couverture</div>
+          <div class="bt" data-t="ord.title">Du muscle au geste<small>Anatomie fonctionnelle du muscle en neuro-orthopédie</small></div>
+          <div class="sub" style="margin-top:26px;font-size:13.5px" data-t="ord.tbd">· Service des UPOH · coordination scientifique ·</div>
+        </div>
+        <div class="author-panel">
+          <div class="row">
+            <span class="rl" data-t="ord.auL">Auteurs</span>
+            <span class="nm" data-t="ord.authors">A. Bursuc · M. Salga · P. Amir Yazdani · V. Hary · B. Parratte · P. Denormandie · F. Genêt</span>
+          </div>
+          <div class="row">
+            <span class="rl" data-t="ord.serviceL">Service</span>
+            <span class="sub" data-t="ord.service">Service des UPOH — neuro-orthopédie, rééducation et chirurgie du handicap moteur</span>
+          </div>
+          <div class="row">
+            <span class="rl" data-t="ord.coordL">Coordination</span>
+            <span class="sub" data-t="ord.coord">Coordination scientifique : A. Bursuc</span>
+          </div>
+          <p class="note" data-t="ord.note">Tout le monde est auteur ; la discussion porte surtout sur l'engagement concret de chacun dans la relecture, les cas cliniques, les schémas et la validation finale.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · PRÉFACE (surprise) -->
+  <section class="slide" id="s-preface">
+    <div class="slide-inner">
+      <div class="eyebrow" style="justify-content:center" data-t="pref.eyebrow">La préface</div>
+      <p class="reveal-sub" data-t="pref.p1">Un ouvrage qui sort de ce service porte son écosystème. Pour l'ouvrir, une voix qui l'incarne :</p>
+      <div class="reveal-name" data-t="pref.name">Pr François Genêt</div>
+      <p class="reveal-sub" data-t="pref.p2">Un rôle qui honore et qui porte le livre, sans la charge d'un auteur. <span class="gold">Si tu acceptes.</span></p>
+    </div>
+  </section>
+
+  <!-- 8 · LES KINÉSITHÉRAPEUTES -->
+  <section class="slide" id="s-kine">
+    <div class="slide-inner">
+      <div class="section-head">
+        <div class="eyebrow" data-t="kine.eyebrow">Un regard complémentaire</div>
+        <h2 data-t="kine.h">Les kinésithérapeutes</h2>
+      </div>
+      <div class="grid-2" style="align-items:start">
+        <div>
+          <div class="region-name" style="margin-bottom:4px" data-t="kine.ltitle">Leur place</div>
+          <ul class="anchors">
+            <li data-t="kine.a1"><span class="m">·</span> Le regard de la rééducation, du terrain</li>
+            <li data-t="kine.a2"><span class="m">·</span> Une phase dédiée, en fin de rédaction</li>
+            <li data-t="kine.a3"><span class="m">·</span> Un temps d'échange rien qu'à eux</li>
+          </ul>
+        </div>
+        <div class="pearl">
+          <div class="tag" data-t="kine.ptag">Leur apport unique</div>
+          <h3 style="margin-bottom:16px" data-t="kine.ph">Une banque de cas cliniques vidéo</h3>
+          <ul class="anchors sm">
+            <li data-t="kine.b1"><span class="m">·</span> Des cas réels, déjà filmés</li>
+            <li data-t="kine.b2"><span class="m">·</span> À intégrer par chapitre, en QR</li>
+            <li data-t="kine.b3"><span class="m">·</span> Crédités en collaboration</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · ÉCHÉANCIER -->
+  <section class="slide" id="s-timeline">
+    <div class="slide-inner">
+      <div class="section-head">
+        <div class="eyebrow" data-t="time.eyebrow">Le calendrier · 2026</div>
+        <h2 data-t="time.h">De maintenant à la fin de l'année</h2>
+      </div>
+      <div class="timeline">
+        <div class="tl hot">
+          <div class="node"></div>
+          <div class="mo" data-t="time.m1">Juillet</div>
+          <div class="who" data-t="time.w1">Le noyau</div>
+          <div class="desc" data-t="time.d1">Andrei, Pegah, Marjorie, Vincent → brouillon propre</div>
+        </div>
+        <div class="tl">
+          <div class="node"></div>
+          <div class="mo" data-t="time.m2">Août</div>
+          <div class="who" data-t="time.w2">Les experts</div>
+          <div class="desc" data-t="time.d2">Genêt, Parratte, Denormandie — commentaires libres</div>
+        </div>
+        <div class="tl">
+          <div class="node"></div>
+          <div class="mo" data-t="time.m3">Septembre</div>
+          <div class="who" data-t="time.w3">Intégration + anglais</div>
+          <div class="desc" data-t="time.d3">Validation scientifique et lancement de la version anglaise</div>
+        </div>
+        <div class="tl">
+          <div class="node"></div>
+          <div class="mo" data-t="time.m4">Oct · Nov</div>
+          <div class="who" data-t="time.w4">Production</div>
+          <div class="desc" data-t="time.d4">Schémas, QR, réunion kinés, contact éditeur</div>
+        </div>
+        <div class="tl">
+          <div class="node"></div>
+          <div class="mo" data-t="time.m5">Fin 2026</div>
+          <div class="who" data-t="time.w5">Manuscrit final</div>
+          <div class="desc" data-t="time.d5">Prêt pour soumission</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 · ÉDITEURS -->
+  <section class="slide" id="s-editor">
+    <div class="slide-inner">
+      <div class="section-head">
+        <div class="eyebrow" data-t="ed.eyebrow">La publication</div>
+        <h2 data-t="ed.h">Plusieurs éditeurs à approcher</h2>
+      </div>
+      <div class="ed-main">
+        <div class="ed-card">
+          <div class="badge" data-t="ed.badge">Shortlist éditoriale</div>
+          <div class="name" data-t="ed.name">Sauramps Médical<small>option naturelle à tester en premier</small></div>
+          <ul class="ed-list">
+            <li><span class="n">01</span><span data-t="ed.l1"><b>Sauramps Médical</b> — très présent en MPR, kinésithérapie et appareil locomoteur</span></li>
+            <li><span class="n">02</span><span data-t="ed.l2"><b>Elsevier Masson</b> — diffusion médicale large et visibilité institutionnelle</span></li>
+            <li><span class="n">03</span><span data-t="ed.l3"><b>Lavoisier Médecine Sciences</b> — ouvrages scientifiques et universitaires</span></li>
+            <li><span class="n">04</span><span data-t="ed.l4"><b>Springer Nature</b> — levier possible pour la version anglaise</span></li>
+          </ul>
+          <div class="plan-b" data-t="ed.planb">Plan B — auto-édition seulement si aucun éditeur ne suit le projet.</div>
+        </div>
+        <div>
+          <div class="region-name" style="margin-bottom:4px" data-t="ed.rtitle">À retenir</div>
+          <ul class="anchors sm">
+            <li data-t="ed.p1"><span class="m">·</span> Présenter le projet comme un ouvrage du service UPOH</li>
+            <li data-t="ed.p2"><span class="m">·</span> Montrer que le manuscrit existe déjà</li>
+            <li data-t="ed.p3"><span class="m">·</span> Discuter schémas, QR vidéos et version anglaise dès le départ</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · PROCHAINES ÉTAPES -->
+  <section class="slide" id="s-next">
+    <div class="slide-inner">
+      <div class="section-head">
+        <div class="eyebrow" data-t="nx.eyebrow">La discussion</div>
+        <h2 data-t="nx.h">Ce soir, trois questions</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="sn">01</div>
+          <h3 data-t="nx.1h">Qui participe activement ?</h3>
+          <p data-t="nx.1p">Tout le monde est auteur ; chacun précise surtout son niveau de relecture et de contribution.</p>
+        </div>
+        <div class="step">
+          <div class="sn">02</div>
+          <h3 data-t="nx.2h">Le titre vous parle-t-il ?</h3>
+          <p data-t="nx.2p">« Du muscle au geste » — ou une autre direction. Le sous-titre neuro-ortho fait consensus ?</p>
+        </div>
+        <div class="step">
+          <div class="sn">03</div>
+          <h3 data-t="nx.3h">On lance juillet ?</h3>
+          <p data-t="nx.3p">Le noyau relit ce mois-ci, les experts en août. Chacun cale ses disponibilités.</p>
+        </div>
+      </div>
+      <p style="margin-top:30px;font-family:'Fraunces',serif;font-size:clamp(20px,2.4vw,30px);color:var(--bone);line-height:1.2" data-t="nx.close">Le manuscrit existe déjà. Il ne demande qu'à devenir <span class="accent">votre</span> livre aussi.</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- chrome -->
+<nav id="rail"></nav>
+<div id="topbar">
+  <div id="counter"><b>01</b> / 11</div>
+  <div class="lang">
+    <button id="fr" class="on" onclick="setLang('fr')">FR</button>
+    <button id="en" onclick="setLang('en')">EN</button>
+  </div>
+</div>
+<div id="nav">
+  <button class="nbtn" id="prev" onclick="go(-1)" aria-label="Précédent">‹</button>
+  <button class="nbtn" id="next" onclick="go(1)" aria-label="Suivant">›</button>
+</div>
+<div id="hint"><kbd>←</kbd> <kbd>→</kbd> <span data-t="hint">naviguer</span></div>
+
+<script>
+/* ---------------- i18n ---------------- */
+const I18N = {
+  "hero.eyebrow":{fr:"Projet d'ouvrage · Neuro-orthopédie",en:"Book project · Neuro-orthopaedics"},
+  "hero.title":{fr:"Du muscle<br>au geste",en:"From muscle<br>to gesture"},
+  "hero.sub":{fr:"Anatomie fonctionnelle du muscle en neuro-orthopédie — échographie et cibles thérapeutiques dans le traitement de la spasticité.",en:"Functional muscle anatomy in neuro-orthopaedics — ultrasound and therapeutic targets in the treatment of spasticity."},
+  "hero.authors":{fr:"<b>A. Bursuc</b> · <b>M. Salga</b> · <b>P. Amir Yazdani</b><br>Avec la collaboration de V. Hary, B. Parratte, P. Denormandie · Préface pressentie",en:"<b>A. Bursuc</b> · <b>M. Salga</b> · <b>P. Amir Yazdani</b><br>With V. Hary, B. Parratte, P. Denormandie · Foreword to be confirmed"},
+  "hero.f1":{fr:"30 chapitres · brouillon complet",en:"30 chapters · full draft"},
+  "hero.f2":{fr:"Présentation du projet",en:"Project pitch"},
+
+  "vision.eyebrow":{fr:"L'intention du livre",en:"The book's intent"},
+  "vision.h":{fr:"Dépasser l'anatomie descriptive.<br><span class='accent'>Aller à l'anatomie fonctionnelle.</span>",en:"Move past descriptive anatomy.<br><span class='accent'>Toward functional anatomy.</span>"},
+  "vision.sub":{fr:"Non pas ce qu'un muscle <em>est</em>, mais ce qu'il <em>fait</em> — dans le geste, en vrai.",en:"Not what a muscle <em>is</em>, but what it <em>does</em> — in the gesture, for real."},
+
+  "pil.eyebrow":{fr:"Ce qui rend l'ouvrage singulier",en:"What sets the book apart"},
+  "pil.h":{fr:"Cinq partis pris",en:"Five deliberate stances"},
+  "pil.1h":{fr:"Anatomie fonctionnelle",en:"Functional anatomy"},
+  "pil.1p":{fr:"Levier · PCSA · ténodèse",en:"Moment arm · PCSA · tenodesis"},
+  "pil.2h":{fr:"Échographie",en:"Ultrasound"},
+  "pil.2p":{fr:"Vidéos · accès QR",en:"Videos · QR access"},
+  "pil.3h":{fr:"Cibles thérapeutiques",en:"Therapeutic targets"},
+  "pil.3p":{fr:"Cibler / préserver · dose",en:"Target / preserve · dose"},
+  "pil.4h":{fr:"Regard neuro-ortho",en:"Neuro-ortho lens"},
+  "pil.4p":{fr:"Transferts · neurectomie",en:"Transfers · neurectomy"},
+  "pil.5h":{fr:"Niveau de preuve",en:"Level of evidence"},
+  "pil.5p":{fr:"Référencé — ou « avis »",en:"Referenced — or “opinion”"},
+
+  "gab.eyebrow":{fr:"La structure",en:"The structure"},
+  "gab.h":{fr:"L'anatomie d'un chapitre",en:"The anatomy of a chapter"},
+  "gab.s1k":{fr:"Récit",en:"Narrative"},
+  "gab.s1h":{fr:"Muscle par muscle",en:"Muscle by muscle"},
+  "gab.s1p":{fr:"Le texte suit la fonction, pas la liste. Origine, action, piège clinique.",en:"The text follows function, not a list. Origin, action, clinical pitfall."},
+  "gab.s2k":{fr:"Synthèse",en:"Summary"},
+  "gab.s2h":{fr:"Aide-mémoire",en:"Quick-reference box"},
+  "gab.s2p":{fr:"L'essentiel condensé après chaque muscle.",en:"The essentials distilled after each muscle."},
+  "gab.s3k":{fr:"Décision",en:"Decision"},
+  "gab.s3h":{fr:"Synthèse clinique régionale",en:"Regional clinical synthesis"},
+  "gab.s3p":{fr:"Tableaux cibler/préserver, moteur résiduel, tests d'orientation, repères de neurectomie.",en:"Target/preserve tables, residual motor, bedside tests, neurectomy landmarks."},
+  "gab.ptag":{fr:"Exemple",en:"Example"},
+  "gab.ph":{fr:"Le grand pectoral, plus qu'un adducteur",en:"Pectoralis major, more than an adductor"},
+  "gab.pa1":{fr:"<span class='m'>anatomie descriptive classique</span> adducteur · rotateur interne",en:"<span class='m'>classic descriptive anatomy</span> adductor · internal rotator"},
+  "gab.pa2":{fr:"<span class='m'>réel</span> le chef claviculaire fait aussi l'abduction",en:"<span class='m'>real</span> the clavicular head also abducts"},
+  "gab.pa3":{fr:"<span class='m'>réel</span> le chef sterno-costal fait aussi l'extension",en:"<span class='m'>real</span> the sternocostal head also extends"},
+  "gab.pa4":{fr:"<span class='m'>la leçon</span> <span class='sub'>un muscle, plusieurs actions selon la position</span>",en:"<span class='m'>lesson</span> <span class='sub'>one muscle, several actions by position</span>"},
+
+  "map.eyebrow":{fr:"Le contenu · brouillon complet",en:"The content · full draft"},
+  "map.h":{fr:"Trente chapitres, du corps entier",en:"Thirty chapters, the whole body"},
+  "map.ms":{fr:"Membre supérieur",en:"Upper limb"},
+  "map.mi":{fr:"Membre inférieur",en:"Lower limb"},
+  "map.intro":{fr:"Fondations",en:"Foundations"},
+  "map.epaule":{fr:"Épaule",en:"Shoulder"},
+  "map.bras":{fr:"Bras",en:"Arm"},
+  "map.avb":{fr:"Avant-bras",en:"Forearm"},
+  "map.main":{fr:"Main",en:"Hand"},
+  "map.hanche":{fr:"Hanche",en:"Hip"},
+  "map.cuisse":{fr:"Cuisse",en:"Thigh"},
+  "map.jambe":{fr:"Jambe",en:"Leg"},
+  "map.pied":{fr:"Pied",en:"Foot"},
+  "map.note":{fr:"<span class='gold mono' style='font-size:11px;letter-spacing:.1em'>SCHÉMAS + QR</span> — illustration par schémas didactiques (le mécanisme, pas la dissection) et vidéos d'échographie en accès QR.",en:"<span class='gold mono' style='font-size:11px;letter-spacing:.1em'>DIAGRAMS + QR</span> — illustrated with didactic diagrams (the mechanism, not the dissection) and ultrasound videos via QR."},
+  "c00":{fr:"Introduction · biomécanique",en:"Introduction · biomechanics"},
+  "c01":{fr:"Grand pectoral",en:"Pectoralis major"},
+  "c02":{fr:"Deltoïde · grand rond · grand dorsal",en:"Deltoid · teres major · latissimus"},
+  "c03":{fr:"Coiffe des rotateurs",en:"Rotator cuff"},
+  "c04":{fr:"Ceinture scapulothoracique",en:"Scapulothoracic girdle"},
+  "c05":{fr:"Petit pectoral · subclavier",en:"Pectoralis minor · subclavius"},
+  "c06":{fr:"Synthèse régionale",en:"Regional synthesis"},
+  "c07":{fr:"Biceps · coracobrachial · triceps",en:"Biceps · coracobrachialis · triceps"},
+  "c08":{fr:"Synthèse régionale",en:"Regional synthesis"},
+  "c09":{fr:"Pronateurs",en:"Pronators"},
+  "c10":{fr:"Fléchisseurs poignet · doigts",en:"Wrist · finger flexors"},
+  "c11":{fr:"Extenseurs",en:"Extensors"},
+  "c12":{fr:"Synthèse régionale",en:"Regional synthesis"},
+  "c13":{fr:"Thénar · hypothénar",en:"Thenar · hypothenar"},
+  "c14":{fr:"Lombricaux · interosseux",en:"Lumbricals · interossei"},
+  "c15":{fr:"Synthèse régionale",en:"Regional synthesis"},
+  "c16":{fr:"Adducteurs",en:"Adductors"},
+  "c17":{fr:"Iliopsoas · fléchisseurs",en:"Iliopsoas · flexors"},
+  "c18":{fr:"Région glutéale",en:"Gluteal region"},
+  "c19":{fr:"Synthèse régionale",en:"Regional synthesis"},
+  "c20":{fr:"Quadriceps",en:"Quadriceps"},
+  "c21":{fr:"Ischio-jambiers",en:"Hamstrings"},
+  "c22":{fr:"Synthèse régionale",en:"Regional synthesis"},
+  "c23":{fr:"Triceps sural",en:"Triceps surae"},
+  "c24":{fr:"Inverseurs · éverseurs",en:"Invertors · evertors"},
+  "c25":{fr:"Fléchisseurs des orteils",en:"Toe flexors"},
+  "c26":{fr:"Extenseurs des orteils",en:"Toe extensors"},
+  "c27":{fr:"Synthèse régionale",en:"Regional synthesis"},
+  "c28":{fr:"Muscles intrinsèques",en:"Intrinsic muscles"},
+  "c29":{fr:"Synthèse régionale",en:"Regional synthesis"},
+
+  "team.eyebrow":{fr:"L'équipe · les rôles",en:"The team · the roles"},
+  "team.h":{fr:"Les rôles",en:"The roles"},
+  "team.r1tag":{fr:"Engagement fort",en:"High commitment"},
+  "team.r1h":{fr:"Auteur",en:"Author"},
+  "team.r1a":{fr:"Relecture de tous les chapitres",en:"Review of every chapter"},
+  "team.r1b":{fr:"Commentaires substantiels",en:"Substantial comments"},
+  "team.r1c":{fr:"Respect de l'échéancier",en:"Meets the timeline"},
+  "team.r1c2":{fr:"→ Nom en couverture",en:"→ Name on the cover"},
+  "team.r2tag":{fr:"Engagement ciblé",en:"Targeted commitment"},
+  "team.r2h":{fr:"Collaborateur scientifique",en:"Scientific collaborator"},
+  "team.r2a":{fr:"Lecture selon expertise",en:"Reading within one's expertise"},
+  "team.r2b":{fr:"Commentaires ponctuels",en:"Occasional comments"},
+  "team.r2c":{fr:"Regard d'expert",en:"Expert's eye"},
+  "team.r2c2":{fr:"→ « Avec la collaboration de »",en:"→ “With the collaboration of”"},
+  "team.r3tag":{fr:"Regard d'autorité",en:"Voice of authority"},
+  "team.r3h":{fr:"Préface",en:"Foreword"},
+  "team.r3a":{fr:"Lecture de l'ensemble",en:"Reads the whole"},
+  "team.r3b":{fr:"Texte d'ouverture",en:"Opening text"},
+  "team.r3c":{fr:"Caution scientifique",en:"Scientific endorsement"},
+  "team.r3c2":{fr:"→ En tête d'ouvrage",en:"→ At the front of the book"},
+  "team.foot":{fr:"<span class='accent'>L'ordre se décide à la fin,</span> sur les contributions.",en:"<span class='accent'>Order is set at the end,</span> on contributions."},
+
+  "ord.eyebrow":{fr:"L'équipe d'auteurs · Service des UPOH",en:"Author team · UPOH department"},
+  "ord.h":{fr:"Un ouvrage collectif du service",en:"A collective book from the department"},
+  "ord.kicker":{fr:"Maquette de couverture",en:"Cover mock-up"},
+  "ord.title":{fr:"Du muscle au geste<small>Anatomie fonctionnelle du muscle en neuro-orthopédie</small>",en:"From muscle to gesture<small>Functional muscle anatomy in neuro-orthopaedics</small>"},
+  "ord.tbd":{fr:"· Service des UPOH · coordination scientifique ·",en:"· UPOH department · scientific coordination ·"},
+  "ord.auL":{fr:"Auteurs",en:"Authors"},
+  "ord.authors":{fr:"A. Bursuc · M. Salga · P. Amir Yazdani · V. Hary · B. Parratte · P. Denormandie · F. Genêt",en:"A. Bursuc · M. Salga · P. Amir Yazdani · V. Hary · B. Parratte · P. Denormandie · F. Genêt"},
+  "ord.serviceL":{fr:"Service",en:"Department"},
+  "ord.service":{fr:"Service des UPOH — neuro-orthopédie, rééducation et chirurgie du handicap moteur",en:"UPOH department — neuro-orthopaedics, rehabilitation and surgery for motor disability"},
+  "ord.coordL":{fr:"Coordination",en:"Coordination"},
+  "ord.coord":{fr:"Coordination scientifique : A. Bursuc",en:"Scientific coordination: A. Bursuc"},
+  "ord.note":{fr:"Tout le monde est auteur ; la discussion porte surtout sur l'engagement concret de chacun dans la relecture, les cas cliniques, les schémas et la validation finale.",en:"Everyone is an author; the discussion is mainly about each person's concrete involvement in review, clinical cases, diagrams and final validation."},
+
+  "pref.eyebrow":{fr:"Dernier auteur · préface",en:"Last author · foreword"},
+  "pref.p1":{fr:"Un ouvrage qui sort de ce service porte son écosystème. Pour le porter et l'ouvrir, une voix :",en:"A book born of this department carries its ecosystem. To carry and open it, a voice:"},
+  "pref.name":{fr:"Pr François Genêt",en:"Prof. François Genêt"},
+  "pref.p2":{fr:"La place d'honneur du dernier auteur — et la préface qui ouvre le livre. <span class='gold'>Si tu acceptes.</span>",en:"The senior's place of honour as last author — and the foreword that opens the book. <span class='gold'>If you accept.</span>"},
+
+  "kine.eyebrow":{fr:"Un regard complémentaire",en:"A complementary lens"},
+  "kine.h":{fr:"Les kinésithérapeutes",en:"The physiotherapists"},
+  "kine.ltitle":{fr:"Leur place",en:"Their place"},
+  "kine.a1":{fr:"<span class='m'>·</span> Le regard de la rééducation, du terrain",en:"<span class='m'>·</span> The rehab lens, from the floor"},
+  "kine.a2":{fr:"<span class='m'>·</span> Une phase dédiée, en fin de rédaction",en:"<span class='m'>·</span> A dedicated phase, late in the writing"},
+  "kine.a3":{fr:"<span class='m'>·</span> Un temps d'échange rien qu'à eux",en:"<span class='m'>·</span> A discussion time just for them"},
+  "kine.ptag":{fr:"Leur apport unique",en:"Their unique contribution"},
+  "kine.ph":{fr:"Une banque de cas cliniques vidéo",en:"A bank of clinical video cases"},
+  "kine.b1":{fr:"<span class='m'>·</span> Des cas réels, déjà filmés",en:"<span class='m'>·</span> Real cases, already filmed"},
+  "kine.b2":{fr:"<span class='m'>·</span> À intégrer par chapitre, en QR",en:"<span class='m'>·</span> Woven into chapters, via QR"},
+  "kine.b3":{fr:"<span class='m'>·</span> Crédités en collaboration",en:"<span class='m'>·</span> Credited as collaborators"},
+
+  "time.eyebrow":{fr:"Le calendrier · 2026",en:"The timeline · 2026"},
+  "time.h":{fr:"De maintenant à la fin de l'année",en:"From now to year-end"},
+  "time.m1":{fr:"Juillet",en:"July"},"time.w1":{fr:"Le noyau",en:"The core"},"time.d1":{fr:"Andrei, Pegah, Marjorie, Vincent → brouillon propre",en:"Andrei, Pegah, Marjorie, Vincent → clean draft"},
+  "time.m2":{fr:"Août",en:"August"},"time.w2":{fr:"Les experts",en:"The experts"},"time.d2":{fr:"Genêt, Parratte, Denormandie — commentaires libres",en:"Genêt, Parratte, Denormandie — open comments"},
+  "time.m3":{fr:"Septembre",en:"September"},"time.w3":{fr:"Intégration + anglais",en:"Integration + English"},"time.d3":{fr:"Validation scientifique et lancement de la version anglaise",en:"Scientific validation and launch of the English version"},
+  "time.m4":{fr:"Oct · Nov",en:"Oct · Nov"},"time.w4":{fr:"Production",en:"Production"},"time.d4":{fr:"Schémas, QR, réunion kinés, contact éditeur",en:"Diagrams, QR, physio meeting, publisher contact"},
+  "time.m5":{fr:"Fin 2026",en:"Late 2026"},"time.w5":{fr:"Manuscrit final",en:"Final manuscript"},"time.d5":{fr:"Prêt pour soumission",en:"Ready for submission"},
+  "ed.eyebrow":{fr:"La publication",en:"Publication"},
+  "ed.h":{fr:"Plusieurs éditeurs à approcher",en:"Several publishers to approach"},
+  "ed.badge":{fr:"Shortlist éditoriale",en:"Publisher shortlist"},
+  "ed.name":{fr:"Sauramps Médical<small>option naturelle à tester en premier</small>",en:"Sauramps Médical<small>natural option to test first</small>"},
+  "ed.l1":{fr:"<b>Sauramps Médical</b> — très présent en MPR, kinésithérapie et appareil locomoteur",en:"<b>Sauramps Médical</b> — strong fit for PRM, physiotherapy and musculoskeletal topics"},
+  "ed.l2":{fr:"<b>Elsevier Masson</b> — diffusion médicale large et visibilité institutionnelle",en:"<b>Elsevier Masson</b> — broad medical distribution and institutional visibility"},
+  "ed.l3":{fr:"<b>Lavoisier Médecine Sciences</b> — ouvrages scientifiques et universitaires",en:"<b>Lavoisier Médecine Sciences</b> — scientific and academic books"},
+  "ed.l4":{fr:"<b>Springer Nature</b> — levier possible pour la version anglaise",en:"<b>Springer Nature</b> — possible lever for the English version"},
+  "ed.planb":{fr:"Plan B — auto-édition seulement si aucun éditeur ne suit le projet.",en:"Plan B — self-publishing only if no publisher follows the project."},
+  "ed.rtitle":{fr:"À retenir",en:"Keep in mind"},
+  "ed.p1":{fr:"<span class='m'>·</span> Présenter le projet comme un ouvrage du service UPOH",en:"<span class='m'>·</span> Present the project as a book from the UPOH department"},
+  "ed.p2":{fr:"<span class='m'>·</span> Montrer que le manuscrit existe déjà",en:"<span class='m'>·</span> Show that the manuscript already exists"},
+  "ed.p3":{fr:"<span class='m'>·</span> Discuter schémas, QR vidéos et version anglaise dès le départ",en:"<span class='m'>·</span> Discuss diagrams, video QR codes and English version from the start"},
+
+  "nx.eyebrow":{fr:"La discussion",en:"The discussion"},
+  "nx.h":{fr:"Ce soir, trois questions",en:"Tonight, three questions"},
+  "nx.1h":{fr:"Qui participe activement ?",en:"Who participates actively?"},
+  "nx.1p":{fr:"Tout le monde est auteur ; chacun précise surtout son niveau de relecture et de contribution.",en:"Everyone is an author; each person mainly clarifies their level of review and contribution."},
+  "nx.2h":{fr:"Le titre vous parle-t-il ?",en:"Does the title land?"},
+  "nx.2p":{fr:"« Du muscle au geste » — ou une autre direction. Le sous-titre neuro-ortho fait consensus ?",en:"“From muscle to gesture” — or another direction. Does the neuro-ortho subtitle work for everyone?"},
+  "nx.3h":{fr:"On lance juillet ?",en:"Do we start July?"},
+  "nx.3p":{fr:"Le noyau relit ce mois-ci, les experts en août. Chacun cale ses disponibilités.",en:"The core reviews this month, the experts in August. Everyone locks in availability."},
+  "nx.close":{fr:"Le manuscrit existe déjà. Il ne demande qu'à devenir <span class='accent'>votre</span> livre aussi.",en:"The manuscript already exists. It only asks to become <span class='accent'>your</span> book too."},
+
+  "hint":{fr:"naviguer",en:"navigate"}
+};
+
+let lang="fr";
+function applyLang(){
+  document.querySelectorAll("[data-t]").forEach(el=>{
+    const k=el.getAttribute("data-t");
+    if(I18N[k]) el.innerHTML=I18N[k][lang];
+  });
+  document.documentElement.lang=lang;
+}
+function setLang(l){
+  lang=l;
+  document.getElementById("fr").classList.toggle("on",l==="fr");
+  document.getElementById("en").classList.toggle("on",l==="en");
+  applyLang();
+}
+
+/* ---------------- deck nav ---------------- */
+const slides=[...document.querySelectorAll(".slide")];
+const rail=document.getElementById("rail");
+let cur=0;
+slides.forEach((s,i)=>{
+  const b=document.createElement("button");
+  b.className="rdot"+(i===0?" on":"");
+  b.setAttribute("aria-label","Aller à la diapo "+(i+1));
+  b.onclick=()=>show(i);
+  rail.appendChild(b);
+});
+const dots=[...rail.children];
+const counter=document.getElementById("counter");
+function pad(n){return String(n).padStart(2,"0")}
+function show(i){
+  if(i<0||i>=slides.length) return;
+  slides[cur].classList.remove("active");
+  dots[cur].classList.remove("on");
+  cur=i;
+  slides[cur].classList.add("active");
+  dots[cur].classList.add("on");
+  counter.innerHTML="<b>"+pad(cur+1)+"</b> / "+pad(slides.length);
+  document.getElementById("prev").disabled=(cur===0);
+  document.getElementById("next").disabled=(cur===slides.length-1);
+  if(slides[cur].id==="s-hero") runHero();
+}
+function go(d){show(cur+d)}
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){e.preventDefault();go(1)}
+  else if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();go(-1)}
+  else if(e.key==="Home"){show(0)}
+  else if(e.key==="End"){show(slides.length-1)}
+});
+// touch
+let tx=0;
+document.addEventListener("touchstart",e=>tx=e.touches[0].clientX,{passive:true});
+document.addEventListener("touchend",e=>{
+  const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>60) go(dx<0?1:-1);
+},{passive:true});
+
+/* ---------------- hero SVG signature ---------------- */
+const reduce=window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+function buildHero(){
+  const svg=document.querySelector("#s-hero svg");
+  const fibers=svg.querySelector(".fibers");
+  const nerve=svg.querySelector(".nerve");
+  // pennate fibers along the aponeurosis
+  let f="";
+  for(let y=60;y<=470;y+=17){
+    const off=(y<260)?1:1; // symmetric
+    f+=`<line x1="200" y1="${y}" x2="120" y2="${y+34}" class="fib"/>`;
+    f+=`<line x1="200" y1="${y}" x2="280" y2="${y+34}" class="fib"/>`;
+  }
+  fibers.innerHTML=f;
+  // nerve arborization: trunk from left entering at motor point, branching
+  nerve.innerHTML=`
+    <path class="nbr" d="M40,300 C110,290 150,275 190,262"/>
+    <path class="nbr" d="M190,262 C205,250 215,236 214,214"/>
+    <path class="nbr" d="M190,262 C210,268 232,270 250,286"/>
+    <path class="nbr" d="M190,262 C196,282 190,300 176,318"/>
+    <path class="nbr" d="M214,214 C210,200 214,190 206,178"/>
+    <path class="nbr" d="M250,286 C264,296 268,308 266,322"/>
+  `;
+}
+function runHero(){
+  const svg=document.querySelector("#s-hero svg");
+  if(!svg) return;
+  const fibs=svg.querySelectorAll(".fib");
+  const nbrs=svg.querySelectorAll(".nbr");
+  const needle=svg.querySelector(".needle");
+  const band=svg.querySelector(".band");
+  const mp=svg.querySelector(".mp");
+  const mpr=svg.querySelector(".mp-ring");
+  if(reduce){
+    fibs.forEach(f=>{f.style.strokeDashoffset=0;f.style.opacity=.85});
+    nbrs.forEach(n=>{n.style.strokeDashoffset=0});
+    needle.style.opacity=1;needle.style.transform="none";band.style.opacity=.14;mp.style.opacity=1;
+    return;
+  }
+  // reset
+  fibs.forEach((f)=>{const L=f.getTotalLength();f.style.strokeDasharray=L;f.style.strokeDashoffset=L;f.style.opacity=0;f.style.transition="none"});
+  nbrs.forEach(n=>{const L=n.getTotalLength();n.style.strokeDasharray=L;n.style.strokeDashoffset=L;n.style.transition="none"});
+  needle.style.transform="translate(60px,-120px)";needle.style.opacity=0;needle.style.transition="none";
+  band.style.opacity=0;mp.style.opacity=0;mpr.style.opacity=0;
+  // force reflow
+  void svg.getBoundingClientRect();
+  // animate fibers
+  fibs.forEach((f,i)=>{
+    f.style.transition="stroke-dashoffset .7s ease "+(i*22)+"ms, opacity .5s ease "+(i*22)+"ms";
+    requestAnimationFrame(()=>{f.style.strokeDashoffset=0;f.style.opacity=.85});
+  });
+  // nerve
+  setTimeout(()=>{
+    nbrs.forEach((n,i)=>{
+      n.style.transition="stroke-dashoffset .8s ease "+(i*120)+"ms";
+      requestAnimationFrame(()=>{n.style.strokeDashoffset=0});
+    });
+  },500);
+  // band + needle + motor point
+  setTimeout(()=>{band.style.transition="opacity .6s ease";band.style.opacity=.13;},1300);
+  setTimeout(()=>{
+    needle.style.transition="transform 1s cubic-bezier(.7,0,.3,1), opacity .4s ease";
+    needle.style.transform="translate(0,0)";needle.style.opacity=1;
+  },1500);
+  setTimeout(()=>{
+    mp.style.transition="opacity .3s ease";mp.style.opacity=1;
+    pulse(mpr);
+  },2450);
+}
+function pulse(ring){
+  let t=0;
+  function frame(){
+    t+=1;
+    const p=(t%90)/90;
+    ring.setAttribute("r",5+p*26);
+    ring.style.opacity=(1-p)*.6;
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+buildHero();
+applyLang();
+show(0);
+runHero();
+</script>
+</body>
+</html>
